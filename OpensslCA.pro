@@ -18,3 +18,8 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
+
+INCLUDEPATH +=..\include
+
+LIBS+= -L..\lib32 -llibeay32
+LIBS+= -L..\lib32 -lssleay32
