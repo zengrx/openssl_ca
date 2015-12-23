@@ -13,3 +13,12 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+//证书请求文件按钮事件
+void MainWindow::on_pushButton_clicked()
+{
+    //执行请求文件
+    careq();
+    //写入message
+    showMessage();
+}
