@@ -22,3 +22,13 @@ void MainWindow::on_pushButton_clicked()
     //写入message
     showMessage();
 }
+
+//导入待验证证书
+
+
+//验证证书
+
+void MainWindow::on_pushButton_7_clicked()
+{
+    userCerUrl = QFileDialog::getOpenFileName(this,"select file","./",NULL);
+}

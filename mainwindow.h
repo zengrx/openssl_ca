@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFileDialog>
+#include <QMessageBox>
 
 #include <string.h>
 #include <stdio.h>
@@ -9,7 +11,6 @@
 #include <openssl/rsa.h>
 #include <openssl/pem.h>
 #include <openssl/bio.h>
-#include <QString>
 
 namespace Ui {
 class MainWindow;
@@ -25,6 +26,7 @@ public:
 
 private slots:
     void on_pushButton_clicked();
+    void on_pushButton_7_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -46,12 +48,17 @@ private:
     X509 *x509;
     BIO *b;
     STACK_OF(X509_EXTENSION) *exts;
+    QString userCerUrl;             //存储用户证书的路径
 
     //申请证书
     int careq();
 
     //显示消息
     void showMessage();
+
+    //证书验证
+    int X509_Pem_Verify();
+    int X509_Der_Verify();
 
 };
 
