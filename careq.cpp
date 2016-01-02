@@ -9,39 +9,30 @@ int MainWindow::careq()
     version=1;
     ret = X509_REQ_set_version(req, version);
     name=X509_NAME_new();
-    //printf("your name or your server's hostname");
-    //strcpy_s(bytes,"openssl");
     strcpy(bytes,ui->lineEdit->text().toStdString().c_str());
     len=strlen(bytes);
     entry = X509_NAME_ENTRY_create_by_txt(&entry, "commonName", V_ASN1_UTF8STRING, (unsigned char *)bytes, len);
     X509_NAME_add_entry(name, entry, 0, -1);
-    //printf("your country name");
-    //strcpy_s(bytes, "CN");
     strcpy(bytes,ui->lineEdit_2->text().toStdString().c_str());
     len = strlen(bytes);
     entry = X509_NAME_ENTRY_create_by_txt(&entry, "countryName", V_ASN1_UTF8STRING, (unsigned char *)bytes, len);
     X509_NAME_add_entry(name, entry, 1, -1);
-    //strcpy_s(bytes, "heh");
     strcpy(bytes,ui->lineEdit_4->text().toStdString().c_str());
     len = strlen(bytes);
     entry = X509_NAME_ENTRY_create_by_txt(&entry, "localityName", V_ASN1_UTF8STRING, (unsigned char *)bytes, len);
     X509_NAME_add_entry(name, entry, 1, -1);
-    //strcpy_s(bytes, "GX");
     strcpy(bytes,ui->lineEdit_3->text().toStdString().c_str());
     len = strlen(bytes);
     entry = X509_NAME_ENTRY_create_by_txt(&entry, "stateOrProvinceName", V_ASN1_UTF8STRING, (unsigned char *)bytes, len);
     X509_NAME_add_entry(name, entry, 1, -1);
-    //strcpy_s(bytes, "Ancient");
     strcpy(bytes,ui->lineEdit_5->text().toStdString().c_str());
     len = strlen(bytes);
     entry = X509_NAME_ENTRY_create_by_txt(&entry, "organizationName", V_ASN1_UTF8STRING, (unsigned char *)bytes, len);
     X509_NAME_add_entry(name, entry, 1, -1);
-    //strcpy_s(bytes, "Amber");
     strcpy(bytes,ui->lineEdit_6->text().toStdString().c_str());
     len = strlen(bytes);
     entry = X509_NAME_ENTRY_create_by_txt(&entry, "organizationalUnitName", V_ASN1_UTF8STRING, (unsigned char *)bytes, len);
     X509_NAME_add_entry(name, entry, 1, -1);
-    //strcpy_s(bytes, "heh@heh.com");
     strcpy(bytes,ui->lineEdit_7->text().toStdString().c_str());
     len = strlen(bytes);
     entry = X509_NAME_ENTRY_create_by_txt(&entry, "emailAddress", V_ASN1_IA5STRING, (unsigned char *)bytes, len);
@@ -54,11 +45,9 @@ int MainWindow::careq()
     EVP_PKEY_assign_RSA(pkey, rsa);
     ret = X509_REQ_set_pubkey(req, pkey);
     /* attribute */
-    //printf("your company name");
     strcpy_s(bytes, "test");
     len = strlen(bytes);
     ret = X509_REQ_add1_attr_by_txt(req, "organizationName", V_ASN1_UTF8STRING, (unsigned char *)bytes, len);
-    //printf("your section name");
     strcpy_s(bytes, "ttt");
     len = strlen(bytes);
     ret = X509_REQ_add1_attr_by_txt(req, "organizationalUnitName", V_ASN1_UTF8STRING, (unsigned char *)bytes, len);
@@ -72,7 +61,9 @@ int MainWindow::careq()
         return -1;
     }
     /* 写入文件 PEM 格式 */
-    b = BIO_new_file("certreq.csr", "w");
+    char name[100];
+    strcpy(name,(ui->lineEdit->text()+".csr").toStdString().c_str());
+    b = BIO_new_file(name, "w");
     PEM_write_bio_X509_REQ(b, req);
     BIO_free(b);
     /* DER 编码 */
@@ -97,7 +88,7 @@ int MainWindow::careq()
 //显示消息函数
 void MainWindow::showMessage()
 {
-    QString message,commonName,countryName,province,city,organization,unit,emailaddr;
+    QString commonName,countryName,province,city,organization,unit,emailaddr;
     message = "this is a test message:\n";
     commonName = "common:"+ui->lineEdit->text()+"\n";
     countryName = "country:"+ui->lineEdit_2->text()+"\n";

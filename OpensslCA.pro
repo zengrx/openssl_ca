@@ -15,7 +15,9 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     careq.cpp \
-    verify.cpp
+    verify.cpp \
+    detail.cpp \
+    creatcrt.cpp
 
 HEADERS  += mainwindow.h
 
