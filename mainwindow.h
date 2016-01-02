@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QDebug>
 
 #include <string.h>
 #include <stdio.h>
@@ -15,6 +16,18 @@
 namespace Ui {
 class MainWindow;
 }
+
+struct StoreCer
+{
+    QString userCerUrl = NULL;             //存储用户证书的路径
+    X509 *userCert1 = NULL;          //用户1
+    X509 *rootCert = NULL;          //根证书
+    X509_CRL *Crl = NULL;           //证书撤销链表
+    X509_STORE_CTX *ctx = NULL;     //存储证书相关设置
+    STACK_OF(X509) *caCertStack = NULL;     //用于证书链？
+    X509_STORE *rootCertStore = NULL;
+    EVP_PKEY *pkey=NULL;
+};
 
 class MainWindow : public QMainWindow
 {
@@ -28,6 +41,8 @@ private slots:
     void on_pushButton_clicked();
     void on_pushButton_7_clicked();
 
+    void on_pushButton_8_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -40,7 +55,7 @@ private:
     X509_NAME_ENTRY *entry = NULL;
     char bytes[100], mdout[20];
     int len, mdlen;
-    int bits = 512;
+    int bits;
     unsigned long e = RSA_3;
     unsigned char *der, *p;
     FILE *fp;
@@ -48,8 +63,7 @@ private:
     X509 *x509;
     BIO *b;
     STACK_OF(X509_EXTENSION) *exts;
-    QString userCerUrl;             //存储用户证书的路径
-
+    StoreCer verify;
     //申请证书
     int careq();
 
@@ -59,6 +73,9 @@ private:
     //证书验证
     int X509_Pem_Verify();
     int X509_Der_Verify();
+    //都取证书
+    int Load_Cer();
+    bool CheckCertWithRoot();
 
 };
 
