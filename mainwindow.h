@@ -24,11 +24,16 @@ public:
     ~MainWindow();
 
 private slots:
+    //证书申请按钮
     void on_pushButton_clicked();
+
+    //证书签名按钮
+    void on_pushButton_2_clicked();
 
 private:
     Ui::MainWindow *ui;
 
+    QString message;
     X509_REQ *req;
     int ret;
     long version;
@@ -52,6 +57,14 @@ private:
 
     //显示消息
     void showMessage();
+
+    //显示证书详细信息
+    void detail();
+
+    //签名
+    bool CreateCertFromRequestFile(int serialNumber,
+                                   int days, char *requestFile,
+                                   char *pubCert, char *priCert, int format);
 
 };
 

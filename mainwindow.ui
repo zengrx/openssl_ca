@@ -76,20 +76,20 @@
         <rect>
          <x>10</x>
          <y>20</y>
-         <width>91</width>
+         <width>71</width>
          <height>20</height>
         </rect>
        </property>
        <property name="text">
-        <string>服务的主机名称</string>
+        <string>申请证书名称</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="lineEdit">
        <property name="geometry">
         <rect>
-         <x>110</x>
+         <x>90</x>
          <y>20</y>
-         <width>91</width>
+         <width>81</width>
          <height>20</height>
         </rect>
        </property>
@@ -97,22 +97,22 @@
       <widget class="QLabel" name="label_2">
        <property name="geometry">
         <rect>
-         <x>250</x>
+         <x>190</x>
          <y>20</y>
-         <width>91</width>
+         <width>71</width>
          <height>16</height>
         </rect>
        </property>
        <property name="text">
-        <string>所属国家或地区</string>
+        <string>所属国家地区</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="lineEdit_2">
        <property name="geometry">
         <rect>
-         <x>350</x>
+         <x>270</x>
          <y>20</y>
-         <width>91</width>
+         <width>81</width>
          <height>20</height>
         </rect>
        </property>
@@ -120,22 +120,22 @@
       <widget class="QLabel" name="label_3">
        <property name="geometry">
         <rect>
-         <x>250</x>
+         <x>190</x>
          <y>60</y>
-         <width>91</width>
+         <width>71</width>
          <height>16</height>
         </rect>
        </property>
        <property name="text">
-        <string>组织或公司名称</string>
+        <string>组织公司名称</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="lineEdit_3">
        <property name="geometry">
         <rect>
-         <x>590</x>
+         <x>450</x>
          <y>20</y>
-         <width>91</width>
+         <width>81</width>
          <height>20</height>
         </rect>
        </property>
@@ -143,22 +143,22 @@
       <widget class="QLabel" name="label_4">
        <property name="geometry">
         <rect>
-         <x>490</x>
+         <x>370</x>
          <y>60</y>
-         <width>91</width>
+         <width>71</width>
          <height>16</height>
         </rect>
        </property>
        <property name="text">
-        <string>单位或部门名称</string>
+        <string>单位部门名称</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="lineEdit_4">
        <property name="geometry">
         <rect>
-         <x>110</x>
+         <x>90</x>
          <y>60</y>
-         <width>91</width>
+         <width>81</width>
          <height>20</height>
         </rect>
        </property>
@@ -166,10 +166,10 @@
       <widget class="QPushButton" name="pushButton">
        <property name="geometry">
         <rect>
-         <x>410</x>
-         <y>110</y>
-         <width>111</width>
-         <height>31</height>
+         <x>390</x>
+         <y>90</y>
+         <width>131</width>
+         <height>41</height>
         </rect>
        </property>
        <property name="text">
@@ -179,14 +179,14 @@
       <widget class="QLabel" name="label_5">
        <property name="geometry">
         <rect>
-         <x>490</x>
+         <x>370</x>
          <y>20</y>
-         <width>91</width>
+         <width>71</width>
          <height>20</height>
         </rect>
        </property>
        <property name="text">
-        <string>省份或自治区名</string>
+        <string>省份自治区名</string>
        </property>
       </widget>
       <widget class="QLabel" name="label_6">
@@ -194,20 +194,20 @@
         <rect>
          <x>10</x>
          <y>60</y>
-         <width>91</width>
+         <width>71</width>
          <height>20</height>
         </rect>
        </property>
        <property name="text">
-        <string>所属的城市名称</string>
+        <string>所属城市名称</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="lineEdit_5">
        <property name="geometry">
         <rect>
-         <x>350</x>
+         <x>270</x>
          <y>60</y>
-         <width>91</width>
+         <width>81</width>
          <height>20</height>
         </rect>
        </property>
@@ -215,9 +215,9 @@
       <widget class="QLineEdit" name="lineEdit_6">
        <property name="geometry">
         <rect>
-         <x>590</x>
+         <x>450</x>
          <y>60</y>
-         <width>91</width>
+         <width>81</width>
          <height>20</height>
         </rect>
        </property>
@@ -227,7 +227,7 @@
         <rect>
          <x>10</x>
          <y>100</y>
-         <width>91</width>
+         <width>71</width>
          <height>16</height>
         </rect>
        </property>
@@ -238,9 +238,9 @@
       <widget class="QLineEdit" name="lineEdit_7">
        <property name="geometry">
         <rect>
-         <x>110</x>
+         <x>90</x>
          <y>100</y>
-         <width>161</width>
+         <width>141</width>
          <height>20</height>
         </rect>
        </property>
@@ -248,7 +248,7 @@
       <widget class="QPushButton" name="pushButton_2">
        <property name="geometry">
         <rect>
-         <x>560</x>
+         <x>580</x>
          <y>110</y>
          <width>75</width>
          <height>31</height>
@@ -256,6 +256,29 @@
        </property>
        <property name="text">
         <string>根证书签名</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_8">
+       <property name="geometry">
+        <rect>
+         <x>250</x>
+         <y>100</y>
+         <width>51</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>申请天数</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_8">
+       <property name="geometry">
+        <rect>
+         <x>310</x>
+         <y>100</y>
+         <width>41</width>
+         <height>20</height>
+        </rect>
        </property>
       </widget>
      </widget>
