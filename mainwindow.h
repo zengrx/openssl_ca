@@ -19,8 +19,8 @@ class MainWindow;
 
 struct StoreCer
 {
-    QString userCerUrl = NULL;             //存储用户证书的路径
-    X509 *userCert1 = NULL;          //用户1
+    QString userCerUrl = NULL;      //存储用户证书的路径
+    X509 *userCert1 = NULL;         //用户1
     X509 *rootCert = NULL;          //根证书
     X509_CRL *Crl = NULL;           //证书撤销链表
     X509_STORE_CTX *ctx = NULL;     //存储证书相关设置
@@ -40,8 +40,11 @@ public:
 private slots:
     //证书申请按钮
     void on_pushButton_clicked();
+
+    //选择待验证书按钮
     void on_pushButton_7_clicked();
 
+    //验证证书按钮
     void on_pushButton_8_clicked();
 
     //证书签名按钮
@@ -64,11 +67,13 @@ private:
     unsigned long e = RSA_3;
     unsigned char *der, *p;
     FILE *fp;
+
     const EVP_MD *md;
     X509 *x509;
     BIO *b;
     STACK_OF(X509_EXTENSION) *exts;
     StoreCer verify;
+
     //申请证书
     int careq();
 
@@ -77,17 +82,21 @@ private:
 
     //证书验证
     int X509_Pem_Verify();
+
     int X509_Der_Verify();
-    //都取证书
+
+    //读取证书
     int Load_Cer();
+
     bool CheckCertWithRoot();
+
     //显示证书详细信息
     void detail();
 
-    //签名
-    bool CreateCertFromRequestFile(int serialNumber,
-                                   int days, char *requestFile,
-                                   char *pubCert, char *priCert, int format);
+    //根证书签名
+    bool CreateCertFromRequestFile(int serialNumber,int days,
+                                   char *requestFile,char *pubCert,
+                                   char *priCert, int format);
 
 };
 

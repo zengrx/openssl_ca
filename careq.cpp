@@ -83,7 +83,7 @@ int MainWindow::careq()
     free(der);
     X509_REQ_free(req);
 
-
+    //写入消息显示窗
     QString commonName,countryName,province,city,organization,unit,emailaddr;
     message = "this is a test message:\n";
     commonName = "common:"+ui->lineEdit->text()+"\n";
@@ -107,6 +107,7 @@ int MainWindow::careq()
 }
 
 //显示消息函数
+//message为全局变量，添加信息显示时累加显示
 void MainWindow::showMessage()
 {
     ui->textEdit->setText(message);

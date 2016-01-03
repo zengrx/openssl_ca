@@ -1,11 +1,7 @@
 #include "mainwindow.h"
 #include <locale.h>
-#include <time.h>
-#include <openssl/pem.h>
-#include <openssl/x509.h>
 #include <openssl/x509v3.h>
 #include <openssl/pkcs12.h>
-#include <openssl/rand.h>
 #include <openssl/engine.h>
 #include <openssl/evp.h>
 #include <string.h>
@@ -21,7 +17,7 @@ X509 * LoadCert()
     X509 * x509 = NULL;
     BIO * in = NULL;
 
-    in = BIO_new_file("ca1.crt","r");
+    in = BIO_new_file("rootca1.crt","r");
     if(in == NULL)
     {
         printf("read cert error\n");

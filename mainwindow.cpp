@@ -55,19 +55,26 @@ void MainWindow::on_pushButton_8_clicked()
 // (～￣▽￣)→))*￣▽￣*)o主要用来签名
 void MainWindow::on_pushButton_2_clicked()
 {
-    int day;
-    //detail();
-    char name1[100];
-    char name2[100];
-    char name3[100];
+    int day;        //申请天数
+    char name1[100];//申请文件名
+    char name2[100];//签发证书名
+    char name3[100];//子证书私钥
     strcpy(name1,(ui->lineEdit->text()+".csr").toStdString().c_str());
     strcpy(name2,(ui->lineEdit->text()+".crt").toStdString().c_str());
     strcpy(name3,(ui->lineEdit->text()+".key").toStdString().c_str());
     day = ui->lineEdit_8->text().toInt();
+
     if(CreateCertFromRequestFile(8,day,name1,name2,name3,3))
-        printf("ss\n");
+    {
+        message+="signature success";
+        showMessage();
+    }
     else
-        printf("gg\n");
+    {
+        message+="signature failed";
+        showMessage();
+    }
+
     //测试输出
     detail();
 }
