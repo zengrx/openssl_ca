@@ -26,16 +26,18 @@ void MainWindow::on_pushButton_clicked()
     showMessage();
 }
 
-//导入待验证证书
-
-//验证证书
-
+//选择待验证证书
 void MainWindow::on_pushButton_7_clicked()
 {
     verify.userCerUrl = QFileDialog::getOpenFileName(this,"select file","./",NULL);
     Load_Cer();
+    message+="rootCert loaded\n";
+    message+="userCert loaded\n";
+    message+="PrivateKey loaded\n";
+    showMessage();
 }
 
+//
 void MainWindow::on_pushButton_8_clicked()
 {
     if (verify.userCerUrl==NULL)
@@ -43,10 +45,11 @@ void MainWindow::on_pushButton_8_clicked()
     else
     {
         if(CheckCertWithRoot())
-            qDebug()<<"Ok";
+            message+="Verify ok\n";
         else
-            qDebug()<<"False";
+            message+="Verify false\n";
     }
+    showMessage();
 }
 //借来查看证书内容
 // (～￣▽￣)→))*￣▽￣*)o主要用来签名

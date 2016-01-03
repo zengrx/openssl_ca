@@ -2,15 +2,12 @@
 #include "ui_mainwindow.h"
 #include <stdio.h>
 #include <iostream>
-#include <openssl/applink.c>
+//#include <openssl/applink.c>
 
-//#include <locale.h>
 #include <openssl/pem.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
 #include <openssl/pkcs12.h>
-//#include <openssl/rand.h>
-//#include <openssl/engine.h>
 #include <openssl/evp.h>
 
 using namespace std;

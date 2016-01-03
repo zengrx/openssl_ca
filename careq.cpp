@@ -82,12 +82,8 @@ int MainWindow::careq()
     fclose(fp);
     free(der);
     X509_REQ_free(req);
-    return 0;
-}
 
-//显示消息函数
-void MainWindow::showMessage()
-{
+
     QString commonName,countryName,province,city,organization,unit,emailaddr;
     message = "this is a test message:\n";
     commonName = "common:"+ui->lineEdit->text()+"\n";
@@ -106,5 +102,12 @@ void MainWindow::showMessage()
     message += organization;
     message += unit;
     message += emailaddr;
+
+    return 0;
+}
+
+//显示消息函数
+void MainWindow::showMessage()
+{
     ui->textEdit->setText(message);
 }

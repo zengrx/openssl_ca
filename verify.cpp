@@ -18,7 +18,7 @@ int MainWindow::Load_Cer()
     X509 *userCert1 = NULL;          //用户1
     X509 *rootCert = NULL;          //根证书
     BIO *b;                         //接收证书等待格式化
-    X509_CRL *Crl = NULL;           //证书撤销链表
+//    X509_CRL *Crl = NULL;           //证书撤销链表
     EVP_PKEY *pkey=NULL;
 
     b=BIO_new_file("rootca1.crt","r");
@@ -33,12 +33,12 @@ int MainWindow::Load_Cer()
         return -2;
     }
     userCert1=PEM_read_bio_X509(b,NULL,NULL,NULL);
-    b=BIO_new_file("Crl.crl","r");
-    if(b==NULL)
-    {
-        return -3;
-    }
-    Crl=PEM_read_bio_X509_CRL(b,NULL,NULL,NULL);
+//    b=BIO_new_file("Crl.crl","r");
+//    if(b==NULL)
+//    {
+//        return -3;
+//    }
+//    Crl=PEM_read_bio_X509_CRL(b,NULL,NULL,NULL);
     b = BIO_new_file("rootca1.key.insecure", "r");
     if(b == NULL)
     {
@@ -49,8 +49,8 @@ int MainWindow::Load_Cer()
     BIO_free(b);
     verify.rootCert=rootCert;
     verify.userCert1=userCert1;
-    verify.Crl=Crl;
     verify.pkey=pkey;
+    //verify.Crl=Crl;
     return 0;
 }
 
