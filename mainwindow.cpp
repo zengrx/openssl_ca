@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <fstream>
 
 using namespace std;
 
@@ -69,10 +70,11 @@ void MainWindow::on_pushButton_8_clicked()
     }
     showMessage();
 }
-//借来查看证书内容
+
 // (～￣▽￣)→))*￣▽￣*)o主要用来签名
 void MainWindow::on_pushButton_2_clicked()
 {
+    int serial;     //证书编号
     int day;        //申请天数
     char name1[100];//申请文件名
     char name2[100];//签发证书名
@@ -82,9 +84,26 @@ void MainWindow::on_pushButton_2_clicked()
     strcpy(name3,(ui->lineEdit->text()+".key").toStdString().c_str());
     day = ui->lineEdit_8->text().toInt();
 
+    ifstream infile;
+    infile.open("sign.txt");
+    if(!infile)
+    {
+        QMessageBox::information(NULL,"error","open this file failed\n");
+    }
+    else
+    {
+        infile >> serial;
+        infile.close();
+    }
+
     if(CreateCertFromRequestFile(8,day,name1,name2,name3,3))
     {
-        message+="signature success";
+        ofstream outfile;
+        outfile.open("sign.txt");
+        serial += 1;
+        outfile << serial;
+        outfile.close();
+        message+="signature success\n";
         showMessage();
     }
     else
@@ -94,5 +113,5 @@ void MainWindow::on_pushButton_2_clicked()
     }
 
     //测试输出
-    detail();
+    //detail();
 }

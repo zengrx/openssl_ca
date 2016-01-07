@@ -85,7 +85,7 @@ int MainWindow::careq()
 
     //写入消息显示窗
     QString commonName,countryName,province,city,organization,unit,emailaddr;
-    message = "this is a test message:\n";
+    message += "this is a test message:\n";
     commonName = "common:"+ui->lineEdit->text()+"\n";
     countryName = "country:"+ui->lineEdit_2->text()+"\n";
     province = "province:"+ui->lineEdit_3->text()+"\n";
@@ -102,7 +102,7 @@ int MainWindow::careq()
     message += organization;
     message += unit;
     message += emailaddr;
-
+    showMessage();
     return 0;
 }
 
@@ -110,5 +110,6 @@ int MainWindow::careq()
 //message为全局变量，添加信息显示时累加显示
 void MainWindow::showMessage()
 {
+    message += "---------------------------------------------------------------------------------------------------------\n";
     ui->textEdit->setText(message);
 }

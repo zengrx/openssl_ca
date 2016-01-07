@@ -42,7 +42,7 @@ int MainWindow::Load_Cer()
 //        return -3;
 //    }
 //    Crl=PEM_read_bio_X509_CRL(b,NULL,NULL,NULL);
-    b = BIO_new_file("rootca1.key.insecure", "r");
+    b = BIO_new_file("rootca1.key", "r");
     if(b == NULL)
     {
         return -4;

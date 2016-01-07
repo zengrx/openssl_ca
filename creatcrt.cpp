@@ -41,7 +41,7 @@ EVP_PKEY * LoadKey()
     EVP_PKEY *pkey = NULL;
     BIO * in = NULL;
 
-    in = BIO_new_file("rootca1.key.insecure", "r");
+    in = BIO_new_file("rootca1.key", "r");
     if(in == NULL)
     {
         printf("read key error\n");
