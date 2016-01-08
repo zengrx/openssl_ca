@@ -2,7 +2,7 @@
 #include "ui_mainwindow.h"
 #include <stdio.h>
 #include <iostream>
-#include <openssl/applink.c>
+//#include <openssl/applink.c>
 
 #include <openssl/pem.h>
 #include <openssl/x509.h>

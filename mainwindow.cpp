@@ -45,9 +45,9 @@ void MainWindow::on_pushButton_8_clicked()
     else
     {
         if(CheckCertWithRoot())
-            message+="Verify ok\n";
+            message+="Verify with ca, ok...\n";
         else
-            message+="Verify false\n";
+            message+="Verify with ca, false...\n";
     }
     showMessage();
 }

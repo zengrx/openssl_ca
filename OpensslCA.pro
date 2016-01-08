@@ -27,3 +27,6 @@ INCLUDEPATH +=..\include
 
 LIBS+= -L..\lib32 -llibeay32
 LIBS+= -L..\lib32 -lssleay32
+
+DISTFILES += \
+    ReadMe

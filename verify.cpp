@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QDateTime>
 
 #include <openssl/evp.h>
 #include <openssl/x509.h>
@@ -9,8 +10,9 @@
 ///
 /// \brief MainWindow::Load_Cer
 /// 从文件读取证书
-/// \return -1 --> ca empety
-/// \return -2 --> user empety
+/// \return -1 --> ca cert empety
+/// \return -2 --> user cert empety
+/// \return -4 --> private key empty
 /// \return 0 --> ok
 ///
 int MainWindow::Load_Cer()
@@ -53,7 +55,6 @@ int MainWindow::Load_Cer()
     //verify.Crl=Crl;
     return 0;
 }
-
 ///
 /// \brief CheckCertWithRoot
 /// 使用根证书验证证书
@@ -75,4 +76,92 @@ bool MainWindow::CheckCertWithRoot()
         return true;
     else
         return false;
+}
+///
+/// \brief MainWindow::CheckCertTime
+/// crash while read certificate date
+/// \return
+///
+bool MainWindow::CheckCertTime()
+{
+    bool bf;
+    X509 *x509=verify.userCert1;
+    QDateTime qtime = QDateTime::currentDateTime();
+    time_t ct=qtime.toTime_t();
+    asn1_string_st *before=X509_get_notBefore(x509),*after=X509_get_notAfter(x509);
+    ASN1_UTCTIME *be=ASN1_STRING_dup(before),*af=ASN1_STRING_dup(after);
+    if(ASN1_UTCTIME_cmp_time_t(be,ct)>=0||ASN1_UTCTIME_cmp_time_t(af,ct)<=0)
+        bf=false;
+    else
+        bf=true;
+    M_ASN1_UTCTIME_free(be);
+    M_ASN1_UTCTIME_free(af);
+    X509_free(x509);
+    return bf;
+}
+///
+/// \brief GetCertSubjectString
+/// 获取证书的主题信息（全部信息），返回主题的字符串形式
+/// crash while read certificate name
+/// \return QString
+///
+QString MainWindow::GetCertSubjectString()
+{
+    char buf[256];
+    memset(buf,0,256);
+    X509 *x509= verify.userCert1;
+    int fn_nid;
+    X509_NAME *name;
+    ASN1_OBJECT *obj;
+    char objtmp[80];
+    const char *objbuf;
+    X509_NAME_ENTRY *entry;
+    setlocale(LC_CTYPE, "");
+    name=X509_get_subject_name(x509);
+    int num=X509_NAME_entry_count(name);
+    for(int i=0;i<num;i++)
+    {
+        entry=(X509_NAME_ENTRY *)X509_NAME_get_entry(name,0);
+        obj=X509_NAME_ENTRY_get_object(entry);
+        fn_nid = OBJ_obj2nid(obj);
+        if(fn_nid==NID_undef)
+            OBJ_obj2txt(objtmp, sizeof objtmp, obj, i);
+        else
+        {
+            objbuf = OBJ_nid2sn(fn_nid);
+            strcpy(objtmp,objbuf);
+        }
+    }
+    X509_free(x509);
+    QString st=buf;
+    message+=buf;
+    showMessage();
+    return st;
+}
+
+///
+/// \brief MainWindow::CheckCertWithCrl
+/// 通过黑名单验证证书，验证通过返回真，否则返回假
+/// \return ture or false
+///
+bool MainWindow::CheckCertWithCrl()
+{
+    X509 *x509=verify.userCert1;
+    X509_CRL *crl=verify.Crl;
+    STACK_OF(X509_REVOKED) *revoked=crl->crl->revoked;
+    X509_REVOKED *rc;
+
+    ASN1_INTEGER *serial=X509_get_serialNumber(x509);
+    int num=sk_X509_REVOKED_num(revoked);
+    bool bf=true;
+    for(int i=0;i<num;i++)
+    {
+        rc=sk_X509_REVOKED_pop(revoked);
+        if(ASN1_INTEGER_cmp(serial,rc->serialNumber)==0)
+            bf=false;
+    }
+    X509_CRL_free(crl);
+    X509_free(x509);
+    EVP_cleanup();
+    return bf;
 }

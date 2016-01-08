@@ -1,0 +1,11 @@
+Tips:
+1. Please named your CLR file name like this "Crl.crl",it will be loaded when verify certificate.
+
+Bugs on verify:
+1. Verify false when you click verify button again without change certificate.
+2. Application will crash while use GetCertSubjectString(),CheckCertTime(),CheckCertWithCrl().
+
+TODO on verify:
+1. Display more certificate information when certificate load.
+2. Certificate's time verify.
+3. CRL verify.

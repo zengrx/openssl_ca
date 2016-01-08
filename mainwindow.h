@@ -80,15 +80,17 @@ private:
     //显示消息
     void showMessage();
 
-    //证书验证
-    int X509_Pem_Verify();
+    //warning: app crash
+    QString GetCertSubjectString();
+    bool CheckCertTime();
+    bool CheckCertWithCrl();
 
-    int X509_Der_Verify();
-
-    //读取证书
+    //load certificate and ca
     int Load_Cer();
 
+    //verify certificate whit rooyt
     bool CheckCertWithRoot();
+
 
     //显示证书详细信息
     void detail();
