@@ -17,7 +17,11 @@ void MainWindow::detail()
     X509 *x;
     BIO *b;
     int ret;
-    b = BIO_new_file("test1.crt", "r");
+    b = BIO_new_file("test2.crt", "r");
+    if(!b)
+    {
+        printf("error in detail\n");
+    }
     x = PEM_read_bio_X509(b, NULL, NULL, NULL);
     //char buf[256];
     //memset(buf, 0, 256);

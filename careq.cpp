@@ -85,7 +85,7 @@ int MainWindow::careq()
 
     //写入消息显示窗
     QString commonName,countryName,province,city,organization,unit,emailaddr;
-    message += "this is a test message:\n";
+    message += getTime() + "subject information:\n";
     commonName = "common:"+ui->lineEdit->text()+"\n";
     countryName = "country:"+ui->lineEdit_2->text()+"\n";
     province = "province:"+ui->lineEdit_3->text()+"\n";
@@ -95,13 +95,13 @@ int MainWindow::careq()
     emailaddr = "email:"+ui->lineEdit_7->text()+"\n";
     ui->textEdit->setText(message);
     //if(ui->lineEdit->text())
-    message += commonName;
-    message += countryName;
-    message += province;
-    message += city;
-    message += organization;
-    message += unit;
-    message += emailaddr;
+    message += getTime() + commonName;
+    message += getTime() + countryName;
+    message += getTime() + province;
+    message += getTime() + city;
+    message += getTime() + organization;
+    message += getTime() + unit;
+    message += getTime() + emailaddr;
     showMessage();
     return 0;
 }
