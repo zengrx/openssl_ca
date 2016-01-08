@@ -4,6 +4,7 @@
 
 #include <openssl/evp.h>
 #include <openssl/x509.h>
+#include <openssl/x509v3.h>
 #include <openssl/err.h>
 #include <openssl/pem.h>
 
@@ -70,34 +71,22 @@ bool MainWindow::CheckCertWithRoot()
     int ret=X509_verify(x509,pcert);
     EVP_PKEY_free (pcert);
 
-    X509_free(x509);
-    X509_free(root);
     if(ret==1)
         return true;
     else
         return false;
 }
 ///
-/// \brief MainWindow::CheckCertTime
-/// crash while read certificate date
-/// \return
+/// \brief MainWindow::GetCertSerialNumber
+/// display certificate SerialNumber
+/// \return QString or null
 ///
-bool MainWindow::CheckCertTime()
+QString MainWindow::GetCertSerialNumber()
 {
-    bool bf;
-    X509 *x509=verify.userCert1;
-    QDateTime qtime = QDateTime::currentDateTime();
-    time_t ct=qtime.toTime_t();
-    asn1_string_st *before=X509_get_notBefore(x509),*after=X509_get_notAfter(x509);
-    ASN1_UTCTIME *be=ASN1_STRING_dup(before),*af=ASN1_STRING_dup(after);
-    if(ASN1_UTCTIME_cmp_time_t(be,ct)>=0||ASN1_UTCTIME_cmp_time_t(af,ct)<=0)
-        bf=false;
-    else
-        bf=true;
-    M_ASN1_UTCTIME_free(be);
-    M_ASN1_UTCTIME_free(af);
-    X509_free(x509);
-    return bf;
+    X509 *x509= verify.userCert1;
+    char * stringval = i2s_ASN1_INTEGER(NULL,X509_get_serialNumber(x509));
+    QString str(stringval);
+    return str;
 }
 ///
 /// \brief GetCertSubjectString
@@ -132,11 +121,29 @@ QString MainWindow::GetCertSubjectString()
             strcpy(objtmp,objbuf);
         }
     }
-    X509_free(x509);
     QString st=buf;
-    message+=buf;
-    showMessage();
     return st;
+}
+///
+/// \brief MainWindow::CheckCertTime
+/// crash while read certificate date
+/// \return
+///
+bool MainWindow::CheckCertTime()
+{
+    bool bf;
+    X509 *x509=verify.userCert1;
+    QDateTime qtime = QDateTime::currentDateTime();
+    time_t ct=qtime.toTime_t();
+    asn1_string_st *before=X509_get_notBefore(x509),*after=X509_get_notAfter(x509);
+    ASN1_UTCTIME *be=ASN1_STRING_dup(before),*af=ASN1_STRING_dup(after);
+    if(ASN1_UTCTIME_cmp_time_t(be,ct)>=0||ASN1_UTCTIME_cmp_time_t(af,ct)<=0)
+        bf=false;
+    else
+        bf=true;
+    M_ASN1_UTCTIME_free(be);
+    M_ASN1_UTCTIME_free(af);
+    return bf;
 }
 
 ///
@@ -165,3 +172,4 @@ bool MainWindow::CheckCertWithCrl()
     EVP_cleanup();
     return bf;
 }
+

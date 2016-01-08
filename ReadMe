@@ -3,7 +3,7 @@ Tips:
 
 Bugs on verify:
 1. Verify false when you click verify button again without change certificate.
-2. Application will crash while use GetCertSubjectString(),CheckCertTime(),CheckCertWithCrl().
+2. Application will crash while use CheckCertTime(),CheckCertWithCrl().
 
 TODO on verify:
 1. Display more certificate information when certificate load.

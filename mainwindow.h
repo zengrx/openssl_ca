@@ -84,6 +84,7 @@ private:
     QString GetCertSubjectString();
     bool CheckCertTime();
     bool CheckCertWithCrl();
+    QString GetCertSerialNumber();
 
     //load certificate and ca
     int Load_Cer();

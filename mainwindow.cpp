@@ -48,6 +48,24 @@ void MainWindow::on_pushButton_8_clicked()
             message+="Verify with ca, ok...\n";
         else
             message+="Verify with ca, false...\n";
+//        if(CheckCertTime())
+//            message+="Verify certificate life time, ok...\n";
+//        else
+//            message+="Verify certificate life time, false...\n";
+    }
+    QString tmpstr = GetCertSerialNumber();
+    if(!tmpstr.isNull())
+    {
+        message+="SerialNumber: ";
+        message+=tmpstr;
+        message+="\n";
+    }
+    tmpstr=GetCertSubjectString();
+    if(!tmpstr.isNull())
+    {
+        message+="Certificate Detail:\n";
+        message+=tmpstr;
+        message+="\n";
     }
     showMessage();
 }
