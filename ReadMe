@@ -1,11 +1,14 @@
 Tips:
 1. Please named your CLR file name like this "Crl.crl",it will be loaded when verify certificate.
+2. Strongly recommended update you library to OpenSSL_1_0_2a or highter version,if you want to verify certificate.
+   Or application will crash.
 
 Bugs on verify:
-1. Verify false when you click verify button again without change certificate.
-2. Application will crash while use CheckCertTime(),CheckCertWithCrl().
+1. Verify false when you click verify button again without change certificate. (Debug done)
+2. Application Maybe crash while use CheckCertWithCrl().
+3. Display None information while read certificate name.
 
 TODO on verify:
 1. Display more certificate information when certificate load.
-2. Certificate's time verify.
+2. Certificate's time verify. (Done)
 3. CRL verify.

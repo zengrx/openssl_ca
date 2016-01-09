@@ -10,7 +10,7 @@
 
 ///
 /// \brief MainWindow::Load_Cer
-/// 从文件读取证书
+/// 从文件读取PEM证书
 /// \return -1 --> ca cert empety
 /// \return -2 --> user cert empety
 /// \return -4 --> private key empty
@@ -91,7 +91,7 @@ QString MainWindow::GetCertSerialNumber()
 ///
 /// \brief GetCertSubjectString
 /// 获取证书的主题信息（全部信息），返回主题的字符串形式
-/// crash while read certificate name
+/// Bugs No information while read certificate name
 /// \return QString
 ///
 QString MainWindow::GetCertSubjectString()
@@ -131,12 +131,11 @@ QString MainWindow::GetCertSubjectString()
 ///
 bool MainWindow::CheckCertTime()
 {
-    bool bf;
     X509 *x509=verify.userCert1;
-    QDateTime qtime = QDateTime::currentDateTime();
-    time_t ct=qtime.toTime_t();
+    time_t ct=QDateTime::currentDateTime().toTime_t();
     asn1_string_st *before=X509_get_notBefore(x509),*after=X509_get_notAfter(x509);
-    ASN1_UTCTIME *be=ASN1_STRING_dup(before),*af=ASN1_STRING_dup(after);
+    ASN1_UTCTIME *be=ASN1_STRING_dup(before), *af=ASN1_STRING_dup(after);
+    bool bf;
     if(ASN1_UTCTIME_cmp_time_t(be,ct)>=0||ASN1_UTCTIME_cmp_time_t(af,ct)<=0)
         bf=false;
     else
@@ -145,10 +144,10 @@ bool MainWindow::CheckCertTime()
     M_ASN1_UTCTIME_free(af);
     return bf;
 }
-
 ///
 /// \brief MainWindow::CheckCertWithCrl
 /// 通过黑名单验证证书，验证通过返回真，否则返回假
+/// None CRL to check certificate
 /// \return ture or false
 ///
 bool MainWindow::CheckCertWithCrl()

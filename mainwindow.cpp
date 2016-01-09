@@ -38,21 +38,24 @@ void MainWindow::on_pushButton_7_clicked()
     showMessage();
 }
 
-//
+//验证证书
 void MainWindow::on_pushButton_8_clicked()
 {
     if (verify.userCerUrl==NULL)
+    {
         QMessageBox::warning(this,"警告","请选择证书！","确定");
+        return;
+    }
     else
     {
         if(CheckCertWithRoot())
             message+="Verify with ca, ok...\n";
         else
             message+="Verify with ca, false...\n";
-//        if(CheckCertTime())
-//            message+="Verify certificate life time, ok...\n";
-//        else
-//            message+="Verify certificate life time, false...\n";
+        if(CheckCertTime())
+            message+="Verify certificate life time, ok...\n";
+        else
+            message+="Verify certificate life time, false...\n";
     }
     QString tmpstr = GetCertSerialNumber();
     if(!tmpstr.isNull())
