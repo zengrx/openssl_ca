@@ -21,39 +21,46 @@ int MainWindow::Load_Cer()
     X509 *userCert1 = NULL;          //用户1
     X509 *rootCert = NULL;          //根证书
     BIO *b;                         //接收证书等待格式化
-//    X509_CRL *Crl = NULL;           //证书撤销链表
+    X509_CRL *Crl = NULL;           //证书撤销链表
     EVP_PKEY *pkey=NULL;
 
     b=BIO_new_file("rootca1.crt","r");
     if(b==NULL)
     {
+        BIO_free(b);
         return -1;
     }
-    rootCert = PEM_read_bio_X509(b,NULL,NULL,NULL);
+    else
+        rootCert = PEM_read_bio_X509(b,NULL,NULL,NULL);
     b=BIO_new_file(verify.userCerUrl.toStdString().data(),"r");
     if(b==NULL)
     {
+        BIO_free(b);
         return -2;
     }
-    userCert1=PEM_read_bio_X509(b,NULL,NULL,NULL);
-//    b=BIO_new_file("Crl.crl","r");
-//    if(b==NULL)
-//    {
-//        return -3;
-//    }
-//    Crl=PEM_read_bio_X509_CRL(b,NULL,NULL,NULL);
+    else
+        userCert1=PEM_read_bio_X509(b,NULL,NULL,NULL);
+    b=BIO_new_file("Crl.crl","r");
+    if(b==NULL)
+    {
+        BIO_free(b);
+        return -3;
+    }
+    else
+        Crl=PEM_read_bio_X509_CRL(b,NULL,NULL,NULL);
     b = BIO_new_file("rootca1.key", "r");
     if(b == NULL)
     {
+        BIO_free(b);
         return -4;
     }
-
-    pkey = PEM_read_bio_PrivateKey(b, NULL, 0, NULL);
+    else
+        pkey = PEM_read_bio_PrivateKey(b, NULL, 0, NULL);
     BIO_free(b);
     verify.rootCert=rootCert;
     verify.userCert1=userCert1;
     verify.pkey=pkey;
-    //verify.Crl=Crl;
+    verify.Crl=Crl;
     return 0;
 }
 ///
@@ -70,7 +77,6 @@ bool MainWindow::CheckCertWithRoot()
     EVP_PKEY * pcert=X509_get_pubkey(root);
     int ret=X509_verify(x509,pcert);
     EVP_PKEY_free (pcert);
-
     if(ret==1)
         return true;
     else
@@ -91,43 +97,59 @@ QString MainWindow::GetCertSerialNumber()
 ///
 /// \brief GetCertSubjectString
 /// 获取证书的主题信息（全部信息），返回主题的字符串形式
-/// Bugs No information while read certificate name
 /// \return QString
 ///
 QString MainWindow::GetCertSubjectString()
 {
-    char buf[256];
-    memset(buf,0,256);
-    X509 *x509= verify.userCert1;
-    int fn_nid;
-    X509_NAME *name;
-    ASN1_OBJECT *obj;
-    char objtmp[80];
-    const char *objbuf;
-    X509_NAME_ENTRY *entry;
-    setlocale(LC_CTYPE, "");
-    name=X509_get_subject_name(x509);
+    QString tring=NULL;
+    X509_NAME *name=X509_get_subject_name(verify.userCert1);
     int num=X509_NAME_entry_count(name);
-    for(int i=0;i<num;i++)
+    X509_NAME_ENTRY *entry;
+    ASN1_OBJECT *obj;
+    ASN1_STRING *str;
+    char objtmp[80]={0};
+    int fn_nid;
+    const char *objbuf;
+    setlocale(LC_CTYPE, "");
+    for(int ii=0;ii<num;ii++)
     {
-        entry=(X509_NAME_ENTRY *)X509_NAME_get_entry(name,0);
+        char out[255]={0};//输出
+        entry=(X509_NAME_ENTRY *)X509_NAME_get_entry(name,ii);
         obj=X509_NAME_ENTRY_get_object(entry);
+        str=X509_NAME_ENTRY_get_data(entry);
         fn_nid = OBJ_obj2nid(obj);
         if(fn_nid==NID_undef)
-            OBJ_obj2txt(objtmp, sizeof objtmp, obj, i);
+            OBJ_obj2txt(objtmp, sizeof objtmp, obj, 1);
         else
         {
             objbuf = OBJ_nid2sn(fn_nid);
             strcpy(objtmp,objbuf);
+            //objbuf = OBJ_nid2ln(fn_nid);
         }
+        BIO *mem = BIO_new(BIO_s_mem());
+        BIO_set_close(mem, BIO_CLOSE);
+        ASN1_STRING_print_ex(mem,str,ASN1_STRFLGS_ESC_QUOTE );
+        BUF_MEM *bptr;
+        BIO_get_mem_ptr(mem, &bptr);
+        int len=bptr->length;
+        char * pbuf=new char[len+1];
+        memset(pbuf,0,len+1);
+        memcpy(pbuf,bptr->data,len);
+        strncpy(out,pbuf,strlen(pbuf));
+        if (mem != NULL)
+            BIO_free(mem);
+        tring+=" \n";
+        tring+=noTime();
+        tring+=objtmp;
+        tring+=":\t";
+        tring+=out;
+        delete [] pbuf;
     }
-    QString st=buf;
-    return st;
+    return tring;
 }
 ///
 /// \brief MainWindow::CheckCertTime
-/// crash while read certificate date
-/// \return
+/// \return ture or false
 ///
 bool MainWindow::CheckCertTime()
 {
@@ -144,6 +166,18 @@ bool MainWindow::CheckCertTime()
     M_ASN1_UTCTIME_free(af);
     return bf;
 }
+///
+/// 获取证书的颁发者名称（全部信息）
+QString MainWindow::GetCertIssuer()
+{
+    X509 *x509=verify.userCert1;
+    char buf[256];
+    memset(buf,0,256);
+    X509_get_issuer_name(x509);
+    QString str=buf;
+    return str;
+}
+
 ///
 /// \brief MainWindow::CheckCertWithCrl
 /// 通过黑名单验证证书，验证通过返回真，否则返回假

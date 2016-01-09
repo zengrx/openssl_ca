@@ -83,16 +83,21 @@ private:
 
     //warning: app crash
     QString GetCertSubjectString();
-    bool CheckCertTime();
     bool CheckCertWithCrl();
+    QString GetCertIssuer();
+    int Crl();
+
+    //display serialnumber
     QString GetCertSerialNumber();
+
+    //verify certificate life time
+    bool CheckCertTime();
 
     //load certificate and ca
     int Load_Cer();
 
     //verify certificate whit rooyt
     bool CheckCertWithRoot();
-
 
     //显示证书详细信息
     void detail();
@@ -103,7 +108,7 @@ private:
                                    char *priCert, int format);
 
     QString getTime();
-
+    QString noTime();
 };
 
 #endif // MAINWINDOW_H

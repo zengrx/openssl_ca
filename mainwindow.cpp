@@ -32,9 +32,23 @@ void MainWindow::on_pushButton_7_clicked()
 {
     verify.userCerUrl = QFileDialog::getOpenFileName(this,"select file","./",NULL);
     Load_Cer();
-    message += getTime() + "rootCert loaded\n";
-    message += getTime() + "userCert loaded\n";
-    message += getTime() + "PrivateKey loaded\n";
+    message += getTime() + "rootCert loaded ...\n";
+    message += noTime() + "userCert loaded ...\n";
+    message += noTime() + "PrivateKey loaded ...\n";
+    showMessage();
+    QString tmpstr_0=GetCertSubjectString();
+    if(!tmpstr_0.isNull())
+    {
+        message += getTime() + "Certificate Detail:";
+        QString tmpstr_1 = GetCertSerialNumber();
+        if(!tmpstr_1.isNull())
+        {
+            message += "\n" + noTime() + "SerialNumber: ";
+            message += tmpstr_1;
+        }
+        message += tmpstr_0;
+        message += "\n";
+    }
     showMessage();
 }
 
@@ -49,27 +63,17 @@ void MainWindow::on_pushButton_8_clicked()
     else
     {
         if(CheckCertWithRoot())
-            message += getTime() + "Verify with ca, ok...\n";
+            message += getTime() + "Verify with ca, ok ...\n";
         else
-            message+="Verify with ca, false...\n";
+            message+="Verify with ca, false ...\n";
         if(CheckCertTime())
-            message+="Verify certificate life time, ok...\n";
+        {
+            message+= noTime() + "Verify certificate life time, ok ...\n";
+        }
         else
-            message+="Verify certificate life time, false...\n";
-    }
-    QString tmpstr = GetCertSerialNumber();
-    if(!tmpstr.isNull())
-    {
-        message += getTime() + "SerialNumber: ";
-        message += tmpstr;
-        message+="\n";
-    }
-    tmpstr=GetCertSubjectString();
-    if(!tmpstr.isNull())
-    {
-        message += getTime() + "Certificate Detail:\n";
-        message += tmpstr;
-        message += "\n";
+        {
+            message+= noTime() + "Verify certificate life time, false ...\n";
+        }
     }
     showMessage();
 }
@@ -124,4 +128,8 @@ QString MainWindow::getTime()
     QDateTime current_date_time = QDateTime::currentDateTime();
     QString current_date = current_date_time.toString("[hh:mm:ss]  ");
     return current_date;
+}
+QString MainWindow::noTime()
+{
+    return "[        ]  ";
 }

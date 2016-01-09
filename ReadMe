@@ -4,11 +4,12 @@ Tips:
    Or application will crash.
 
 Bugs on verify:
-1. Verify false when you click verify button again without change certificate. (Debug done)
-2. Application Maybe crash while use CheckCertWithCrl().
-3. Display None information while read certificate name.
+1. Application Maybe crash while use CheckCertWithCrl().
 
 TODO on verify:
-1. Display more certificate information when certificate load.
-2. Certificate's time verify. (Done)
-3. CRL verify.
+2. CRL verify.
+
+verify feature:
+1. verify with ca.
+2. Certificate's time verify.
+3. Display register information when certificate load.
