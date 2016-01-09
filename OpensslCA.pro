@@ -17,7 +17,8 @@ SOURCES += main.cpp\
     careq.cpp \
     verify.cpp \
     detail.cpp \
-    creatcrt.cpp
+    creatcrt.cpp \
+    cacrl.cpp
 
 HEADERS  += mainwindow.h
 

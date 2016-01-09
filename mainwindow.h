@@ -12,6 +12,7 @@
 #include <openssl/rsa.h>
 #include <openssl/pem.h>
 #include <openssl/bio.h>
+#include <QDateTime>
 
 namespace Ui {
 class MainWindow;
@@ -100,6 +101,8 @@ private:
     bool CreateCertFromRequestFile(int serialNumber,int days,
                                    char *requestFile,char *pubCert,
                                    char *priCert, int format);
+
+    QString getTime();
 
 };
 
