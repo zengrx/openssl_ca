@@ -29,6 +29,16 @@ struct StoreCer
     X509_STORE *rootCertStore = NULL;
     EVP_PKEY *pkey=NULL;
 };
+struct certInfo
+{
+    QString client;
+    QString state;
+    QString location;
+    QString organization;
+    QString organizationalUnitName;
+    QString country;
+    QString email;
+};
 
 class MainWindow : public QMainWindow
 {
@@ -82,10 +92,12 @@ private:
     void showMessage();
 
     //warning: app crash
-    QString GetCertSubjectString();
     bool CheckCertWithCrl();
     QString GetCertIssuer();
     int Crl();
+
+    //display cert info
+    QString GetCertSubjectString(certInfo *info);
 
     //display serialnumber
     QString GetCertSerialNumber();
