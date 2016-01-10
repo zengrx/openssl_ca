@@ -99,7 +99,7 @@ QString MainWindow::GetCertSerialNumber()
 /// 获取证书的主题信息（全部信息），返回主题的字符串形式
 /// \return QString
 ///
-QString MainWindow::GetCertSubjectString()
+QString MainWindow::GetCertSubjectString(certInfo *info)
 {
     QString tring=NULL;
     X509_NAME *name=X509_get_subject_name(verify.userCert1);
@@ -111,10 +111,10 @@ QString MainWindow::GetCertSubjectString()
     int fn_nid;
     const char *objbuf;
     setlocale(LC_CTYPE, "");
-    for(int ii=0;ii<num;ii++)
+    for(int i=0;i<num;i++)
     {
         char out[255]={0};//输出
-        entry=(X509_NAME_ENTRY *)X509_NAME_get_entry(name,ii);
+        entry=(X509_NAME_ENTRY *)X509_NAME_get_entry(name,i);
         obj=X509_NAME_ENTRY_get_object(entry);
         str=X509_NAME_ENTRY_get_data(entry);
         fn_nid = OBJ_obj2nid(obj);
@@ -138,6 +138,32 @@ QString MainWindow::GetCertSubjectString()
         strncpy(out,pbuf,strlen(pbuf));
         if (mem != NULL)
             BIO_free(mem);
+        switch(i)
+        {
+        case 0 :
+            info->country=out;
+            break;
+        case 1:
+            info->location=out;
+            break;
+        case 2 :
+            info->state=out;
+            break;
+        case 3 :
+            info->organization=out;
+            break;
+        case 4 :
+            info->organizationalUnitName=out;
+            break;
+        case 5 :
+            info->client=out;
+            break;
+        case 6 :
+            info->email=out;
+            break;
+        default:
+            break;
+        }
         tring+=" \n";
         tring+=noTime();
         tring+=objtmp;
