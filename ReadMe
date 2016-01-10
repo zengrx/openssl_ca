@@ -7,7 +7,7 @@ Bugs on verify:
 1. Application Maybe crash while use CheckCertWithCrl().
 
 TODO on verify:
-2. CRL verify.
+1. CRL verify.
 
 verify feature:
 1. verify with ca.
