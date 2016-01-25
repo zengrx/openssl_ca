@@ -14,7 +14,7 @@
 /// \return -1 --> ca cert empety
 /// \return -2 --> user cert empety
 /// \return -4 --> private key empty
-/// \return 0 --> ok
+/// \return 1r --> ok
 ///
 int MainWindow::Load_Cer()
 {
@@ -27,41 +27,64 @@ int MainWindow::Load_Cer()
     b=BIO_new_file("rootca1.crt","r");
     if(b==NULL)
     {
+        QMessageBox::information(NULL,"Error","Load rootcal.crt failed!\n");
+        message += getTime() + "Load rootcal.crt failed! Please make sure file exist.\n";
+        showMessage();
         BIO_free(b);
         return -1;
     }
     else
+    {
         rootCert = PEM_read_bio_X509(b,NULL,NULL,NULL);
+        b=NULL;
+    }
     b=BIO_new_file(verify.userCerUrl.toStdString().data(),"r");
     if(b==NULL)
     {
+        QMessageBox::information(NULL,"Error","Load userCer failed!\n");
+        message += getTime() + "Load userCer failed! Please make sure file exist.\n";
+        showMessage();
         BIO_free(b);
         return -2;
     }
     else
+    {
         userCert1=PEM_read_bio_X509(b,NULL,NULL,NULL);
-    b=BIO_new_file("Crl.crl","r");
+        b=NULL;
+    }
+    b=BIO_new_file("CRL.crl","r");
     if(b==NULL)
     {
+        QMessageBox::information(NULL,"Error","Load CRL.crl failed!\n");
+        message += getTime() + "Load CRL.crl failed! Please make sure file exist.\n";
+        showMessage();
         BIO_free(b);
         return -3;
     }
     else
+    {
         Crl=PEM_read_bio_X509_CRL(b,NULL,NULL,NULL);
+        b=NULL;
+    }
     b = BIO_new_file("rootca1.key", "r");
     if(b == NULL)
     {
+        QMessageBox::information(NULL,"Error","Load rootca1.key failed!\n");
+        message += getTime() + "Load rootca1.key failed! Please make sure file exist.\n";
+        showMessage();
         BIO_free(b);
         return -4;
     }
     else
+    {
         pkey = PEM_read_bio_PrivateKey(b, NULL, 0, NULL);
+    }
     BIO_free(b);
     verify.rootCert=rootCert;
     verify.userCert1=userCert1;
     verify.pkey=pkey;
     verify.Crl=Crl;
-    return 0;
+    return 1;
 }
 ///
 /// \brief CheckCertWithRoot
@@ -226,8 +249,6 @@ bool MainWindow::CheckCertWithCrl()
         if(ASN1_INTEGER_cmp(serial,rc->serialNumber)==0)
             bf=false;
     }
-    X509_CRL_free(crl);
-    X509_free(x509);
     EVP_cleanup();
     return bf;
 }
