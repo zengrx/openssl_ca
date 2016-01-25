@@ -28,6 +28,7 @@ struct StoreCer
     STACK_OF(X509) *caCertStack = NULL;     //用于证书链？
     X509_STORE *rootCertStore = NULL;
     EVP_PKEY *pkey=NULL;
+    QString ser;
 };
 struct certInfo
 {
@@ -60,6 +61,10 @@ private slots:
 
     //证书签名按钮
     void on_pushButton_2_clicked();
+
+    void on_pushButton_3_clicked();
+
+    void on_pushButton_4_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -95,6 +100,8 @@ private:
     bool CheckCertWithCrl();
     QString GetCertIssuer();
     int Crl();
+    bool CreateCrl();
+    bool revokedCert();
 
     //display cert info
     QString GetCertSubjectString(certInfo *info);
@@ -107,9 +114,13 @@ private:
 
     //load certificate and ca
     int Load_Cer();
+    int Revoked_Load_Cer();
 
     //verify certificate whit rooyt
     bool CheckCertWithRoot();
+
+    //display info but no time
+    QString noTime();
 
     //显示证书详细信息
     void detail();
@@ -120,7 +131,6 @@ private:
                                    char *priCert, int format);
 
     QString getTime();
-    QString noTime();
 };
 
 #endif // MAINWINDOW_H
