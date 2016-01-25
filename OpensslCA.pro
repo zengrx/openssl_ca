@@ -18,7 +18,8 @@ SOURCES += main.cpp\
     verify.cpp \
     detail.cpp \
     creatcrt.cpp \
-    cacrl.cpp
+    cacrl.cpp \
+    revoked.cpp
 
 HEADERS  += mainwindow.h
 
@@ -31,3 +32,8 @@ LIBS+= -L..\lib32 -lssleay32
 
 DISTFILES += \
     ReadMe
+
+RC_FILE = Book_UI.rc
+
+DISTFILES += \
+    Book_UI.rc
