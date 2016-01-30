@@ -30,7 +30,7 @@ void MainWindow::on_pushButton_clicked()
 //选择待验证证书
 void MainWindow::on_pushButton_7_clicked()
 {
-    verify.userCerUrl = QFileDialog::getOpenFileName(this,"select file","./",NULL);
+    verify.userCerUrl = QFileDialog::getOpenFileName(this,"select file","./","*.crt;*.der;*.pem;*.cer");
     if (verify.userCerUrl.isNull())
     {
         QMessageBox::information(NULL,"error","Select file failed!\n");
@@ -238,7 +238,7 @@ void MainWindow::on_pushButton_5_clicked()
 {
     QFileInfo fileinfo;
     //获取文件绝对路径
-    QString absurl = QFileDialog::getOpenFileName(this,"select file","./",NULL);
+    QString absurl = QFileDialog::getOpenFileName(this,"select file","./","*.csr");
     if (absurl.isNull())
     {
         QMessageBox::warning(NULL,"error","Select file failed!\n");
