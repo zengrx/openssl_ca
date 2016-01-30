@@ -47,13 +47,13 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>10</y>
+      <y>0</y>
       <width>701</width>
       <height>181</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -296,7 +296,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>服务的主机名称</string>
+        <string>待验证证书名称</string>
        </property>
       </widget>
       <widget class="QLineEdit" name="lineEdit_22">
@@ -503,9 +503,9 @@
      <widget class="QPushButton" name="pushButton_2">
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>70</y>
-        <width>75</width>
+        <x>220</x>
+        <y>90</y>
+        <width>71</width>
         <height>31</height>
        </rect>
       </property>
@@ -516,8 +516,8 @@
      <widget class="QPushButton" name="pushButton_3">
       <property name="geometry">
        <rect>
-        <x>210</x>
-        <y>70</y>
+        <x>410</x>
+        <y>20</y>
         <width>81</width>
         <height>31</height>
        </rect>
@@ -529,8 +529,8 @@
      <widget class="QPushButton" name="pushButton_4">
       <property name="geometry">
        <rect>
-        <x>444</x>
-        <y>70</y>
+        <x>550</x>
+        <y>90</y>
         <width>81</width>
         <height>31</height>
        </rect>
@@ -542,14 +542,40 @@
      <widget class="QLineEdit" name="lineEdit_9">
       <property name="geometry">
        <rect>
-        <x>320</x>
-        <y>70</y>
+        <x>520</x>
+        <y>20</y>
         <width>111</width>
         <height>31</height>
        </rect>
       </property>
       <property name="text">
        <string>撤销证书的序列号</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_5">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>20</y>
+        <width>121</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>选择证书请求文件</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_10">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>20</y>
+        <width>91</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>证书请求文件名</string>
       </property>
      </widget>
     </widget>

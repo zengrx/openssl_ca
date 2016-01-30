@@ -66,6 +66,8 @@ private slots:
 
     void on_pushButton_4_clicked();
 
+    void on_pushButton_5_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -89,6 +91,9 @@ private:
     BIO *b;
     STACK_OF(X509_EXTENSION) *exts;
     StoreCer verify;
+
+    //请求文件名，无后缀
+    QString fname;
 
     //申请证书
     int careq();

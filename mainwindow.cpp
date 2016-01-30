@@ -116,9 +116,9 @@ void MainWindow::on_pushButton_2_clicked()
     char name1[100];//申请文件名
     char name2[100];//签发证书名
     char name3[100];//子证书私钥
-    strcpy(name1,(ui->lineEdit->text()+".csr").toStdString().c_str());
-    strcpy(name2,(ui->lineEdit->text()+".crt").toStdString().c_str());
-    strcpy(name3,(ui->lineEdit->text()+".key").toStdString().c_str());
+    strcpy(name1,(fname+".csr").toStdString().c_str());
+    strcpy(name2,(fname+".crt").toStdString().c_str());
+    strcpy(name3,(fname+".key").toStdString().c_str());
     day = ui->lineEdit_8->text().toInt();
 
     ifstream infile;
@@ -231,4 +231,32 @@ void MainWindow::on_pushButton_4_clicked()
             QMessageBox::information(this,"提示","撤销成功！","确定");
         else
             QMessageBox::information(this,"提示","撤销失败！","确定");
+}
+
+//选择证书请求文件
+void MainWindow::on_pushButton_5_clicked()
+{
+    QFileInfo fileinfo;
+    //获取文件绝对路径
+    QString absurl = QFileDialog::getOpenFileName(this,"select file","./",NULL);
+    if (absurl.isNull())
+    {
+        QMessageBox::warning(NULL,"error","Select file failed!\n");
+        message += getTime() + "Select file failed!\n";
+        showMessage();
+    }
+    else
+    {
+        QString filename;
+        fileinfo = QFileInfo(absurl);
+        //获取文件名
+        filename = fileinfo.fileName();
+        ui->lineEdit_10->setText(filename);
+        //除去后缀名
+        int index = filename.lastIndexOf(".");
+        filename.truncate(index);
+        fname = filename;
+        message += getTime() + "select request file " + fname + " success\n";
+        showMessage();
+    }
 }
