@@ -79,6 +79,7 @@ void MainWindow::on_pushButton_7_clicked()
 //验证证书
 void MainWindow::on_pushButton_8_clicked()
 {
+    bool ret_check=true;
     if (verify.userCerUrl==NULL)
     {
         QMessageBox::warning(this,"警告","请选择证书！","确定");
@@ -92,6 +93,7 @@ void MainWindow::on_pushButton_8_clicked()
         }
         else
         {
+            ret_check=false;
             QMessageBox::warning(this,"警告","不受根证书信任的证书！","确定");
             message+= noTime()+ "Verify with ca, false ...\n";
         }
@@ -101,6 +103,7 @@ void MainWindow::on_pushButton_8_clicked()
         }
         else
         {
+            ret_check=false;
             QMessageBox::warning(this,"警告","证书过期！","确定");
             message+= noTime() + "Verify certificate life time, false ...\n";
         }
@@ -110,9 +113,12 @@ void MainWindow::on_pushButton_8_clicked()
         }
         else
         {
+            ret_check=false;
             QMessageBox::warning(this,"警告","证书已经被撤销！","确定");
             message+= noTime() + "Verify certificate with CRL, false ...\n";
         }
+        if(ret_check)
+            QMessageBox::information(this,"提示","证书通过验证","确定");
     }
     showMessage();
 }
