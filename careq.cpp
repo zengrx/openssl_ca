@@ -95,21 +95,30 @@ int MainWindow::careq()
     emailaddr = "email:"+ui->lineEdit_7->text()+"\n";
     ui->textEdit->setText(message);
     //if(ui->lineEdit->text())
-    message += getTime() + commonName;
-    message += getTime() + countryName;
-    message += getTime() + province;
-    message += getTime() + city;
-    message += getTime() + organization;
-    message += getTime() + unit;
-    message += getTime() + emailaddr;
+//    message += getTime() + commonName;
+//    message += getTime() + countryName;
+//    message += getTime() + province;
+//    message += getTime() + city;
+//    message += getTime() + organization;
+//    message += getTime() + unit;
+//    message += getTime() + emailaddr;
+//    showMessage();
+    ui->textEdit->append(getTime()+commonName);
+    ui->textEdit->append(getTime()+countryName);
+    ui->textEdit->append(getTime()+province);
+    ui->textEdit->append(getTime()+city);
+    ui->textEdit->append(getTime()+organization);
+    ui->textEdit->append(getTime()+unit);
+    ui->textEdit->append(getTime()+emailaddr);
     showMessage();
     return 0;
 }
 
 //显示消息函数
 //message为全局变量，添加信息显示时累加显示
+/*除去message累加消息功能，只保留分割功能 16/2/1 先睡觉明天再撸*/
 void MainWindow::showMessage()
 {
-    message += "---------------------------------------------------------------------------------------------------------\n";
-    ui->textEdit->setText(message);
+    message = "---------------------------------------------------------------------------------------------------------\n";
+    ui->textEdit->append(message);
 }

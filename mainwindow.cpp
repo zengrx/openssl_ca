@@ -24,7 +24,7 @@ void MainWindow::on_pushButton_clicked()
     //执行请求文件
     careq();
     //写入message
-    showMessage();
+    //showMessage();
 }
 
 //选择待验证证书
@@ -41,10 +41,13 @@ void MainWindow::on_pushButton_7_clicked()
     {
         if(Load_Cer()>0)
         {
-            message += getTime() + "rootCert loaded ...\n";
-            message += noTime() + "userCert loaded ...\n";
-            message += noTime() + "PrivateKey loaded ...\n";
+            //message1保存CA问文件载入信息，message2保存操作后信息
+            QString message1,message2;
+            message1 += getTime() + "rootCert loaded ...\n";
+            message1 += getTime() + "userCert loaded ...\n";
+            message1 += getTime() + "PrivateKey loaded ...\n";
             showMessage();
+            ui->textEdit->append(message1);
             certInfo info;
             QString tmpstr_0=GetCertSubjectString(&info);
             if(!tmpstr_0.isNull())
@@ -56,21 +59,23 @@ void MainWindow::on_pushButton_7_clicked()
                 ui->lineEdit_26->setText(info.organization);
                 ui->lineEdit_27->setText(info.organizationalUnitName);
                 ui->lineEdit_28->setText(info.email);
-                message += getTime() + "Certificate Detail:";
+                message2 += getTime() + "Certificate Detail:";
                 QString tmpstr_1 = GetCertSerialNumber();
                 if(!tmpstr_1.isNull())
                 {
-                    message += "\n" + noTime() + "SerialNumber: ";
-                    message += tmpstr_1;
+                    message2 += "\n" + noTime() + "SerialNumber: ";
+                    message2 += tmpstr_1;
                 }
-                message += tmpstr_0;
-                message += "\n";
+                message2 += tmpstr_0;
+                message2 += "\n";
             }
+            ui->textEdit->append(message2);
             showMessage();
         }
         else
         {
-            message += getTime()+"Load file faild!\n";
+            //message += getTime()+"Load file faild!\n";
+            ui->textEdit->append(getTime()+"Load file faild!\n");
             showMessage();
         }
     }
@@ -89,43 +94,51 @@ void MainWindow::on_pushButton_8_clicked()
     {
         if(CheckCertWithRoot())
         {
-            message += getTime() + "Verify with ca, ok ...\n";
+            //message += getTime() + "Verify with ca, ok ...\n";
+            ui->textEdit->append(getTime()+"Verify with ca, ok ...\n");
         }
         else
         {
             ret_check=false;
             QMessageBox::warning(this,"警告","不受根证书信任的证书！","确定");
-            message+= noTime()+ "Verify with ca, false ...\n";
+            //message+= noTime()+ "Verify with ca, false ...\n";
+            ui->textEdit->append(getTime()+"Verify with ca, false ...\n");
         }
         if(CheckCertTime())
         {
-            message+= noTime() + "Verify certificate life time, ok ...\n";
+            //message+= noTime() + "Verify certificate life time, ok ...\n";
+            ui->textEdit->append(getTime()+"Verify certificate life time, ok ...\n");
         }
         else
         {
             ret_check=false;
             QMessageBox::warning(this,"警告","证书过期！","确定");
-            message+= noTime() + "Verify certificate life time, false ...\n";
+            //message+= noTime() + "Verify certificate life time, false ...\n";
+            ui->textEdit->append(getTime()+"Verify certificate life time, false ...\n");
         }
         if(CheckCertWithCrl())
         {
-            message+= noTime() + "Verify certificate with CRL, ok ...\n";
+            //message+= noTime() + "Verify certificate with CRL, ok ...\n";
+            ui->textEdit->append(getTime()+"Verify certificate with CRL, ok ...\n");
         }
         else
         {
             ret_check=false;
             QMessageBox::warning(this,"警告","证书已经被撤销！","确定");
-            message+= noTime() + "Verify certificate with CRL, false ...\n";
+            //message+= noTime() + "Verify certificate with CRL, false ...\n";
+            ui->textEdit->append(getTime()+"Verify certificate with CRL, false ...\n");
         }
         if(ret_check)
             QMessageBox::information(this,"提示","证书通过验证","确定");
     }
     showMessage();
+    ui->textEdit->append("finished (●'◡'●) ...\n");
 }
 
 // (～￣▽￣)→))*￣▽￣*)o主要用来签名
 void MainWindow::on_pushButton_2_clicked()
 {
+    QString msgout;
     int serial;     //证书编号
     int day;        //申请天数
     char name1[100];//申请文件名
@@ -155,14 +168,15 @@ void MainWindow::on_pushButton_2_clicked()
         serial += 1;
         outfile << serial;
         outfile.close();
-        message += getTime() + "signature success\n";
-        showMessage();
+        msgout = getTime() + "signature success\n";
     }
     else
     {
-        message+="signature failed\n";
-        showMessage();
+        msgout = getTime() + "signature failed\n";
     }
+
+    ui->textEdit->append(msgout);
+    showMessage();
 
     //测试输出
     //detail();
