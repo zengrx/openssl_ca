@@ -96,8 +96,7 @@ private:
     //显示消息
     void showMessage();
 
-    //warning: app crash
-    bool CheckCertWithCrl();
+    //warning: app maybe crash
     QString GetCertIssuer();
     int Crl();
     bool CreateCrl();
@@ -116,8 +115,11 @@ private:
     int Load_Cer();
     int Revoked_Load_Cer();
 
-    //verify certificate whit rooyt
+    //verify certificate whit root
     bool CheckCertWithRoot();
+
+    //verify certificate with CRL
+    bool CheckCertWithCrl();
 
     //display info but no time
     QString noTime();

@@ -1,15 +1,12 @@
 Tips:
-1. Please named your CLR file name like this "Crl.crl",it will be loaded when verify certificate.
-2. Strongly recommended update you library to OpenSSL_1_0_2a or highter version,if you want to verify certificate.
+1. Strongly recommended update you library to OpenSSL_1_0_2a or highter version,if you want to verify certificate.
    Or application will crash.
-
-Bugs on verify:
-1. Application Maybe crash while use CheckCertWithCrl().
-
-TODO on verify:
-1. CRL verify.
 
 verify feature:
 1. verify with ca.
 2. Certificate's time verify.
 3. Display register information when certificate load.
+4. CRL verify.
+
+Revoked feature:
+1. Revoked certificate by serial.

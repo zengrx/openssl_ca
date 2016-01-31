@@ -7,6 +7,7 @@
 
 bool MainWindow::revokedCert()
 {
+    BIO  *bp;
     Revoked_Load_Cer();
     time_t t;
     ASN1_TIME *rvTime;
@@ -24,7 +25,12 @@ bool MainWindow::revokedCert()
         X509_CRL_set_nextUpdate(verify.Crl,rvTime);
         X509_REVOKED_set_revocationDate(revoked,rvTime);
         if(X509_CRL_add0_revoked(verify.Crl,revoked))
+        {
+            bp=BIO_new_file("CRL.crl","wb");
+            PEM_write_bio_X509_CRL(bp,verify.Crl);
+            BIO_free(bp);
             return true;
+        }
         else
             return false;
     }
@@ -83,6 +89,11 @@ int MainWindow::Revoked_Load_Cer()
     verify.Crl=Crl;
     return 1;
 }
+
+///
+/// \brief MainWindow::CreateCrl
+/// 生成证书撤销链（没有使用）
+/// \return true or false
 ///
 bool MainWindow::CreateCrl()
 {

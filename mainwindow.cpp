@@ -104,6 +104,15 @@ void MainWindow::on_pushButton_8_clicked()
             QMessageBox::warning(this,"警告","证书过期！","确定");
             message+= noTime() + "Verify certificate life time, false ...\n";
         }
+        if(CheckCertWithCrl())
+        {
+            message+= noTime() + "Verify certificate with CRL, ok ...\n";
+        }
+        else
+        {
+            QMessageBox::warning(this,"警告","证书已经被撤销！","确定");
+            message+= noTime() + "Verify certificate with CRL, false ...\n";
+        }
     }
     showMessage();
 }
@@ -164,6 +173,7 @@ QString MainWindow::noTime()
     return "[        ]  ";
 }
 
+//生成证书撤销链
 void MainWindow::on_pushButton_3_clicked()
 {
     X509 *rootCert = NULL;          //根证书
@@ -213,6 +223,7 @@ void MainWindow::on_pushButton_3_clicked()
     }
 }
 
+//撤销证书
 void MainWindow::on_pushButton_4_clicked()
 {
     /*
