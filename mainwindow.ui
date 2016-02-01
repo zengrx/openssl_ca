@@ -46,7 +46,7 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>0</x>
       <y>10</y>
       <width>701</width>
       <height>181</height>
@@ -503,8 +503,8 @@
      <widget class="QPushButton" name="pushButton_2">
       <property name="geometry">
        <rect>
-        <x>220</x>
-        <y>90</y>
+        <x>10</x>
+        <y>100</y>
         <width>71</width>
         <height>31</height>
        </rect>
@@ -516,21 +516,21 @@
      <widget class="QPushButton" name="pushButton_3">
       <property name="geometry">
        <rect>
-        <x>410</x>
+        <x>600</x>
         <y>20</y>
         <width>81</width>
         <height>31</height>
        </rect>
       </property>
       <property name="text">
-       <string>撤销链</string>
+       <string>生成撤销链</string>
       </property>
      </widget>
      <widget class="QPushButton" name="pushButton_4">
       <property name="geometry">
        <rect>
-        <x>550</x>
-        <y>90</y>
+        <x>600</x>
+        <y>100</y>
         <width>81</width>
         <height>31</height>
        </rect>
@@ -542,8 +542,8 @@
      <widget class="QLineEdit" name="lineEdit_9">
       <property name="geometry">
        <rect>
-        <x>520</x>
-        <y>20</y>
+        <x>570</x>
+        <y>60</y>
         <width>111</width>
         <height>31</height>
        </rect>
@@ -555,7 +555,7 @@
      <widget class="QPushButton" name="pushButton_5">
       <property name="geometry">
        <rect>
-        <x>50</x>
+        <x>10</x>
         <y>20</y>
         <width>121</width>
         <height>31</height>
@@ -568,14 +568,37 @@
      <widget class="QLineEdit" name="lineEdit_10">
       <property name="geometry">
        <rect>
-        <x>200</x>
-        <y>20</y>
+        <x>10</x>
+        <y>60</y>
         <width>91</width>
         <height>31</height>
        </rect>
       </property>
       <property name="text">
        <string>证书请求文件名</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_6">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>20</y>
+        <width>75</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>显示信息</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="listWidget">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>20</y>
+        <width>371</width>
+        <height>131</height>
+       </rect>
       </property>
      </widget>
     </widget>
