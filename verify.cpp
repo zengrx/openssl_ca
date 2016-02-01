@@ -110,9 +110,8 @@ bool MainWindow::CheckCertWithRoot()
 /// display certificate SerialNumber
 /// \return QString or null
 ///
-QString MainWindow::GetCertSerialNumber()
+QString MainWindow::GetCertSerialNumber(X509 *x509)
 {
-    X509 *x509= verify.userCert1;
     char * stringval = i2s_ASN1_INTEGER(NULL,X509_get_serialNumber(x509));
     QString str(stringval);
     return str;
