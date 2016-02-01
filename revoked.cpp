@@ -21,19 +21,19 @@ bool MainWindow::revokedCert()
     ASN1_INTEGER   *serial;
     if(verify.Crl==NULL)
     {
-        b=BIO_new_file("CRL.crl","r");
-        if(b==NULL)
+        bp=BIO_new_file("CRL.crl","r");
+        if(bp==NULL)
         {
             if(!CreateCrl())
             {
                 QMessageBox::information(this,"Error","Create CRL.crl failed!\n");
-                BIO_free(b);
+                BIO_free(bp);
                 return false;
             }
         }
         else
         {
-            verify.Crl=PEM_read_bio_X509_CRL(b,NULL,NULL,NULL);
+            verify.Crl=PEM_read_bio_X509_CRL(bp,NULL,NULL,NULL);
         }
     }
     /* 添加被撤销证书序列号*/
@@ -42,8 +42,8 @@ bool MainWindow::revokedCert()
     ASN1_INTEGER_set(serial,verify.ser.toLong());
     if(!CheckSerialWithCrl(serial))    //验证是否重复撤销
     {
-        QMessageBox::information(this,"Error","证书已经被吊销，请勿重复吊销!\n");
-        BIO_free(b);
+        QMessageBox::information(this,"Error","证书已经被吊销，请勿重复吊销!\n","确定");
+        BIO_free(bp);
         return false;
     }
     if(X509_REVOKED_set_serialNumber(revoked,serial))
