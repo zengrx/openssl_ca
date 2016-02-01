@@ -57,7 +57,7 @@ void MainWindow::on_pushButton_7_clicked()
                 ui->lineEdit_27->setText(info.organizationalUnitName);
                 ui->lineEdit_28->setText(info.email);
                 message += getTime() + "Certificate Detail:";
-                QString tmpstr_1 = GetCertSerialNumber();
+                QString tmpstr_1 = GetCertSerialNumber(verify.userCert1);
                 if(!tmpstr_1.isNull())
                 {
                     message += "\n" + noTime() + "SerialNumber: ";
@@ -168,6 +168,7 @@ void MainWindow::on_pushButton_2_clicked()
     //detail();
 }
 
+//格式化消息流
 QString MainWindow::getTime()
 {
     QDateTime current_date_time = QDateTime::currentDateTime();
@@ -232,8 +233,6 @@ void MainWindow::on_pushButton_3_clicked()
 //撤销证书
 void MainWindow::on_pushButton_4_clicked()
 {
-    /*
-    CreateCrl();*/
     if(Revoked_Load_Cer()<=0)
     {
         QMessageBox::information(this,"Error","Revoked_Load_Cer failed","确定");
@@ -245,7 +244,10 @@ void MainWindow::on_pushButton_4_clicked()
         QMessageBox::warning(this,"警告","请输入证书序列号！","确定");
     else
         if(revokedCert())
+        {
             QMessageBox::information(this,"提示","撤销成功！","确定");
+            Init_DisCRL();
+        }
         else
             QMessageBox::information(this,"提示","撤销失败！","确定");
 }
@@ -276,4 +278,10 @@ void MainWindow::on_pushButton_5_clicked()
         message += getTime() + "select request file " + fname + " success\n";
         showMessage();
     }
+}
+
+//显示撤销的证书列表
+void MainWindow::on_pushButton_6_clicked()
+{
+    Init_DisCRL();
 }

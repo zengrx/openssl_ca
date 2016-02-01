@@ -68,6 +68,8 @@ private slots:
 
     void on_pushButton_5_clicked();
 
+    void on_pushButton_6_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -103,15 +105,24 @@ private:
 
     //warning: app maybe crash
     QString GetCertIssuer();
+
+    //create CRl
     int Crl();
+
+    //useless code
     bool CreateCrl();
+
+    //revoked certificate
     bool revokedCert();
+
+    //display revoked certificate list
+    void Init_DisCRL();
 
     //display cert info
     QString GetCertSubjectString(certInfo *info);
 
     //display serialnumber
-    QString GetCertSerialNumber();
+    QString GetCertSerialNumber(X509 *x509);
 
     //verify certificate life time
     bool CheckCertTime();
@@ -128,6 +139,9 @@ private:
 
     //display info but no time
     QString noTime();
+
+    //chage ASN1_Time to time_t
+    time_t ASN1_GetTimeT(ASN1_TIME* time);
 
     //显示证书详细信息
     void detail();

@@ -5,6 +5,11 @@
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
 
+///
+/// \brief MainWindow::revokedCert
+/// 撤销证书
+/// \return
+///
 bool MainWindow::revokedCert()
 {
     BIO  *bp;
@@ -26,6 +31,7 @@ bool MainWindow::revokedCert()
         X509_REVOKED_set_revocationDate(revoked,rvTime);
         if(X509_CRL_add0_revoked(verify.Crl,revoked))
         {
+            X509_CRL_sort(verify.Crl);// 排序
             bp=BIO_new_file("CRL.crl","wb");
             PEM_write_bio_X509_CRL(bp,verify.Crl);
             BIO_free(bp);
@@ -194,4 +200,79 @@ void AddRevoke(stuREVOKE *& Head,int index,time_t time)
         p->Link=End;
     }
     return;
+}
+
+//初始化证书撤销列表
+void MainWindow::Init_DisCRL()
+{
+    BIO *b;                         //接收CRL等待格式化
+    if(verify.Crl==NULL)
+    {
+        b=BIO_new_file("CRL.crl","r");
+        if(b==NULL)
+        {
+            QMessageBox::information(this,"Error","Load CRL.crl failed!\n");
+            message += getTime() + "Load CRL.crl failed! Please make sure file exist.\n";
+            showMessage();
+            BIO_free(b);
+            return;
+        }
+        else
+        {
+            verify.Crl=PEM_read_bio_X509_CRL(b,NULL,NULL,NULL);
+        }
+    }
+    STACK_OF(X509_REVOKED) *revoked=verify.Crl->crl->revoked;
+    int num=sk_X509_REVOKED_num(revoked);
+    X509_REVOKED *rc;
+    ui->listWidget->clear();
+    ui->listWidget->addItem("序号\t撤销序列号\t撤销时间");
+    message+=getTime()+"序号\t撤销序列号\t撤销时间\n";
+    for(int i=0;i<num;i++)
+    {
+        rc=sk_X509_REVOKED_value(revoked,i);
+        asn1_string_st *revTime=rc->revocationDate;
+        ASN1_TIME *rt=ASN1_STRING_dup(revTime);
+        time_t tt=ASN1_GetTimeT(rt);
+        QDateTime dt = QDateTime::fromTime_t(tt);
+        ui->listWidget->addItem(QString::number(i)+'\t'+i2s_ASN1_INTEGER(NULL,rc->serialNumber)+"\t"+dt.toString(Qt::TextDate));
+        message+=noTime()+QString::number(i)+"   \t"+i2s_ASN1_INTEGER(NULL,rc->serialNumber)+"\t"+dt.toString(Qt::TextDate)+'\n';
+    }
+    showMessage();
+    BIO_free(b);
+}
+
+//change ASN1_Time to time_t
+//copy from http://stackoverflow.com/questions/10975542/asn1-time-to-time-t-conversion
+//copy date 2016.2.1
+time_t MainWindow::ASN1_GetTimeT(ASN1_TIME* time)
+{
+    struct tm t;
+    const char* str = (const char*) time->data;
+    size_t i = 0;
+    memset(&t, 0, sizeof(t));
+    if (time->type == V_ASN1_UTCTIME) {/* two digit year */
+        t.tm_year = (str[i++] - '0') * 10;
+        t.tm_year += (str[i++] - '0');
+        if (t.tm_year < 70)
+            t.tm_year += 100;
+    } else if (time->type == V_ASN1_GENERALIZEDTIME) {/* four digit year */
+        t.tm_year = (str[i++] - '0') * 1000;
+        t.tm_year+= (str[i++] - '0') * 100;
+        t.tm_year+= (str[i++] - '0') * 10;
+        t.tm_year+= (str[i++] - '0');
+        t.tm_year -= 1900;
+    }
+    t.tm_mon  = (str[i++] - '0') * 10;
+    t.tm_mon += (str[i++] - '0') - 1; // -1 since January is 0 not 1.
+    t.tm_mday = (str[i++] - '0') * 10;
+    t.tm_mday+= (str[i++] - '0');
+    t.tm_hour = (str[i++] - '0') * 10;
+    t.tm_hour+= (str[i++] - '0');
+    t.tm_min  = (str[i++] - '0') * 10;
+    t.tm_min += (str[i++] - '0');
+    t.tm_sec  = (str[i++] - '0') * 10;
+    t.tm_sec += (str[i++] - '0');
+    /* Note: we did not adjust the time based on time zone information */
+    return mktime(&t);
 }

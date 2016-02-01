@@ -11,13 +11,11 @@ int MainWindow::Crl()
 {
     time_t t;
     X509_NAME *issuer;
-    ASN1_TIME *lastUpdate,*nextUpdate,*rvTime;
+    ASN1_TIME *lastUpdate,*nextUpdate;
     X509_CRL  *crl=NULL;
     EVP_PKEY *pkey;
     BIO  *bp;
     X509 *x509;
-    X509_REVOKED  *revoked;
-    ASN1_INTEGER   *serial;
     Revoked_Load_Cer();
     pkey=verify.pkey;
     x509=verify.rootCert;
@@ -37,19 +35,6 @@ int MainWindow::Crl()
     t=time(NULL);
     ASN1_TIME_set(nextUpdate,t+1000);
     X509_CRL_set_nextUpdate(crl,nextUpdate);
-    /* 添加被撤销证书序列号*/
-    revoked=X509_REVOKED_new();
-    serial=ASN1_INTEGER_new();
-    ret=ASN1_INTEGER_set(serial,1000);
-    ret=X509_REVOKED_set_serialNumber(revoked,serial);
-    rvTime=ASN1_TIME_new();
-    t=time(NULL);
-    ASN1_TIME_set(rvTime,t+2000);
-    ret=X509_CRL_set_nextUpdate(crl,rvTime);
-    ret=X509_REVOKED_set_revocationDate(revoked,rvTime);
-    ret=X509_CRL_add0_revoked(crl,revoked);
-    /* 排序*/
-    X509_CRL_sort(crl);
     /* 签名*/
     X509_CRL_sign(crl,pkey,EVP_md5());
     /* 写入文件*/
