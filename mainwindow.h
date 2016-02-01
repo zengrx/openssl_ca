@@ -24,12 +24,14 @@ struct StoreCer
     X509 *userCert1 = NULL;         //用户1
     X509 *rootCert = NULL;          //根证书
     X509_CRL *Crl = NULL;           //证书撤销链表
-    X509_STORE_CTX *ctx = NULL;     //存储证书相关设置
-    STACK_OF(X509) *caCertStack = NULL;     //用于证书链？
-    X509_STORE *rootCertStore = NULL;
+    X509_STORE_CTX *ctx = NULL;     //存储证书相关设置-->never use
+    STACK_OF(X509) *caCertStack = NULL;     //用于证书链？-->never use
+    X509_STORE *rootCertStore = NULL;   //never use
     EVP_PKEY *pkey=NULL;
     QString ser;
 };
+
+//store certificate info for display
 struct certInfo
 {
     QString client;
@@ -129,13 +131,16 @@ private:
 
     //load certificate and ca
     int Load_Cer();
-    int Revoked_Load_Cer();
+    int Revoked_Load();
 
     //verify certificate whit root
     bool CheckCertWithRoot();
 
     //verify certificate with CRL
     bool CheckCertWithCrl();
+
+    //verify certificate's Serial with CRL
+    bool CheckSerialWithCrl(ASN1_INTEGER   *serial);
 
     //display info but no time
     QString noTime();
