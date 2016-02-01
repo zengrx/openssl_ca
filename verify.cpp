@@ -28,7 +28,7 @@ int MainWindow::Load_Cer()
     if(b==NULL)
     {
         QMessageBox::information(NULL,"Error","Load rootcal.crt failed!\n");
-        message += getTime() + "Load rootcal.crt failed! Please make sure file exist.\n";
+        ui->textEdit->append(getTime() + "Load rootcal.crt failed! Please make sure file exist.\n");
         showMessage();
         BIO_free(b);
         return -1;
@@ -42,7 +42,7 @@ int MainWindow::Load_Cer()
     if(b==NULL)
     {
         QMessageBox::information(NULL,"Error","Load userCer failed!\n");
-        message += getTime() + "Load userCer failed! Please make sure file exist.\n";
+        ui->textEdit->append(getTime() + "Load userCer failed! Please make sure file exist.\n");
         showMessage();
         BIO_free(b);
         return -2;
@@ -56,7 +56,7 @@ int MainWindow::Load_Cer()
     if(b==NULL)
     {
         QMessageBox::information(NULL,"Error","Load CRL.crl failed!\n");
-        message += getTime() + "Load CRL.crl failed! Please make sure file exist.\n";
+        ui->textEdit->append(getTime() + "Load CRL.crl failed! Please make sure file exist.\n");
         showMessage();
         BIO_free(b);
         return -3;
@@ -70,7 +70,7 @@ int MainWindow::Load_Cer()
     if(b == NULL)
     {
         QMessageBox::information(NULL,"Error","Load rootca1.key failed!\n");
-        message += getTime() + "Load rootca1.key failed! Please make sure file exist.\n";
+        ui->textEdit->append(getTime() + "Load rootca1.key failed! Please make sure file exist.\n");
         showMessage();
         BIO_free(b);
         return -4;

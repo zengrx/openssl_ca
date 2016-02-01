@@ -59,7 +59,7 @@ void MainWindow::on_pushButton_7_clicked()
                 ui->lineEdit_26->setText(info.organization);
                 ui->lineEdit_27->setText(info.organizationalUnitName);
                 ui->lineEdit_28->setText(info.email);
-                message += getTime() + "Certificate Detail:";
+                message2 += getTime() + "Certificate Detail:";
                 QString tmpstr_1 = GetCertSerialNumber(verify.userCert1);
                 if(!tmpstr_1.isNull())
                 {
@@ -197,6 +197,7 @@ QString MainWindow::noTime()
 //生成证书撤销链
 void MainWindow::on_pushButton_3_clicked()
 {
+    QString rvkmsg;
     X509 *rootCert = NULL;          //根证书
     EVP_PKEY *pkey;
     BIO *b;                         //接收证书等待格式化
@@ -204,7 +205,7 @@ void MainWindow::on_pushButton_3_clicked()
     if(b==NULL)
     {
         QMessageBox::information(NULL,"Error","Load rootca1.crt failed!\n");
-        message += getTime() + "Load CA(rootca1.crt) failed! Please make sure file exist.\n";
+        ui->textEdit->append(getTime() + "Load CA(rootca1.crt) failed! Please make sure file exist.\n");
         showMessage();
         BIO_free(b);
         return;
@@ -219,7 +220,7 @@ void MainWindow::on_pushButton_3_clicked()
     if(b==NULL)
     {
         QMessageBox::information(NULL,"Error","Load CRL.crl failed!\n");
-        message += getTime() + "Load CRL.crl failed! Please make sure file exist.\n";
+        ui->textEdit->append(getTime() + "Load CRL.crl failed! Please make sure file exist.\n");
         showMessage();
         BIO_free(b);
         return;
@@ -233,13 +234,13 @@ void MainWindow::on_pushButton_3_clicked()
     if(Crl()>0)
     {
         QMessageBox::information(NULL,"Sucess","Create CRL Sucess!\n");
-        message += getTime() + "Create CRL sucessed!\n";
+        ui->textEdit->append(getTime() + "Create CRL sucessed!\n");
         showMessage();
     }
     else
     {
         QMessageBox::information(NULL,"Fail","Create CRL Failed!\n");
-        message += getTime() + "Create CRL failed!\n";
+        ui->textEdit->append(getTime() + "Create CRL failed!\n");
         showMessage();
     }
 }
@@ -275,7 +276,7 @@ void MainWindow::on_pushButton_5_clicked()
     if (absurl.isNull())
     {
         QMessageBox::warning(NULL,"error","Select file failed!\n");
-        message += getTime() + "Select file failed!\n";
+        ui->textEdit->append(getTime() + "Select file failed!\n");
         showMessage();
     }
     else
@@ -289,7 +290,7 @@ void MainWindow::on_pushButton_5_clicked()
         int index = filename.lastIndexOf(".");
         filename.truncate(index);
         fname = filename;
-        message += getTime() + "select request file " + fname + " success\n";
+        ui->textEdit->append(getTime() + "select request file " + fname + " success\n");
         showMessage();
     }
 }
