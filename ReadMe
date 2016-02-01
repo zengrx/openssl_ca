@@ -1,6 +1,8 @@
 Tips:
 1. Strongly recommended update you library to OpenSSL_1_0_2a or highter version,if you want to verify certificate.
    Or application will crash.
+2. All showMessage function has changed, if you wanna add textedit message, use ui->textedit->append() to update it.
+	this function can show latest message in textedit area.
 
 verify feature:
 1. verify with ca.
