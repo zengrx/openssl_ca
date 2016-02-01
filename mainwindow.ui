@@ -514,11 +514,14 @@
       </property>
      </widget>
      <widget class="QPushButton" name="pushButton_3">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
-        <x>600</x>
-        <y>20</y>
-        <width>81</width>
+        <x>520</x>
+        <y>100</y>
+        <width>71</width>
         <height>31</height>
        </rect>
       </property>
@@ -549,7 +552,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>撤销证书的序列号</string>
+       <string/>
       </property>
      </widget>
      <widget class="QPushButton" name="pushButton_5">
@@ -575,20 +578,20 @@
        </rect>
       </property>
       <property name="text">
-       <string>证书请求文件名</string>
+       <string/>
       </property>
      </widget>
      <widget class="QPushButton" name="pushButton_6">
       <property name="geometry">
        <rect>
-        <x>520</x>
+        <x>544</x>
         <y>20</y>
-        <width>75</width>
+        <width>141</width>
         <height>31</height>
        </rect>
       </property>
       <property name="text">
-       <string>显示信息</string>
+       <string>显示证书吊销链信息</string>
       </property>
      </widget>
      <widget class="QListWidget" name="listWidget">
@@ -601,6 +604,14 @@
        </rect>
       </property>
      </widget>
+     <zorder>pushButton_3</zorder>
+     <zorder>pushButton_2</zorder>
+     <zorder>pushButton_4</zorder>
+     <zorder>lineEdit_9</zorder>
+     <zorder>pushButton_5</zorder>
+     <zorder>lineEdit_10</zorder>
+     <zorder>pushButton_6</zorder>
+     <zorder>listWidget</zorder>
     </widget>
    </widget>
   </widget>

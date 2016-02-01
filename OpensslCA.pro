@@ -18,7 +18,6 @@ SOURCES += main.cpp\
     verify.cpp \
     detail.cpp \
     creatcrt.cpp \
-    cacrl.cpp \
     revoked.cpp
 
 HEADERS  += mainwindow.h

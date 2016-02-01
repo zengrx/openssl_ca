@@ -11,6 +11,10 @@ MainWindow::MainWindow(QWidget *parent) :
     bits=512;
     ui->setupUi(this);
     setFixedSize(722,481);
+    QValidator *validator=new QIntValidator(0,99999999,this);
+    ui->lineEdit_9->setValidator(validator);
+    ui->lineEdit_9->setPlaceholderText("撤销证书的序列号");
+    ui->lineEdit_10->setPlaceholderText("证书请求文件名");
 }
 
 MainWindow::~MainWindow()
@@ -231,7 +235,7 @@ void MainWindow::on_pushButton_3_clicked()
         b=NULL;
     }
     verify.pkey=pkey;
-    if(Crl()>0)
+    if(CreateCrl()>0)
     {
         QMessageBox::information(NULL,"Sucess","Create CRL Sucess!\n");
         ui->textEdit->append(getTime() + "Create CRL sucessed!\n");
@@ -248,16 +252,17 @@ void MainWindow::on_pushButton_3_clicked()
 //撤销证书
 void MainWindow::on_pushButton_4_clicked()
 {
-    if(Revoked_Load_Cer()<=0)
+    if(Revoked_Load()<=0)
     {
-        QMessageBox::information(this,"Error","Revoked_Load_Cer failed","确定");
+        QMessageBox::warning(this,"警告","缺少程序依赖文件","确定");
         return;
     }
     QString strtmp=ui->lineEdit_9->text();
-    verify.ser=strtmp;
-    if(strtmp==NULL)
-        QMessageBox::warning(this,"警告","请输入证书序列号！","确定");
+    if(strtmp==NULL||strtmp=="0")
+        QMessageBox::warning(this,"警告","请输入有效的证书序列号！","确定");
     else
+    {
+        verify.ser=strtmp;
         if(revokedCert())
         {
             QMessageBox::information(this,"提示","撤销成功！","确定");
@@ -265,6 +270,7 @@ void MainWindow::on_pushButton_4_clicked()
         }
         else
             QMessageBox::information(this,"提示","撤销失败！","确定");
+    }
 }
 
 //选择证书请求文件

@@ -244,11 +244,25 @@ bool MainWindow::CheckCertWithCrl()
     bool bf=true;
     for(int i=0;i<num;i++)
     {
-        rc=sk_X509_REVOKED_pop(revoked);
+        rc=sk_X509_REVOKED_value(revoked,i);
         if(ASN1_INTEGER_cmp(serial,rc->serialNumber)==0)
             bf=false;
     }
-    EVP_cleanup();
+    return bf;
+}
+bool MainWindow::CheckSerialWithCrl(ASN1_INTEGER   *serial)
+{
+    X509_CRL *crl=verify.Crl;
+    STACK_OF(X509_REVOKED) *revoked=crl->crl->revoked;
+    X509_REVOKED *rc;
+    int num=sk_X509_REVOKED_num(revoked);
+    bool bf=true;
+    for(int i=0;i<num;i++)
+    {
+        rc=sk_X509_REVOKED_value(revoked,i);
+        if(ASN1_INTEGER_cmp(serial,rc->serialNumber)==0)
+            bf=false;
+    }
     return bf;
 }
 
