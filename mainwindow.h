@@ -72,6 +72,10 @@ private slots:
 
     void on_pushButton_6_clicked();
 
+    void on_listWidget_currentRowChanged(int currentRow);
+
+    void on_pushButton_9_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -95,6 +99,7 @@ private:
     BIO *b;
     STACK_OF(X509_EXTENSION) *exts;
     StoreCer verify;
+    int indexPtr;
 
     //请求文件名，无后缀
     QString fname;
@@ -147,6 +152,9 @@ private:
 
     //chage ASN1_Time to time_t
     time_t ASN1_GetTimeT(ASN1_TIME* time);
+
+    //delete revoked serial
+    bool DeleteCRLItem();
 
     //显示证书详细信息
     void detail();

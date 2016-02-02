@@ -78,7 +78,6 @@ int MainWindow::Revoked_Load()
 {
     X509 *rootCert = NULL;          //根证书
     BIO *b;                         //接收文件等待格式化
-    X509_CRL *Crl = NULL;           //证书撤销链表
     EVP_PKEY *pkey=NULL;
 
     b=BIO_new_file("rootca1.crt","r");
@@ -258,4 +257,18 @@ time_t MainWindow::ASN1_GetTimeT(ASN1_TIME* time)
     t.tm_sec += (str[i++] - '0');
     /* Note: we did not adjust the time based on time zone information */
     return mktime(&t);
+}
+
+bool MainWindow::DeleteCRLItem()
+{
+    BIO *bp;
+    if(verify.Crl==NULL)
+        return false;
+    sk_X509_REVOKED_delete(verify.Crl->crl->revoked,indexPtr);
+    X509_CRL_sort(verify.Crl);// 排序
+    bp=BIO_new_file("CRL.crl","wb");
+    PEM_write_bio_X509_CRL(bp,verify.Crl);
+    Init_DisCRL();
+    BIO_free(bp);
+    return true;
 }

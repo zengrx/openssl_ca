@@ -14,7 +14,7 @@
 /// \return -1 --> ca cert empety
 /// \return -2 --> user cert empety
 /// \return -4 --> private key empty
-/// \return 1r --> ok
+/// \return 1 --> ok
 ///
 int MainWindow::Load_Cer()
 {

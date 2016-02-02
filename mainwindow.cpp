@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setFixedSize(722,481);
     QValidator *validator=new QIntValidator(0,99999999,this);
     ui->lineEdit_9->setValidator(validator);
-    ui->lineEdit_9->setPlaceholderText("撤销证书的序列号");
+    ui->lineEdit_9->setPlaceholderText("撤销的证书序列号");
     ui->lineEdit_10->setPlaceholderText("证书请求文件名");
 }
 
@@ -304,4 +304,17 @@ void MainWindow::on_pushButton_5_clicked()
 void MainWindow::on_pushButton_6_clicked()
 {
     Init_DisCRL();
+}
+
+void MainWindow::on_listWidget_currentRowChanged(int currentRow)
+{
+    indexPtr = currentRow-1;
+}
+
+void MainWindow::on_pushButton_9_clicked()
+{
+    if(DeleteCRLItem())
+        QMessageBox::information(this,"提示","移除成功！");
+    else
+        QMessageBox::information(this,"提示","移除失败！");
 }
