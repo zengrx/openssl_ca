@@ -9,17 +9,27 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     bits=512;
+    indexPtr=-1;
     ui->setupUi(this);
     setFixedSize(722,481);
     QValidator *validator=new QIntValidator(0,99999999,this);
     ui->lineEdit_9->setValidator(validator);
-    ui->lineEdit_9->setPlaceholderText("撤销的证书序列号");
+    ui->lineEdit_9->setPlaceholderText("需要吊销的证书序列号");
     ui->lineEdit_10->setPlaceholderText("证书请求文件名");
+    ui->pushButton_9->setDisabled(true);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    BIO_free(b);
+    X509_free(x509);
+    X509_free(verify.rootCert);
+    X509_free(verify.userCert1);
+    X509_CRL_free(verify.Crl);
+    EVP_PKEY_free(verify.pkey);
+    EVP_PKEY_free(pkey);
+    EVP_cleanup();
 }
 
 //证书请求文件按钮事件
@@ -78,7 +88,6 @@ void MainWindow::on_pushButton_7_clicked()
         }
         else
         {
-            //message += getTime()+"Load file faild!\n";
             ui->textEdit->append(getTime()+"Load file faild!\n");
             showMessage();
         }
@@ -98,38 +107,32 @@ void MainWindow::on_pushButton_8_clicked()
     {
         if(CheckCertWithRoot())
         {
-            //message += getTime() + "Verify with ca, ok ...\n";
             ui->textEdit->append(getTime()+"Verify with ca, ok ...\n");
         }
         else
         {
             ret_check=false;
             QMessageBox::warning(this,"警告","不受根证书信任的证书！","确定");
-            //message+= noTime()+ "Verify with ca, false ...\n";
             ui->textEdit->append(getTime()+"Verify with ca, false ...\n");
         }
         if(CheckCertTime())
         {
-            //message+= noTime() + "Verify certificate life time, ok ...\n";
             ui->textEdit->append(getTime()+"Verify certificate life time, ok ...\n");
         }
         else
         {
             ret_check=false;
             QMessageBox::warning(this,"警告","证书过期！","确定");
-            //message+= noTime() + "Verify certificate life time, false ...\n";
             ui->textEdit->append(getTime()+"Verify certificate life time, false ...\n");
         }
         if(CheckCertWithCrl())
         {
-            //message+= noTime() + "Verify certificate with CRL, ok ...\n";
             ui->textEdit->append(getTime()+"Verify certificate with CRL, ok ...\n");
         }
         else
         {
             ret_check=false;
             QMessageBox::warning(this,"警告","证书已经被撤销！","确定");
-            //message+= noTime() + "Verify certificate with CRL, false ...\n";
             ui->textEdit->append(getTime()+"Verify certificate with CRL, false ...\n");
         }
         if(ret_check)
@@ -265,11 +268,11 @@ void MainWindow::on_pushButton_4_clicked()
         verify.ser=strtmp;
         if(revokedCert())
         {
-            QMessageBox::information(this,"提示","撤销成功！","确定");
+            QMessageBox::information(this,"提示","证书吊销成功！","确定");
             Init_DisCRL();
         }
         else
-            QMessageBox::information(this,"提示","撤销失败！","确定");
+            QMessageBox::information(this,"提示","证书吊销失败！","确定");
     }
 }
 
@@ -310,12 +313,14 @@ void MainWindow::on_pushButton_6_clicked()
 void MainWindow::on_listWidget_currentRowChanged(int currentRow)
 {
     indexPtr = currentRow-1;
+    ui->pushButton_9->setDisabled(false);
 }
 
 void MainWindow::on_pushButton_9_clicked()
 {
     if(DeleteCRLItem())
-        QMessageBox::information(this,"提示","移除成功！");
+        QMessageBox::information(this,"提示","恢复证书成功！");
     else
-        QMessageBox::information(this,"提示","移除失败！");
+        QMessageBox::information(this,"提示","恢复失败,请选择需要恢复的证书！");
+    ui->pushButton_9->setDisabled(true);
 }

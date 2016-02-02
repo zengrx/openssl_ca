@@ -146,7 +146,6 @@ QString MainWindow::GetCertSubjectString(certInfo *info)
         {
             objbuf = OBJ_nid2sn(fn_nid);
             strcpy(objtmp,objbuf);
-            //objbuf = OBJ_nid2ln(fn_nid);
         }
         BIO *mem = BIO_new(BIO_s_mem());
         BIO_set_close(mem, BIO_CLOSE);

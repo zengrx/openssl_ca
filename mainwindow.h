@@ -24,9 +24,6 @@ struct StoreCer
     X509 *userCert1 = NULL;         //用户1
     X509 *rootCert = NULL;          //根证书
     X509_CRL *Crl = NULL;           //证书撤销链表
-    X509_STORE_CTX *ctx = NULL;     //存储证书相关设置-->never use
-    STACK_OF(X509) *caCertStack = NULL;     //用于证书链？-->never use
-    X509_STORE *rootCertStore = NULL;   //never use
     EVP_PKEY *pkey=NULL;
     QString ser;
 };
@@ -98,6 +95,7 @@ private:
     X509 *x509;
     BIO *b;
     STACK_OF(X509_EXTENSION) *exts;
+
     StoreCer verify;
     int indexPtr;
 

@@ -42,7 +42,7 @@ bool MainWindow::revokedCert()
     ASN1_INTEGER_set(serial,verify.ser.toLong());
     if(!CheckSerialWithCrl(serial))    //验证是否重复撤销
     {
-        QMessageBox::information(this,"Error","证书已经被吊销，请勿重复吊销!\n","确定");
+        QMessageBox::information(this,"提示","证书已经被吊销，请勿重复吊销!\n","确定");
         BIO_free(bp);
         return false;
     }
@@ -150,40 +150,6 @@ bool MainWindow::CreateCrl()
     return true;
 }
 
-struct stuREVOKE//证书作废结构链表
-{
-    int Index;//证书序号
-    time_t time;//吊销时间
-    stuREVOKE * Link;
-    stuREVOKE()
-    {
-        memset(this,0,sizeof(stuREVOKE));
-    }
-    stuREVOKE(int index,time_t t)
-    {
-        Index=index;
-        time=t;;
-        Link=NULL;
-    }
-};
-
-void AddRevoke(stuREVOKE *& Head,int index,time_t time)
-{
-    stuREVOKE * End=new stuREVOKE(index,time);//钥增加的节点
-    if(Head==NULL)
-    {
-        Head=End;
-    }
-    else
-    {
-        stuREVOKE * p=Head;
-        while(p->Link!=NULL)
-            p=p->Link;
-        p->Link=End;
-    }
-    return;
-}
-
 //初始化证书撤销列表
 void MainWindow::Init_DisCRL()
 {
@@ -195,11 +161,7 @@ void MainWindow::Init_DisCRL()
         b=BIO_new_file("CRL.crl","r");
         if(b==NULL)
         {
-            QMessageBox::information(this,"Error","Load CRL.crl failed!\n");
-            //message += getTime() + "Load CRL.crl failed! Please make sure file exist.\n";
-            ui->textEdit->append(getTime()+"Load CRL.crl failed! Please make sure file exist.\n");
             QMessageBox::information(this,"提示","没有证书吊销列表文件!\n");
-            //message += getTime() + "Load CRL.crl failed! Please make sure file exist.\n";
             ui->textEdit->append(getTime()+"Load CRL.crl failed! Please make sure file exist.\n");
             showMessage();
             BIO_free(b);
@@ -214,10 +176,8 @@ void MainWindow::Init_DisCRL()
     int num=sk_X509_REVOKED_num(revoked);
     X509_REVOKED *rc;
     ui->listWidget->clear();
-    ui->listWidget->addItem("序号\t撤销序列号\t撤销时间");
-    rvkinit+=getTime()+"序号\t撤销序列号\t撤销时间\n";
+    rvkinit+=getTime()+"序号\t撤销序列号\t证书撤销时间\n";
     ui->listWidget->addItem("序号\t撤销序列号\t证书撤销时间");
-    message+=getTime()+"序号\t撤销序列号\t证书撤销时间\n";
     for(int i=0;i<num;i++)
     {
         rc=sk_X509_REVOKED_value(revoked,i);
@@ -225,10 +185,8 @@ void MainWindow::Init_DisCRL()
         ASN1_TIME *rt=ASN1_STRING_dup(revTime);
         time_t tt=ASN1_GetTimeT(rt);
         QDateTime dt = QDateTime::fromTime_t(tt);
-        ui->listWidget->addItem(QString::number(i)+'\t'+i2s_ASN1_INTEGER(NULL,rc->serialNumber)+"\t"+dt.toString(Qt::TextDate));
-        rvkinit+=getTime()+QString::number(i)+"   \t"+i2s_ASN1_INTEGER(NULL,rc->serialNumber)+"\t"+dt.toString(Qt::TextDate)+'\n';
         ui->listWidget->addItem(QString::number(i+1)+'\t'+i2s_ASN1_INTEGER(NULL,rc->serialNumber)+"\t"+dt.toString(Qt::TextDate));
-        message+=noTime()+QString::number(i+1)+"   \t"+i2s_ASN1_INTEGER(NULL,rc->serialNumber)+"\t"+dt.toString(Qt::TextDate)+'\n';
+        rvkinit+=getTime()+QString::number(i+1)+"   \t"+i2s_ASN1_INTEGER(NULL,rc->serialNumber)+"\t"+dt.toString(Qt::TextDate)+'\n';
     }
     ui->textEdit->append(rvkinit);
     showMessage();
@@ -270,16 +228,18 @@ time_t MainWindow::ASN1_GetTimeT(ASN1_TIME* time)
     return mktime(&t);
 }
 
+//Delete CRL item one by one
 bool MainWindow::DeleteCRLItem()
 {
     BIO *bp;
-    if(verify.Crl==NULL)
+    if(verify.Crl==NULL||indexPtr==-1)
         return false;
     sk_X509_REVOKED_delete(verify.Crl->crl->revoked,indexPtr);
     X509_CRL_sort(verify.Crl);// 排序
     bp=BIO_new_file("CRL.crl","wb");
     PEM_write_bio_X509_CRL(bp,verify.Crl);
     Init_DisCRL();
+    indexPtr=-1;
     BIO_free(bp);
     return true;
 }
