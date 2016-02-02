@@ -187,14 +187,20 @@ void AddRevoke(stuREVOKE *& Head,int index,time_t time)
 //初始化证书撤销列表
 void MainWindow::Init_DisCRL()
 {
+    //存储初始化函数中消息
+    QString rvkinit;
     BIO *b;                         //接收CRL等待格式化
     if(verify.Crl==NULL)
     {
         b=BIO_new_file("CRL.crl","r");
         if(b==NULL)
         {
+            QMessageBox::information(this,"Error","Load CRL.crl failed!\n");
+            //message += getTime() + "Load CRL.crl failed! Please make sure file exist.\n";
+            ui->textEdit->append(getTime()+"Load CRL.crl failed! Please make sure file exist.\n");
             QMessageBox::information(this,"提示","没有证书吊销列表文件!\n");
-            message += getTime() + "Load CRL.crl failed! Please make sure file exist.\n";
+            //message += getTime() + "Load CRL.crl failed! Please make sure file exist.\n";
+            ui->textEdit->append(getTime()+"Load CRL.crl failed! Please make sure file exist.\n");
             showMessage();
             BIO_free(b);
             return;
@@ -208,6 +214,8 @@ void MainWindow::Init_DisCRL()
     int num=sk_X509_REVOKED_num(revoked);
     X509_REVOKED *rc;
     ui->listWidget->clear();
+    ui->listWidget->addItem("序号\t撤销序列号\t撤销时间");
+    rvkinit+=getTime()+"序号\t撤销序列号\t撤销时间\n";
     ui->listWidget->addItem("序号\t撤销序列号\t证书撤销时间");
     message+=getTime()+"序号\t撤销序列号\t证书撤销时间\n";
     for(int i=0;i<num;i++)
@@ -217,9 +225,12 @@ void MainWindow::Init_DisCRL()
         ASN1_TIME *rt=ASN1_STRING_dup(revTime);
         time_t tt=ASN1_GetTimeT(rt);
         QDateTime dt = QDateTime::fromTime_t(tt);
+        ui->listWidget->addItem(QString::number(i)+'\t'+i2s_ASN1_INTEGER(NULL,rc->serialNumber)+"\t"+dt.toString(Qt::TextDate));
+        rvkinit+=getTime()+QString::number(i)+"   \t"+i2s_ASN1_INTEGER(NULL,rc->serialNumber)+"\t"+dt.toString(Qt::TextDate)+'\n';
         ui->listWidget->addItem(QString::number(i+1)+'\t'+i2s_ASN1_INTEGER(NULL,rc->serialNumber)+"\t"+dt.toString(Qt::TextDate));
         message+=noTime()+QString::number(i+1)+"   \t"+i2s_ASN1_INTEGER(NULL,rc->serialNumber)+"\t"+dt.toString(Qt::TextDate)+'\n';
     }
+    ui->textEdit->append(rvkinit);
     showMessage();
     BIO_free(b);
 }
