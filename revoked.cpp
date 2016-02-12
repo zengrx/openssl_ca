@@ -4,6 +4,9 @@
 
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
+#include <fstream>
+#include <QFile>
+#include <QTextStream>
 
 ///
 /// \brief MainWindow::revokedCert
@@ -12,7 +15,7 @@
 ///
 bool MainWindow::revokedCert()
 {
-    BIO  *bp;
+    BIO  *bpint=NULL;
     if(Revoked_Load()<0)
         QMessageBox::warning(this,"警告","缺少程序必须文件!\n","确定");
     time_t t;
@@ -21,19 +24,19 @@ bool MainWindow::revokedCert()
     ASN1_INTEGER   *serial;
     if(verify.Crl==NULL)
     {
-        bp=BIO_new_file("CRL.crl","r");
-        if(bp==NULL)
+        bpint=BIO_new_file("CRL.crl","r");
+        if(bpint==NULL)
         {
             if(!CreateCrl())
             {
                 QMessageBox::information(this,"Error","Create CRL.crl failed!\n");
-                BIO_free(bp);
+                BIO_free(bpint);
                 return false;
             }
         }
         else
         {
-            verify.Crl=PEM_read_bio_X509_CRL(bp,NULL,NULL,NULL);
+            verify.Crl=PEM_read_bio_X509_CRL(bpint,NULL,NULL,NULL);
         }
     }
     /* 添加被撤销证书序列号*/
@@ -43,7 +46,7 @@ bool MainWindow::revokedCert()
     if(!CheckSerialWithCrl(serial))    //验证是否重复撤销
     {
         QMessageBox::information(this,"提示","证书已经被吊销，请勿重复吊销!\n","确定");
-        BIO_free(bp);
+        BIO_free(bpint);
         return false;
     }
     if(X509_REVOKED_set_serialNumber(revoked,serial))
@@ -56,9 +59,9 @@ bool MainWindow::revokedCert()
         if(X509_CRL_add0_revoked(verify.Crl,revoked))
         {
             X509_CRL_sort(verify.Crl);// 排序
-            bp=BIO_new_file("CRL.crl","wb");
-            PEM_write_bio_X509_CRL(bp,verify.Crl);
-            BIO_free(bp);
+            bpint=BIO_new_file("CRL.crl","wb");
+            PEM_write_bio_X509_CRL(bpint,verify.Crl);
+            BIO_free(bpint);
             return true;
         }
         else
@@ -154,29 +157,29 @@ bool MainWindow::CreateCrl()
 void MainWindow::Init_DisCRL()
 {
     //存储初始化函数中消息
-    QString rvkinit;
-    BIO *b;                         //接收CRL等待格式化
+//    QString rvkinit;
+    BIO *biof=NULL;                         //接收CRL等待格式化
     if(verify.Crl==NULL)
     {
-        b=BIO_new_file("CRL.crl","r");
-        if(b==NULL)
+        biof=BIO_new_file("CRL.crl","r");
+        if(biof==NULL)
         {
             QMessageBox::information(this,"提示","没有证书吊销列表文件!\n");
             ui->textEdit->append(getTime()+"Load CRL.crl failed! Please make sure file exist.\n");
-            showMessage();
-            BIO_free(b);
+//            showMessage();
+            BIO_free(biof);
             return;
         }
         else
         {
-            verify.Crl=PEM_read_bio_X509_CRL(b,NULL,NULL,NULL);
+            verify.Crl=PEM_read_bio_X509_CRL(biof,NULL,NULL,NULL);
         }
     }
     STACK_OF(X509_REVOKED) *revoked=verify.Crl->crl->revoked;
     int num=sk_X509_REVOKED_num(revoked);
-    X509_REVOKED *rc;
+    X509_REVOKED *rc=NULL;
     ui->listWidget->clear();
-    rvkinit+=getTime()+"序号\t撤销序列号\t证书撤销时间\n";
+//    rvkinit+=getTime()+"序号\t撤销序列号\t证书撤销时间\n";
     ui->listWidget->addItem("序号\t撤销序列号\t证书撤销时间");
     for(int i=0;i<num;i++)
     {
@@ -186,11 +189,11 @@ void MainWindow::Init_DisCRL()
         time_t tt=ASN1_GetTimeT(rt);
         QDateTime dt = QDateTime::fromTime_t(tt);
         ui->listWidget->addItem(QString::number(i+1)+'\t'+i2s_ASN1_INTEGER(NULL,rc->serialNumber)+"\t"+dt.toString(Qt::TextDate));
-        rvkinit+=getTime()+QString::number(i+1)+"   \t"+i2s_ASN1_INTEGER(NULL,rc->serialNumber)+"\t"+dt.toString(Qt::TextDate)+'\n';
+//        rvkinit+=getTime()+QString::number(i+1)+"   \t"+i2s_ASN1_INTEGER(NULL,rc->serialNumber)+"\t"+dt.toString(Qt::TextDate)+'\n';
     }
-    ui->textEdit->append(rvkinit);
-    showMessage();
-    BIO_free(b);
+//    ui->textEdit->append(rvkinit);
+//    showMessage();
+    BIO_free(biof);
 }
 
 //change ASN1_Time to time_t
@@ -231,15 +234,93 @@ time_t MainWindow::ASN1_GetTimeT(ASN1_TIME* time)
 //Delete CRL item one by one
 bool MainWindow::DeleteCRLItem()
 {
-    BIO *bp;
-    if(verify.Crl==NULL||indexPtr==-1)
+    int iptr=indexPtr;//Bug maybe occurs here,indexPtr will begin a big num
+    QString CRLserial;
+    queue.clear();
+    LoadSignFile(&queue);
+    STACK_OF(X509_REVOKED) *revoked=verify.Crl->crl->revoked;
+    X509_REVOKED *rc=sk_X509_REVOKED_value(revoked,iptr);
+    CRLserial = i2s_ASN1_INTEGER(NULL,rc->serialNumber);
+    for(int i=0;i<queue.count();i++)
+    {
+        QString serialInfo=queue.at(i);
+        if(CRLserial.toInt()==serialInfo.left(8).toInt())
+        {
+            if(serialInfo.right(4)=="ture")
+            {
+                serialInfo=serialInfo.left(serialInfo.length()-4)+"false";
+            }
+            else if(serialInfo.right(5)=="false")
+            {
+                break;
+            }
+            else
+            {
+                serialInfo.append("\tfalse");
+            }
+            queue.replace(i,serialInfo);
+            Mem2SignList(&queue);
+            queue.clear();
+            LoadSignFile(&queue);
+            break;
+        }
+    }
+
+    BIO *bp=NULL;
+    if(verify.Crl==NULL||indexPtr<0)
         return false;
     sk_X509_REVOKED_delete(verify.Crl->crl->revoked,indexPtr);
     X509_CRL_sort(verify.Crl);// 排序
     bp=BIO_new_file("CRL.crl","wb");
     PEM_write_bio_X509_CRL(bp,verify.Crl);
     Init_DisCRL();
-    indexPtr=-1;
     BIO_free(bp);
+    indexPtr=-1;
+    return true;
+}
+
+//Load sign.txt file
+bool MainWindow::LoadSignFile(QList<QString>* queue)
+{
+    ui->listWidget_2->clear();
+    queue->clear();
+    QFile sign("signlist.txt");
+    if (!sign.open(QIODevice::ReadOnly | QIODevice::Text))
+            return false;
+    QTextStream in(&sign);
+    ui->listWidget_2->addItem("序列号\t发布时间\t\t是否吊销");
+    while (!in.atEnd())
+    {
+        QString line = in.readLine();
+        ui->listWidget_2->addItem(line);
+        queue->append(line);
+    }
+    return true;
+}
+
+//Write serial to signlist file
+bool MainWindow::Write2SignList(int serial)
+{
+    QFile signList("signlist.txt");
+    if (!signList.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
+            return false;
+    QTextStream out(&signList);
+    QDateTime date=QDateTime::currentDateTime();
+    out<<serial<<"\t"<<date.toString("yyyy-MM-dd hh:mm:ss")<<endl;
+    signList.close();
+    return true;
+}
+
+bool MainWindow::Mem2SignList(QList<QString> *queue)
+{
+    QFile signList("signlist.txt");
+    if (!signList.open(QIODevice::WriteOnly | QIODevice::Text))
+            return false;
+    QTextStream out(&signList);
+    for(int i=0;i<queue->size();i++)
+    {
+        out<<queue->at(i)<<endl;
+    }
+    signList.close();
     return true;
 }

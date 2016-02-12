@@ -13,6 +13,7 @@
 #include <openssl/pem.h>
 #include <openssl/bio.h>
 #include <QDateTime>
+#include <QQueue>
 
 namespace Ui {
 class MainWindow;
@@ -73,6 +74,16 @@ private slots:
 
     void on_pushButton_9_clicked();
 
+    void on_pushButton_10_clicked();
+
+    void on_listWidget_2_currentRowChanged(int currentRow);
+
+    void on_pushButton_11_clicked();
+
+    void on_pushButton_12_clicked();
+
+    void on_pushButton_13_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -98,6 +109,7 @@ private:
 
     StoreCer verify;
     int indexPtr;
+    QList<QString> queue;
 
     //请求文件名，无后缀
     QString fname;
@@ -153,6 +165,15 @@ private:
 
     //delete revoked serial
     bool DeleteCRLItem();
+
+    //Load sign.txt file,file to memory
+    bool LoadSignFile(QList<QString>* que);
+
+    //Write a serial to signlist file
+    bool Write2SignList(int serial);
+
+    //Write serial queue to file
+    bool Mem2SignList(QList<QString>* queue);
 
     //显示证书详细信息
     void detail();

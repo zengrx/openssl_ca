@@ -12,11 +12,20 @@ MainWindow::MainWindow(QWidget *parent) :
     indexPtr=-1;
     ui->setupUi(this);
     setFixedSize(722,481);
-    QValidator *validator=new QIntValidator(0,99999999,this);
+    QRegExp regx("[0-9]{1,9}$");
+    QValidator *validator=new QRegExpValidator(regx,ui->lineEdit_9);
     ui->lineEdit_9->setValidator(validator);
     ui->lineEdit_9->setPlaceholderText("需要吊销的证书序列号");
     ui->lineEdit_10->setPlaceholderText("证书请求文件名");
     ui->pushButton_9->setDisabled(true);
+    ui->pushButton_11->setDisabled(true);
+    ui->pushButton_3->setVisible(false);
+    ui->pushButton_6->setVisible(false);
+    ui->pushButton_10->setVisible(false);
+    ui->pushButton_12->setDisabled(false);
+    ui->pushButton_13->setDisabled(true);
+    Init_DisCRL();
+    LoadSignFile(&queue);
 }
 
 MainWindow::~MainWindow()
@@ -139,7 +148,6 @@ void MainWindow::on_pushButton_8_clicked()
             QMessageBox::information(this,"提示","证书通过验证","确定");
     }
     showMessage();
-    ui->textEdit->append("finished (●'◡'●) ...\n");
 }
 
 // (～￣▽￣)→))*￣▽￣*)o主要用来签名
@@ -170,6 +178,13 @@ void MainWindow::on_pushButton_2_clicked()
 
     if(CreateCertFromRequestFile(serial,day,name1,name2,name3,3))
     {
+        //+++++++++++++++++++++++++++++++++++++++++++++++
+        //append by Qool in order to write serial to file
+        if(!(Write2SignList(serial)))
+            msgout = getTime() + "SignList failed\n";
+        queue.clear();
+        LoadSignFile(&queue);
+        //+++++++++++++++++++++++++++++++++++++++++++++++
         ofstream outfile;
         outfile.open("sign.txt");
         serial += 1;
@@ -270,6 +285,32 @@ void MainWindow::on_pushButton_4_clicked()
         {
             QMessageBox::information(this,"提示","证书吊销成功！","确定");
             Init_DisCRL();
+            queue.clear();
+            LoadSignFile(&queue);
+            for(int i=0;i<queue.count();i++)
+            {
+                QString serialInfo=queue.at(i);
+                if(strtmp.toInt()==serialInfo.left(8).toInt())
+                {
+                    if(serialInfo.right(4)=="ture")
+                    {
+                        break;
+                    }
+                    else if(serialInfo.right(5)=="false")
+                    {
+                        serialInfo=serialInfo.left(serialInfo.length()-5)+"ture";
+                    }
+                    else
+                    {
+                        serialInfo.append("\tture");
+                    }
+                    queue.replace(i,serialInfo);
+                    Mem2SignList(&queue);
+                    queue.clear();
+                    LoadSignFile(&queue);
+                    break;
+                }
+            }
         }
         else
             QMessageBox::information(this,"提示","证书吊销失败！","确定");
@@ -310,12 +351,14 @@ void MainWindow::on_pushButton_6_clicked()
     Init_DisCRL();
 }
 
+//Select serial num by list row change
 void MainWindow::on_listWidget_currentRowChanged(int currentRow)
 {
     indexPtr = currentRow-1;
     ui->pushButton_9->setDisabled(false);
 }
 
+//Undo revoked
 void MainWindow::on_pushButton_9_clicked()
 {
     if(DeleteCRLItem())
@@ -323,4 +366,66 @@ void MainWindow::on_pushButton_9_clicked()
     else
         QMessageBox::information(this,"提示","恢复失败,请选择需要恢复的证书！");
     ui->pushButton_9->setDisabled(true);
+}
+
+void MainWindow::on_pushButton_10_clicked()
+{
+    LoadSignFile(&queue);
+}
+
+void MainWindow::on_listWidget_2_currentRowChanged(int currentRow)
+{
+    indexPtr = currentRow-1;
+    ui->pushButton_11->setDisabled(false);
+}
+
+void MainWindow::on_pushButton_11_clicked()
+{
+    QString serialInfo = queue.at(indexPtr);
+    verify.ser=serialInfo.left(8);
+    if(revokedCert())
+    {
+        QMessageBox::information(this,"提示","证书吊销成功！","确定");
+        Init_DisCRL();
+        if(serialInfo.right(4)=="ture")
+        {
+            verify.ser=-1;
+            ui->pushButton_11->setDisabled(true);
+            return;
+        }
+        else if(serialInfo.right(5)=="false")
+        {
+            serialInfo=serialInfo.left(serialInfo.length()-5)+"ture";
+        }
+        else
+        {
+            serialInfo.append("\tture");
+        }
+        queue.replace(indexPtr,serialInfo);
+        Mem2SignList(&queue);
+        queue.clear();
+        LoadSignFile(&queue);
+    }
+    else
+        QMessageBox::information(this,"提示","证书吊销失败！","确定");
+    verify.ser=-1;
+    ui->pushButton_11->setDisabled(true);
+}
+
+void MainWindow::on_pushButton_12_clicked()
+{
+        ui->pushButton_3->setVisible(true);
+        ui->pushButton_6->setVisible(true);
+        ui->pushButton_10->setVisible(true);
+        ui->pushButton_12->setDisabled(true);
+        ui->pushButton_13->setDisabled(false);
+}
+
+void MainWindow::on_pushButton_13_clicked()
+{
+    ui->pushButton_3->setVisible(false);
+    ui->pushButton_6->setVisible(false);
+    ui->pushButton_10->setVisible(false);
+    ui->pushButton_12->setDisabled(false);
+    ui->pushButton_13->setDisabled(true);
 }
