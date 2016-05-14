@@ -18,16 +18,21 @@ SOURCES += main.cpp\
     verify.cpp \
     detail.cpp \
     creatcrt.cpp \
-    revoked.cpp
+    revoked.cpp \
+    iojson.cpp
 
 HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
 
-INCLUDEPATH +=..\include
+INCLUDEPATH +=G:\Git\GitOSC\include
+LIBS+= -LG:\Git\GitOSC\lib32 -llibeay32
+LIBS+= -LG:\Git\GitOSC\lib32 -lssleay32
 
-LIBS+= -L..\lib32 -llibeay32
-LIBS+= -L..\lib32 -lssleay32
+#INCLUDEPATH +=..\include
+
+#LIBS+= -L..\lib32 -llibeay32
+#LIBS+= -L..\lib32 -lssleay32
 
 DISTFILES += \
     ReadMe

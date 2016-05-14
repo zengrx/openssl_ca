@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 #include <fstream>
 
+#include <QJsonArray>
+
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -12,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     indexPtr=-1;
     ui->setupUi(this);
     setFixedSize(722,481);
-    QRegExp regx("[0-9]{1,9}$");
+    QRegExp regx("[0-9]{10}$");
     QValidator *validator=new QRegExpValidator(regx,ui->lineEdit_9);
     ui->lineEdit_9->setValidator(validator);
     ui->lineEdit_9->setPlaceholderText("需要吊销的证书序列号");
@@ -25,7 +27,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushButton_12->setDisabled(false);
     ui->pushButton_13->setDisabled(true);
     Init_DisCRL();
-    LoadSignFile(&queue);
+    UpdataListWidget2();
+//    LoadSignFile(&queue);
 }
 
 MainWindow::~MainWindow()
@@ -180,10 +183,10 @@ void MainWindow::on_pushButton_2_clicked()
     {
         //+++++++++++++++++++++++++++++++++++++++++++++++
         //append by Qool in order to write serial to file
-        if(!(Write2SignList(serial)))
-            msgout = getTime() + "SignList failed\n";
-        queue.clear();
-        LoadSignFile(&queue);
+        if(WriteSerial2Json(serial))
+            UpdataListWidget2();
+        else
+            qWarning("Write json failed.");
         //+++++++++++++++++++++++++++++++++++++++++++++++
         ofstream outfile;
         outfile.open("sign.txt");
@@ -284,33 +287,21 @@ void MainWindow::on_pushButton_4_clicked()
         if(revokedCert())
         {
             QMessageBox::information(this,"提示","证书吊销成功！","确定");
-            Init_DisCRL();
+            DisCRL();
             queue.clear();
-            LoadSignFile(&queue);
-            for(int i=0;i<queue.count();i++)
+            ReadJson(signlistjson);
+            if(signlistjson.isEmpty())
             {
-                QString serialInfo=queue.at(i);
-                if(strtmp.toInt()==serialInfo.left(8).toInt())
-                {
-                    if(serialInfo.right(4)=="ture")
-                    {
-                        break;
-                    }
-                    else if(serialInfo.right(5)=="false")
-                    {
-                        serialInfo=serialInfo.left(serialInfo.length()-5)+"ture";
-                    }
-                    else
-                    {
-                        serialInfo.append("\tture");
-                    }
-                    queue.replace(i,serialInfo);
-                    Mem2SignList(&queue);
-                    queue.clear();
-                    LoadSignFile(&queue);
-                    break;
-                }
+                qWarning("Error: json empty.");
+                return;
             }
+            QJsonArray array = signlistjson["signlist"].toArray();
+            QJsonObject JsonSerial = array[strtmp.toInt()].toObject();
+            JsonSerial["stats"]=true;
+            array[strtmp.toInt()]=JsonSerial;
+            signlistjson["signlist"]=array;
+            SaveJson(signlistjson);
+            UpdataListWidget2();
         }
         else
             QMessageBox::information(this,"提示","证书吊销失败！","确定");
@@ -348,7 +339,7 @@ void MainWindow::on_pushButton_5_clicked()
 //显示撤销的证书列表
 void MainWindow::on_pushButton_6_clicked()
 {
-    Init_DisCRL();
+    DisCRL();
 }
 
 //Select serial num by list row change
@@ -368,11 +359,6 @@ void MainWindow::on_pushButton_9_clicked()
     ui->pushButton_9->setDisabled(true);
 }
 
-void MainWindow::on_pushButton_10_clicked()
-{
-    LoadSignFile(&queue);
-}
-
 void MainWindow::on_listWidget_2_currentRowChanged(int currentRow)
 {
     indexPtr = currentRow-1;
@@ -381,30 +367,29 @@ void MainWindow::on_listWidget_2_currentRowChanged(int currentRow)
 
 void MainWindow::on_pushButton_11_clicked()
 {
-    QString serialInfo = queue.at(indexPtr);
-    verify.ser=serialInfo.left(8);
+    ReadJson(signlistjson);
+    if(signlistjson.isEmpty())
+    {
+        qWarning("Error: json empty.");
+        return;
+    }
+    QJsonArray ArrayJson = signlistjson["signlist"].toArray();
+    QJsonObject objson = ArrayJson[indexPtr].toObject();
+    verify.ser = QString::number(objson["serialNumber"].toInt());
+    if(verify.ser.isEmpty()||verify.ser.isNull())
+    {
+        QMessageBox::information(this,"提示","证书序列号为空！","确定");
+        return;
+    }
     if(revokedCert())
     {
+        objson["stats"]=true;
+        ArrayJson[indexPtr]=objson;
+        signlistjson["signlist"]=ArrayJson;
+        SaveJson(signlistjson);
+        UpdataListWidget2();
+        DisCRL();
         QMessageBox::information(this,"提示","证书吊销成功！","确定");
-        Init_DisCRL();
-        if(serialInfo.right(4)=="ture")
-        {
-            verify.ser=-1;
-            ui->pushButton_11->setDisabled(true);
-            return;
-        }
-        else if(serialInfo.right(5)=="false")
-        {
-            serialInfo=serialInfo.left(serialInfo.length()-5)+"ture";
-        }
-        else
-        {
-            serialInfo.append("\tture");
-        }
-        queue.replace(indexPtr,serialInfo);
-        Mem2SignList(&queue);
-        queue.clear();
-        LoadSignFile(&queue);
     }
     else
         QMessageBox::information(this,"提示","证书吊销失败！","确定");

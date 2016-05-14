@@ -14,6 +14,7 @@
 #include <openssl/bio.h>
 #include <QDateTime>
 #include <QQueue>
+#include <QJsonObject>
 
 namespace Ui {
 class MainWindow;
@@ -74,8 +75,6 @@ private slots:
 
     void on_pushButton_9_clicked();
 
-    void on_pushButton_10_clicked();
-
     void on_listWidget_2_currentRowChanged(int currentRow);
 
     void on_pushButton_11_clicked();
@@ -110,6 +109,7 @@ private:
     StoreCer verify;
     int indexPtr;
     QList<QString> queue;
+    QJsonObject signlistjson;
 
     //请求文件名，无后缀
     QString fname;
@@ -134,6 +134,7 @@ private:
 
     //display revoked certificate list
     void Init_DisCRL();
+    void DisCRL();
 
     //display cert info
     QString GetCertSubjectString(certInfo *info);
@@ -174,6 +175,14 @@ private:
 
     //Write serial queue to file
     bool Mem2SignList(QList<QString>* queue);
+
+    //Read signlist.txt to json
+    bool ReadJson(QJsonObject &json);
+
+    //Save to json
+    bool SaveJson(QJsonObject &json);
+    bool WriteSerial2Json(const int &serial);
+    bool UpdataListWidget2();
 
     //显示证书详细信息
     void detail();
