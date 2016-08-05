@@ -1,0 +1,29 @@
+{
+    "signlist": [
+        {
+            "serialNumber": 5,
+            "stats": false,
+            "time": "2016-08-05 10:49:31"
+        },
+        {
+            "serialNumber": 6,
+            "stats": false,
+            "time": "2016-08-05 10:55:23"
+        },
+        {
+            "serialNumber": 7,
+            "stats": false,
+            "time": "2016-08-05 10:56:08"
+        },
+        {
+            "serialNumber": 8,
+            "stats": false,
+            "time": "2016-08-05 11:00:23"
+        },
+        {
+            "serialNumber": 9,
+            "stats": false,
+            "time": "2016-08-05 11:02:24"
+        }
+    ]
+}
