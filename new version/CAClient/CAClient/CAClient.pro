@@ -20,7 +20,9 @@ HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
 
-INCLUDEPATH +=E:\git\OpenSSLCA_program\include
+INCLUDEPATH +=E:\project\QTProject\OpenSSLCA\include
 
-LIBS+= -LE:\git\OpenSSLCA_program\lib32 -llibeay32
-LIBS+= -LE:\git\OpenSSLCA_program\lib32 -lssleay32
+LIBS+= -LE:\project\QTProject\OpenSSLCA\lib32 -llibeay32
+LIBS+= -LE:\project\QTProject\OpenSSLCA\lib32 -lssleay32
+
+RC_FILE = certificate.rc

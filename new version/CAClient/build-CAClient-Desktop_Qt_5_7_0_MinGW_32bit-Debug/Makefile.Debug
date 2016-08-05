@@ -14,16 +14,16 @@ CXX           = g++
 DEFINES       = -DUNICODE -DQT_QML_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_NEEDS_QMAIN
 CFLAGS        = -pipe -fno-keep-inline-dllexport -g -Wall -Wextra $(DEFINES)
 CXXFLAGS      = -pipe -fno-keep-inline-dllexport -g -std=gnu++11 -frtti -Wall -Wextra -fexceptions -mthreads $(DEFINES)
-INCPATH       = -I..\CAClient -I. -IE:\git\OpenSSLCA_program\include -ID:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\include -ID:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\include\QtWidgets -ID:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\include\QtGui -ID:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\include\QtANGLE -ID:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\include\QtNetwork -ID:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\include\QtCore -Idebug -I. -ID:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\mkspecs\win32-g++ 
+INCPATH       = -I..\CAClient -I. -I..\..\include -ID:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\include -ID:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\include\QtWidgets -ID:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\include\QtGui -ID:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\include\QtANGLE -ID:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\include\QtNetwork -ID:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\include\QtCore -Idebug -I. -ID:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\mkspecs\win32-g++ 
 LINKER      =        g++
 LFLAGS        =        -Wl,-subsystem,windows -mthreads
-LIBS        =        -lmingw32 -LD:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\lib D:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\lib\libqtmaind.a -LC:\utils\postgresql\pgsql\lib -LC:\utils\my_sql\my_sql\lib -lshell32 -LE:\git\OpenSSLCA_program\lib32 -llibeay32 -lssleay32 D:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\lib\libQt5Widgetsd.a D:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\lib\libQt5Guid.a D:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\lib\libQt5Networkd.a D:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\lib\libQt5Cored.a 
+LIBS        =        -lmingw32 -LD:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\lib D:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\lib\libqtmaind.a -LC:\utils\postgresql\pgsql\lib -LC:\utils\my_sql\my_sql\lib -lshell32 -LE:\project\QTProject\OpenSSLCA\lib32 -llibeay32 -lssleay32 D:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\lib\libQt5Widgetsd.a D:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\lib\libQt5Guid.a D:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\lib\libQt5Networkd.a D:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\lib\libQt5Cored.a debug\certificate_res.o 
 QMAKE         = D:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\bin\qmake.exe
 IDC           = idc
 IDL           = midl
 ZIP           = zip -r -9
 DEF_FILE      = 
-RES_FILE      = 
+RES_FILE      = debug\certificate_res.o
 COPY          = copy /y
 SED           = $(QMAKE) -install sed
 COPY_FILE     = copy /y
@@ -64,8 +64,11 @@ DESTDIR_TARGET = debug\CAClient.exe
 first: all
 all: Makefile.Debug  $(DESTDIR_TARGET)
 
-$(DESTDIR_TARGET): ui_mainwindow.h $(OBJECTS) 
+$(DESTDIR_TARGET): ui_mainwindow.h $(OBJECTS) debug/certificate_res.o
 	$(LINKER) $(LFLAGS) -o $(DESTDIR_TARGET) $(OBJECTS)  $(LIBS)
+
+debug/certificate_res.o: ../CAClient/certificate.rc
+	windres -i ..\CAClient\certificate.rc -o debug\certificate_res.o --include-dir=./../CAClient $(DEFINES)
 
 qmake: FORCE
 	@$(QMAKE) -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug" -o Makefile.Debug ..\CAClient\CAClient.pro
@@ -77,6 +80,7 @@ dist:
 
 clean: compiler_clean 
 	-$(DEL_FILE) debug\main.o debug\mainwindow.o debug\certreq.o debug\moc_mainwindow.o
+	-$(DEL_FILE) debug\certificate_res.o
 
 distclean: clean 
 	-$(DEL_FILE) .qmake.stash
@@ -204,38 +208,38 @@ debug/moc_mainwindow.cpp: D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtW
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtCore/QFile \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtCore/QDateTime \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtCore/qdatetime.h \
-		E:/git/OpenSSLCA_program/include/openssl/x509.h \
-		E:/git/OpenSSLCA_program/include/openssl/e_os2.h \
-		E:/git/OpenSSLCA_program/include/openssl/opensslconf.h \
-		E:/git/OpenSSLCA_program/include/openssl/symhacks.h \
-		E:/git/OpenSSLCA_program/include/openssl/buffer.h \
-		E:/git/OpenSSLCA_program/include/openssl/ossl_typ.h \
-		E:/git/OpenSSLCA_program/include/openssl/evp.h \
-		E:/git/OpenSSLCA_program/include/openssl/bio.h \
-		E:/git/OpenSSLCA_program/include/openssl/crypto.h \
-		E:/git/OpenSSLCA_program/include/openssl/stack.h \
-		E:/git/OpenSSLCA_program/include/openssl/safestack.h \
-		E:/git/OpenSSLCA_program/include/openssl/opensslv.h \
-		E:/git/OpenSSLCA_program/include/openssl/ebcdic.h \
-		E:/git/OpenSSLCA_program/include/openssl/objects.h \
-		E:/git/OpenSSLCA_program/include/openssl/obj_mac.h \
-		E:/git/OpenSSLCA_program/include/openssl/asn1.h \
-		E:/git/OpenSSLCA_program/include/openssl/bn.h \
-		E:/git/OpenSSLCA_program/include/openssl/ec.h \
-		E:/git/OpenSSLCA_program/include/openssl/ecdsa.h \
-		E:/git/OpenSSLCA_program/include/openssl/ecdh.h \
-		E:/git/OpenSSLCA_program/include/openssl/rsa.h \
-		E:/git/OpenSSLCA_program/include/openssl/dsa.h \
-		E:/git/OpenSSLCA_program/include/openssl/dh.h \
-		E:/git/OpenSSLCA_program/include/openssl/sha.h \
-		E:/git/OpenSSLCA_program/include/openssl/x509_vfy.h \
-		E:/git/OpenSSLCA_program/include/openssl/lhash.h \
-		E:/git/OpenSSLCA_program/include/openssl/pkcs7.h \
-		E:/git/OpenSSLCA_program/include/openssl/pem.h \
-		E:/git/OpenSSLCA_program/include/openssl/pem2.h \
+		../../include/openssl/x509.h \
+		../../include/openssl/e_os2.h \
+		../../include/openssl/opensslconf.h \
+		../../include/openssl/symhacks.h \
+		../../include/openssl/buffer.h \
+		../../include/openssl/ossl_typ.h \
+		../../include/openssl/evp.h \
+		../../include/openssl/bio.h \
+		../../include/openssl/crypto.h \
+		../../include/openssl/stack.h \
+		../../include/openssl/safestack.h \
+		../../include/openssl/opensslv.h \
+		../../include/openssl/ebcdic.h \
+		../../include/openssl/objects.h \
+		../../include/openssl/obj_mac.h \
+		../../include/openssl/asn1.h \
+		../../include/openssl/bn.h \
+		../../include/openssl/ec.h \
+		../../include/openssl/ecdsa.h \
+		../../include/openssl/ecdh.h \
+		../../include/openssl/rsa.h \
+		../../include/openssl/dsa.h \
+		../../include/openssl/dh.h \
+		../../include/openssl/sha.h \
+		../../include/openssl/x509_vfy.h \
+		../../include/openssl/lhash.h \
+		../../include/openssl/pkcs7.h \
+		../../include/openssl/pem.h \
+		../../include/openssl/pem2.h \
 		../CAClient/mainwindow.h \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/bin/moc.exe
-	D:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -ID:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/mkspecs/win32-g++ -IE:/project/QTProject/OpenSSLCA/CAClient/CAClient -IE:/git/OpenSSLCA_program/include -ID:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include -ID:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtWidgets -ID:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtGui -ID:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtANGLE -ID:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtNetwork -ID:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtCore -I. -ID:/Qt/qtcreator-4.0.3/mingw/Tools/mingw530_32/lib/gcc/i686-w64-mingw32/5.3.0/include -ID:/Qt/qtcreator-4.0.3/mingw/Tools/mingw530_32/lib/gcc/i686-w64-mingw32/5.3.0/include-fixed -ID:/Qt/qtcreator-4.0.3/mingw/Tools/mingw530_32/i686-w64-mingw32/include -ID:/Qt/qtcreator-4.0.3/mingw/Tools/mingw530_32/i686-w64-mingw32/include/c++ -ID:/Qt/qtcreator-4.0.3/mingw/Tools/mingw530_32/i686-w64-mingw32/include/c++/i686-w64-mingw32 -ID:/Qt/qtcreator-4.0.3/mingw/Tools/mingw530_32/i686-w64-mingw32/include/c++/backward ..\CAClient\mainwindow.h -o debug\moc_mainwindow.cpp
+	D:\Qt\qtcreator-4.0.3\mingw\5.7\mingw53_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -ID:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/mkspecs/win32-g++ -IE:/project/QTProject/OpenSSLCA/CAClient/CAClient -IE:/project/QTProject/OpenSSLCA/include -ID:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include -ID:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtWidgets -ID:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtGui -ID:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtANGLE -ID:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtNetwork -ID:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtCore -I. -ID:/Qt/qtcreator-4.0.3/mingw/Tools/mingw530_32/lib/gcc/i686-w64-mingw32/5.3.0/include -ID:/Qt/qtcreator-4.0.3/mingw/Tools/mingw530_32/lib/gcc/i686-w64-mingw32/5.3.0/include-fixed -ID:/Qt/qtcreator-4.0.3/mingw/Tools/mingw530_32/i686-w64-mingw32/include -ID:/Qt/qtcreator-4.0.3/mingw/Tools/mingw530_32/i686-w64-mingw32/include/c++ -ID:/Qt/qtcreator-4.0.3/mingw/Tools/mingw530_32/i686-w64-mingw32/include/c++/i686-w64-mingw32 -ID:/Qt/qtcreator-4.0.3/mingw/Tools/mingw530_32/i686-w64-mingw32/include/c++/backward ..\CAClient\mainwindow.h -o debug\moc_mainwindow.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -365,35 +369,35 @@ debug/main.o: ../CAClient/main.cpp ../CAClient/mainwindow.h \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtCore/QFile \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtCore/QDateTime \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtCore/qdatetime.h \
-		E:/git/OpenSSLCA_program/include/openssl/x509.h \
-		E:/git/OpenSSLCA_program/include/openssl/e_os2.h \
-		E:/git/OpenSSLCA_program/include/openssl/opensslconf.h \
-		E:/git/OpenSSLCA_program/include/openssl/symhacks.h \
-		E:/git/OpenSSLCA_program/include/openssl/buffer.h \
-		E:/git/OpenSSLCA_program/include/openssl/ossl_typ.h \
-		E:/git/OpenSSLCA_program/include/openssl/evp.h \
-		E:/git/OpenSSLCA_program/include/openssl/bio.h \
-		E:/git/OpenSSLCA_program/include/openssl/crypto.h \
-		E:/git/OpenSSLCA_program/include/openssl/stack.h \
-		E:/git/OpenSSLCA_program/include/openssl/safestack.h \
-		E:/git/OpenSSLCA_program/include/openssl/opensslv.h \
-		E:/git/OpenSSLCA_program/include/openssl/ebcdic.h \
-		E:/git/OpenSSLCA_program/include/openssl/objects.h \
-		E:/git/OpenSSLCA_program/include/openssl/obj_mac.h \
-		E:/git/OpenSSLCA_program/include/openssl/asn1.h \
-		E:/git/OpenSSLCA_program/include/openssl/bn.h \
-		E:/git/OpenSSLCA_program/include/openssl/ec.h \
-		E:/git/OpenSSLCA_program/include/openssl/ecdsa.h \
-		E:/git/OpenSSLCA_program/include/openssl/ecdh.h \
-		E:/git/OpenSSLCA_program/include/openssl/rsa.h \
-		E:/git/OpenSSLCA_program/include/openssl/dsa.h \
-		E:/git/OpenSSLCA_program/include/openssl/dh.h \
-		E:/git/OpenSSLCA_program/include/openssl/sha.h \
-		E:/git/OpenSSLCA_program/include/openssl/x509_vfy.h \
-		E:/git/OpenSSLCA_program/include/openssl/lhash.h \
-		E:/git/OpenSSLCA_program/include/openssl/pkcs7.h \
-		E:/git/OpenSSLCA_program/include/openssl/pem.h \
-		E:/git/OpenSSLCA_program/include/openssl/pem2.h \
+		../../include/openssl/x509.h \
+		../../include/openssl/e_os2.h \
+		../../include/openssl/opensslconf.h \
+		../../include/openssl/symhacks.h \
+		../../include/openssl/buffer.h \
+		../../include/openssl/ossl_typ.h \
+		../../include/openssl/evp.h \
+		../../include/openssl/bio.h \
+		../../include/openssl/crypto.h \
+		../../include/openssl/stack.h \
+		../../include/openssl/safestack.h \
+		../../include/openssl/opensslv.h \
+		../../include/openssl/ebcdic.h \
+		../../include/openssl/objects.h \
+		../../include/openssl/obj_mac.h \
+		../../include/openssl/asn1.h \
+		../../include/openssl/bn.h \
+		../../include/openssl/ec.h \
+		../../include/openssl/ecdsa.h \
+		../../include/openssl/ecdh.h \
+		../../include/openssl/rsa.h \
+		../../include/openssl/dsa.h \
+		../../include/openssl/dh.h \
+		../../include/openssl/sha.h \
+		../../include/openssl/x509_vfy.h \
+		../../include/openssl/lhash.h \
+		../../include/openssl/pkcs7.h \
+		../../include/openssl/pem.h \
+		../../include/openssl/pem2.h \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtWidgets/QApplication \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtWidgets/qapplication.h \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtCore/qcoreapplication.h \
@@ -510,35 +514,35 @@ debug/mainwindow.o: ../CAClient/mainwindow.cpp ../CAClient/mainwindow.h \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtCore/QFile \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtCore/QDateTime \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtCore/qdatetime.h \
-		E:/git/OpenSSLCA_program/include/openssl/x509.h \
-		E:/git/OpenSSLCA_program/include/openssl/e_os2.h \
-		E:/git/OpenSSLCA_program/include/openssl/opensslconf.h \
-		E:/git/OpenSSLCA_program/include/openssl/symhacks.h \
-		E:/git/OpenSSLCA_program/include/openssl/buffer.h \
-		E:/git/OpenSSLCA_program/include/openssl/ossl_typ.h \
-		E:/git/OpenSSLCA_program/include/openssl/evp.h \
-		E:/git/OpenSSLCA_program/include/openssl/bio.h \
-		E:/git/OpenSSLCA_program/include/openssl/crypto.h \
-		E:/git/OpenSSLCA_program/include/openssl/stack.h \
-		E:/git/OpenSSLCA_program/include/openssl/safestack.h \
-		E:/git/OpenSSLCA_program/include/openssl/opensslv.h \
-		E:/git/OpenSSLCA_program/include/openssl/ebcdic.h \
-		E:/git/OpenSSLCA_program/include/openssl/objects.h \
-		E:/git/OpenSSLCA_program/include/openssl/obj_mac.h \
-		E:/git/OpenSSLCA_program/include/openssl/asn1.h \
-		E:/git/OpenSSLCA_program/include/openssl/bn.h \
-		E:/git/OpenSSLCA_program/include/openssl/ec.h \
-		E:/git/OpenSSLCA_program/include/openssl/ecdsa.h \
-		E:/git/OpenSSLCA_program/include/openssl/ecdh.h \
-		E:/git/OpenSSLCA_program/include/openssl/rsa.h \
-		E:/git/OpenSSLCA_program/include/openssl/dsa.h \
-		E:/git/OpenSSLCA_program/include/openssl/dh.h \
-		E:/git/OpenSSLCA_program/include/openssl/sha.h \
-		E:/git/OpenSSLCA_program/include/openssl/x509_vfy.h \
-		E:/git/OpenSSLCA_program/include/openssl/lhash.h \
-		E:/git/OpenSSLCA_program/include/openssl/pkcs7.h \
-		E:/git/OpenSSLCA_program/include/openssl/pem.h \
-		E:/git/OpenSSLCA_program/include/openssl/pem2.h \
+		../../include/openssl/x509.h \
+		../../include/openssl/e_os2.h \
+		../../include/openssl/opensslconf.h \
+		../../include/openssl/symhacks.h \
+		../../include/openssl/buffer.h \
+		../../include/openssl/ossl_typ.h \
+		../../include/openssl/evp.h \
+		../../include/openssl/bio.h \
+		../../include/openssl/crypto.h \
+		../../include/openssl/stack.h \
+		../../include/openssl/safestack.h \
+		../../include/openssl/opensslv.h \
+		../../include/openssl/ebcdic.h \
+		../../include/openssl/objects.h \
+		../../include/openssl/obj_mac.h \
+		../../include/openssl/asn1.h \
+		../../include/openssl/bn.h \
+		../../include/openssl/ec.h \
+		../../include/openssl/ecdsa.h \
+		../../include/openssl/ecdh.h \
+		../../include/openssl/rsa.h \
+		../../include/openssl/dsa.h \
+		../../include/openssl/dh.h \
+		../../include/openssl/sha.h \
+		../../include/openssl/x509_vfy.h \
+		../../include/openssl/lhash.h \
+		../../include/openssl/pkcs7.h \
+		../../include/openssl/pem.h \
+		../../include/openssl/pem2.h \
 		ui_mainwindow.h \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtCore/QVariant \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtWidgets/QAction \
@@ -715,35 +719,35 @@ debug/certreq.o: ../CAClient/certreq.cpp ../CAClient/mainwindow.h \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtCore/QFile \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtCore/QDateTime \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtCore/qdatetime.h \
-		E:/git/OpenSSLCA_program/include/openssl/x509.h \
-		E:/git/OpenSSLCA_program/include/openssl/e_os2.h \
-		E:/git/OpenSSLCA_program/include/openssl/opensslconf.h \
-		E:/git/OpenSSLCA_program/include/openssl/symhacks.h \
-		E:/git/OpenSSLCA_program/include/openssl/buffer.h \
-		E:/git/OpenSSLCA_program/include/openssl/ossl_typ.h \
-		E:/git/OpenSSLCA_program/include/openssl/evp.h \
-		E:/git/OpenSSLCA_program/include/openssl/bio.h \
-		E:/git/OpenSSLCA_program/include/openssl/crypto.h \
-		E:/git/OpenSSLCA_program/include/openssl/stack.h \
-		E:/git/OpenSSLCA_program/include/openssl/safestack.h \
-		E:/git/OpenSSLCA_program/include/openssl/opensslv.h \
-		E:/git/OpenSSLCA_program/include/openssl/ebcdic.h \
-		E:/git/OpenSSLCA_program/include/openssl/objects.h \
-		E:/git/OpenSSLCA_program/include/openssl/obj_mac.h \
-		E:/git/OpenSSLCA_program/include/openssl/asn1.h \
-		E:/git/OpenSSLCA_program/include/openssl/bn.h \
-		E:/git/OpenSSLCA_program/include/openssl/ec.h \
-		E:/git/OpenSSLCA_program/include/openssl/ecdsa.h \
-		E:/git/OpenSSLCA_program/include/openssl/ecdh.h \
-		E:/git/OpenSSLCA_program/include/openssl/rsa.h \
-		E:/git/OpenSSLCA_program/include/openssl/dsa.h \
-		E:/git/OpenSSLCA_program/include/openssl/dh.h \
-		E:/git/OpenSSLCA_program/include/openssl/sha.h \
-		E:/git/OpenSSLCA_program/include/openssl/x509_vfy.h \
-		E:/git/OpenSSLCA_program/include/openssl/lhash.h \
-		E:/git/OpenSSLCA_program/include/openssl/pkcs7.h \
-		E:/git/OpenSSLCA_program/include/openssl/pem.h \
-		E:/git/OpenSSLCA_program/include/openssl/pem2.h \
+		../../include/openssl/x509.h \
+		../../include/openssl/e_os2.h \
+		../../include/openssl/opensslconf.h \
+		../../include/openssl/symhacks.h \
+		../../include/openssl/buffer.h \
+		../../include/openssl/ossl_typ.h \
+		../../include/openssl/evp.h \
+		../../include/openssl/bio.h \
+		../../include/openssl/crypto.h \
+		../../include/openssl/stack.h \
+		../../include/openssl/safestack.h \
+		../../include/openssl/opensslv.h \
+		../../include/openssl/ebcdic.h \
+		../../include/openssl/objects.h \
+		../../include/openssl/obj_mac.h \
+		../../include/openssl/asn1.h \
+		../../include/openssl/bn.h \
+		../../include/openssl/ec.h \
+		../../include/openssl/ecdsa.h \
+		../../include/openssl/ecdh.h \
+		../../include/openssl/rsa.h \
+		../../include/openssl/dsa.h \
+		../../include/openssl/dh.h \
+		../../include/openssl/sha.h \
+		../../include/openssl/x509_vfy.h \
+		../../include/openssl/lhash.h \
+		../../include/openssl/pkcs7.h \
+		../../include/openssl/pem.h \
+		../../include/openssl/pem2.h \
 		ui_mainwindow.h \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtCore/QVariant \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/include/QtWidgets/QAction \

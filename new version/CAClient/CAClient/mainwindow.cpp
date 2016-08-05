@@ -9,6 +9,15 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    //设置lineEdit正则
+    QRegExp regExpIP("((2[0-4]\\d|25[0-5]|[01]?\\d\\d?)\\.){3}(2[0-4]\\d|25[0-4]|[01]?\\d\\d?)");
+    QRegExp regExpPort("([0-9]{0,5})");
+    QRegExp regExpReq("[A-Za-z_0-9]+");
+    QRegExpValidator *pRegExpValidatorIp = new QRegExpValidator(regExpIP,this);
+    QRegExpValidator *pRegExpValidatorPort = new QRegExpValidator(regExpPort,this);
+    ui->lineEdit_9->setValidator(pRegExpValidatorIp);
+    ui->lineEdit_10->setValidator(pRegExpValidatorPort);
+
     /***********************初始化数据部分*************************/
     //文件传输部分
     loadSize = 4*1024;
@@ -45,8 +54,8 @@ MainWindow::~MainWindow()
 //选择文件函数
 void MainWindow::selectFile()
 {
-    //打开单个文件，默认目录为[...\OpenSSLCA\CAClient\reqfile]
-    fileName = QFileDialog::getOpenFileName(this,"select file",dir/*);//*/,"*.csr");
+    //打开单个文件，默认目录为[...\CAClient\reqfile],文件类型为.csr
+    fileName = QFileDialog::getOpenFileName(this,"select file",dir);//*/,"*.csr");
     if(!fileName.isEmpty())
     {
         ui->pushButton_3->setEnabled(true);
