@@ -182,6 +182,7 @@ Makefile: ../CAServer/CAServer.pro D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/mk
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/mkspecs/features/win32/qt_config.prf \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/mkspecs/win32-g++/qmake.conf \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/mkspecs/features/exclusive_builds.prf \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/mkspecs/features/default_pre.prf \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/mkspecs/features/win32/default_pre.prf \
@@ -207,6 +208,7 @@ Makefile: ../CAServer/CAServer.pro D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/mk
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/lib/qtmaind.prl \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/lib/Qt5Widgets.prl \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/lib/Qt5Gui.prl \
+		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/lib/Qt5Network.prl \
 		D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/lib/Qt5Core.prl
 	$(QMAKE) -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug" -o Makefile ..\CAServer\CAServer.pro
 D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/mkspecs/features/spec_pre.prf:
@@ -332,6 +334,7 @@ D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/mkspecs/features/qt_config.prf:
 D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/mkspecs/features/win32/qt_config.prf:
 D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/mkspecs/win32-g++/qmake.conf:
 D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/mkspecs/features/spec_post.prf:
+.qmake.stash:
 D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/mkspecs/features/exclusive_builds.prf:
 D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/mkspecs/features/default_pre.prf:
 D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/mkspecs/features/win32/default_pre.prf:
@@ -357,6 +360,7 @@ D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/mkspecs/features/lex.prf:
 D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/lib/qtmaind.prl:
 D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/lib/Qt5Widgets.prl:
 D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/lib/Qt5Gui.prl:
+D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/lib/Qt5Network.prl:
 D:/Qt/qtcreator-4.0.3/mingw/5.7/mingw53_32/lib/Qt5Core.prl:
 qmake: FORCE
 	@$(QMAKE) -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug" -o Makefile ..\CAServer\CAServer.pro
