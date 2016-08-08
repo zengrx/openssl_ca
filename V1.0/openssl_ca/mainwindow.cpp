@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    bits=512;
+    bits=1024;
     indexPtr=-1;
     ui->setupUi(this);
     setFixedSize(722,481);

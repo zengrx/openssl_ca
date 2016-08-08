@@ -13,7 +13,9 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QGridLayout>
+#include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
@@ -34,7 +36,8 @@ class Ui_MainWindow
 public:
     QWidget *centralWidget;
     QVBoxLayout *verticalLayout;
-    QLabel *label_12;
+    QGroupBox *groupBox_2;
+    QHBoxLayout *horizontalLayout_13;
     QGridLayout *gridLayout;
     QHBoxLayout *horizontalLayout_6;
     QSpacerItem *horizontalSpacer_4;
@@ -95,12 +98,19 @@ public:
     QSpacerItem *horizontalSpacer_31;
     QPushButton *pushButton;
     QSpacerItem *horizontalSpacer_32;
+    QHBoxLayout *horizontalLayout_17;
+    QSpacerItem *horizontalSpacer_37;
+    QLabel *label_12;
+    QComboBox *comboBox;
+    QSpacerItem *horizontalSpacer_38;
     QSpacerItem *verticalSpacer_7;
     QSpacerItem *verticalSpacer;
-    QLabel *label_11;
+    QGroupBox *groupBox;
+    QHBoxLayout *horizontalLayout_11;
     QTextBrowser *textBrowser;
     QSpacerItem *verticalSpacer_6;
-    QLabel *label_13;
+    QGroupBox *groupBox_3;
+    QHBoxLayout *horizontalLayout_14;
     QVBoxLayout *verticalLayout_2;
     QHBoxLayout *horizontalLayout;
     QSpacerItem *horizontalSpacer_26;
@@ -116,6 +126,8 @@ public:
     QSpacerItem *horizontalSpacer_30;
     QPushButton *pushButton_4;
     QPushButton *pushButton_3;
+    QHBoxLayout *horizontalLayout_15;
+    QLabel *label_11;
     QProgressBar *progressBar;
     QMenuBar *menuBar;
 
@@ -123,7 +135,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(639, 570);
+        MainWindow->resize(620, 570);
         QIcon icon;
         icon.addFile(QStringLiteral("certificate.ico"), QSize(), QIcon::Normal, QIcon::Off);
         MainWindow->setWindowIcon(icon);
@@ -133,11 +145,12 @@ public:
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-        label_12 = new QLabel(centralWidget);
-        label_12->setObjectName(QStringLiteral("label_12"));
-
-        verticalLayout->addWidget(label_12);
-
+        groupBox_2 = new QGroupBox(centralWidget);
+        groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
+        horizontalLayout_13 = new QHBoxLayout(groupBox_2);
+        horizontalLayout_13->setSpacing(6);
+        horizontalLayout_13->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_13->setObjectName(QStringLiteral("horizontalLayout_13"));
         gridLayout = new QGridLayout();
         gridLayout->setSpacing(6);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
@@ -148,7 +161,7 @@ public:
 
         horizontalLayout_6->addItem(horizontalSpacer_4);
 
-        label_3 = new QLabel(centralWidget);
+        label_3 = new QLabel(groupBox_2);
         label_3->setObjectName(QStringLiteral("label_3"));
         QFont font;
         font.setPointSize(9);
@@ -160,7 +173,7 @@ public:
 
         horizontalLayout_6->addItem(horizontalSpacer_5);
 
-        lineEdit_5 = new QLineEdit(centralWidget);
+        lineEdit_5 = new QLineEdit(groupBox_2);
         lineEdit_5->setObjectName(QStringLiteral("lineEdit_5"));
         QFont font1;
         font1.setPointSize(11);
@@ -182,7 +195,7 @@ public:
 
         horizontalLayout_2->addItem(horizontalSpacer_7);
 
-        label = new QLabel(centralWidget);
+        label = new QLabel(groupBox_2);
         label->setObjectName(QStringLiteral("label"));
         label->setFont(font);
 
@@ -192,7 +205,7 @@ public:
 
         horizontalLayout_2->addItem(horizontalSpacer_8);
 
-        lineEdit = new QLineEdit(centralWidget);
+        lineEdit = new QLineEdit(groupBox_2);
         lineEdit->setObjectName(QStringLiteral("lineEdit"));
         lineEdit->setFont(font1);
 
@@ -216,7 +229,7 @@ public:
 
         horizontalLayout_3->addItem(horizontalSpacer_13);
 
-        label_2 = new QLabel(centralWidget);
+        label_2 = new QLabel(groupBox_2);
         label_2->setObjectName(QStringLiteral("label_2"));
         label_2->setFont(font);
 
@@ -226,7 +239,7 @@ public:
 
         horizontalLayout_3->addItem(horizontalSpacer_14);
 
-        lineEdit_2 = new QLineEdit(centralWidget);
+        lineEdit_2 = new QLineEdit(groupBox_2);
         lineEdit_2->setObjectName(QStringLiteral("lineEdit_2"));
         lineEdit_2->setFont(font1);
 
@@ -250,7 +263,7 @@ public:
 
         horizontalLayout_4->addItem(horizontalSpacer_10);
 
-        label_5 = new QLabel(centralWidget);
+        label_5 = new QLabel(groupBox_2);
         label_5->setObjectName(QStringLiteral("label_5"));
         label_5->setFont(font);
 
@@ -260,7 +273,7 @@ public:
 
         horizontalLayout_4->addItem(horizontalSpacer_11);
 
-        lineEdit_3 = new QLineEdit(centralWidget);
+        lineEdit_3 = new QLineEdit(groupBox_2);
         lineEdit_3->setObjectName(QStringLiteral("lineEdit_3"));
         lineEdit_3->setFont(font1);
 
@@ -280,7 +293,7 @@ public:
 
         horizontalLayout_5->addItem(horizontalSpacer_16);
 
-        label_7 = new QLabel(centralWidget);
+        label_7 = new QLabel(groupBox_2);
         label_7->setObjectName(QStringLiteral("label_7"));
         label_7->setFont(font);
 
@@ -290,7 +303,7 @@ public:
 
         horizontalLayout_5->addItem(horizontalSpacer_17);
 
-        lineEdit_7 = new QLineEdit(centralWidget);
+        lineEdit_7 = new QLineEdit(groupBox_2);
         lineEdit_7->setObjectName(QStringLiteral("lineEdit_7"));
         lineEdit_7->setFont(font1);
 
@@ -310,7 +323,7 @@ public:
 
         horizontalLayout_8->addItem(horizontalSpacer_19);
 
-        label_4 = new QLabel(centralWidget);
+        label_4 = new QLabel(groupBox_2);
         label_4->setObjectName(QStringLiteral("label_4"));
         label_4->setFont(font);
 
@@ -320,7 +333,7 @@ public:
 
         horizontalLayout_8->addItem(horizontalSpacer_20);
 
-        lineEdit_6 = new QLineEdit(centralWidget);
+        lineEdit_6 = new QLineEdit(groupBox_2);
         lineEdit_6->setObjectName(QStringLiteral("lineEdit_6"));
         lineEdit_6->setFont(font1);
 
@@ -344,7 +357,7 @@ public:
 
         horizontalLayout_9->addItem(horizontalSpacer_22);
 
-        label_8 = new QLabel(centralWidget);
+        label_8 = new QLabel(groupBox_2);
         label_8->setObjectName(QStringLiteral("label_8"));
         label_8->setFont(font);
 
@@ -354,7 +367,7 @@ public:
 
         horizontalLayout_9->addItem(horizontalSpacer_23);
 
-        lineEdit_8 = new QLineEdit(centralWidget);
+        lineEdit_8 = new QLineEdit(groupBox_2);
         lineEdit_8->setObjectName(QStringLiteral("lineEdit_8"));
         lineEdit_8->setFont(font1);
 
@@ -374,7 +387,7 @@ public:
 
         horizontalLayout_7->addItem(horizontalSpacer);
 
-        label_6 = new QLabel(centralWidget);
+        label_6 = new QLabel(groupBox_2);
         label_6->setObjectName(QStringLiteral("label_6"));
         label_6->setFont(font);
 
@@ -384,7 +397,7 @@ public:
 
         horizontalLayout_7->addItem(horizontalSpacer_2);
 
-        lineEdit_4 = new QLineEdit(centralWidget);
+        lineEdit_4 = new QLineEdit(groupBox_2);
         lineEdit_4->setObjectName(QStringLiteral("lineEdit_4"));
         lineEdit_4->setFont(font1);
 
@@ -420,7 +433,7 @@ public:
 
         horizontalLayout_12->addItem(horizontalSpacer_31);
 
-        pushButton = new QPushButton(centralWidget);
+        pushButton = new QPushButton(groupBox_2);
         pushButton->setObjectName(QStringLiteral("pushButton"));
 
         horizontalLayout_12->addWidget(pushButton);
@@ -432,36 +445,68 @@ public:
 
         gridLayout->addLayout(horizontalLayout_12, 5, 2, 1, 1);
 
+        horizontalLayout_17 = new QHBoxLayout();
+        horizontalLayout_17->setSpacing(6);
+        horizontalLayout_17->setObjectName(QStringLiteral("horizontalLayout_17"));
+        horizontalSpacer_37 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_17->addItem(horizontalSpacer_37);
+
+        label_12 = new QLabel(groupBox_2);
+        label_12->setObjectName(QStringLiteral("label_12"));
+
+        horizontalLayout_17->addWidget(label_12);
+
+        comboBox = new QComboBox(groupBox_2);
+        comboBox->setObjectName(QStringLiteral("comboBox"));
+
+        horizontalLayout_17->addWidget(comboBox);
+
+        horizontalSpacer_38 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_17->addItem(horizontalSpacer_38);
+
         verticalSpacer_7 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        gridLayout->addItem(verticalSpacer_7, 5, 0, 1, 1);
+        horizontalLayout_17->addItem(verticalSpacer_7);
 
 
-        verticalLayout->addLayout(gridLayout);
+        gridLayout->addLayout(horizontalLayout_17, 5, 0, 1, 1);
+
+
+        horizontalLayout_13->addLayout(gridLayout);
+
+
+        verticalLayout->addWidget(groupBox_2);
 
         verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         verticalLayout->addItem(verticalSpacer);
 
-        label_11 = new QLabel(centralWidget);
-        label_11->setObjectName(QStringLiteral("label_11"));
-
-        verticalLayout->addWidget(label_11);
-
-        textBrowser = new QTextBrowser(centralWidget);
+        groupBox = new QGroupBox(centralWidget);
+        groupBox->setObjectName(QStringLiteral("groupBox"));
+        horizontalLayout_11 = new QHBoxLayout(groupBox);
+        horizontalLayout_11->setSpacing(6);
+        horizontalLayout_11->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_11->setObjectName(QStringLiteral("horizontalLayout_11"));
+        textBrowser = new QTextBrowser(groupBox);
         textBrowser->setObjectName(QStringLiteral("textBrowser"));
 
-        verticalLayout->addWidget(textBrowser);
+        horizontalLayout_11->addWidget(textBrowser);
+
+
+        verticalLayout->addWidget(groupBox);
 
         verticalSpacer_6 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         verticalLayout->addItem(verticalSpacer_6);
 
-        label_13 = new QLabel(centralWidget);
-        label_13->setObjectName(QStringLiteral("label_13"));
-
-        verticalLayout->addWidget(label_13);
-
+        groupBox_3 = new QGroupBox(centralWidget);
+        groupBox_3->setObjectName(QStringLiteral("groupBox_3"));
+        horizontalLayout_14 = new QHBoxLayout(groupBox_3);
+        horizontalLayout_14->setSpacing(6);
+        horizontalLayout_14->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_14->setObjectName(QStringLiteral("horizontalLayout_14"));
         verticalLayout_2 = new QVBoxLayout();
         verticalLayout_2->setSpacing(6);
         verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
@@ -472,7 +517,7 @@ public:
 
         horizontalLayout->addItem(horizontalSpacer_26);
 
-        label_9 = new QLabel(centralWidget);
+        label_9 = new QLabel(groupBox_3);
         label_9->setObjectName(QStringLiteral("label_9"));
 
         horizontalLayout->addWidget(label_9);
@@ -481,7 +526,7 @@ public:
 
         horizontalLayout->addItem(horizontalSpacer_25);
 
-        lineEdit_9 = new QLineEdit(centralWidget);
+        lineEdit_9 = new QLineEdit(groupBox_3);
         lineEdit_9->setObjectName(QStringLiteral("lineEdit_9"));
 
         horizontalLayout->addWidget(lineEdit_9);
@@ -490,7 +535,7 @@ public:
 
         horizontalLayout->addItem(horizontalSpacer_27);
 
-        label_10 = new QLabel(centralWidget);
+        label_10 = new QLabel(groupBox_3);
         label_10->setObjectName(QStringLiteral("label_10"));
 
         horizontalLayout->addWidget(label_10);
@@ -499,7 +544,7 @@ public:
 
         horizontalLayout->addItem(horizontalSpacer_28);
 
-        lineEdit_10 = new QLineEdit(centralWidget);
+        lineEdit_10 = new QLineEdit(groupBox_3);
         lineEdit_10->setObjectName(QStringLiteral("lineEdit_10"));
 
         horizontalLayout->addWidget(lineEdit_10);
@@ -518,12 +563,12 @@ public:
 
         horizontalLayout_10->addItem(horizontalSpacer_30);
 
-        pushButton_4 = new QPushButton(centralWidget);
+        pushButton_4 = new QPushButton(groupBox_3);
         pushButton_4->setObjectName(QStringLiteral("pushButton_4"));
 
         horizontalLayout_10->addWidget(pushButton_4);
 
-        pushButton_3 = new QPushButton(centralWidget);
+        pushButton_3 = new QPushButton(groupBox_3);
         pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
         pushButton_3->setEnabled(false);
 
@@ -532,19 +577,33 @@ public:
 
         verticalLayout_2->addLayout(horizontalLayout_10);
 
-        progressBar = new QProgressBar(centralWidget);
+        horizontalLayout_15 = new QHBoxLayout();
+        horizontalLayout_15->setSpacing(6);
+        horizontalLayout_15->setObjectName(QStringLiteral("horizontalLayout_15"));
+        label_11 = new QLabel(groupBox_3);
+        label_11->setObjectName(QStringLiteral("label_11"));
+
+        horizontalLayout_15->addWidget(label_11);
+
+        progressBar = new QProgressBar(groupBox_3);
         progressBar->setObjectName(QStringLiteral("progressBar"));
         progressBar->setValue(0);
 
-        verticalLayout_2->addWidget(progressBar);
+        horizontalLayout_15->addWidget(progressBar);
 
 
-        verticalLayout->addLayout(verticalLayout_2);
+        verticalLayout_2->addLayout(horizontalLayout_15);
+
+
+        horizontalLayout_14->addLayout(verticalLayout_2);
+
+
+        verticalLayout->addWidget(groupBox_3);
 
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 639, 23));
+        menuBar->setGeometry(QRect(0, 0, 620, 23));
         MainWindow->setMenuBar(menuBar);
         QWidget::setTabOrder(lineEdit_4, lineEdit_5);
         QWidget::setTabOrder(lineEdit_5, lineEdit);
@@ -554,8 +613,7 @@ public:
         QWidget::setTabOrder(lineEdit_7, lineEdit_6);
         QWidget::setTabOrder(lineEdit_6, lineEdit_8);
         QWidget::setTabOrder(lineEdit_8, pushButton);
-        QWidget::setTabOrder(pushButton, textBrowser);
-        QWidget::setTabOrder(textBrowser, lineEdit_9);
+        QWidget::setTabOrder(pushButton, lineEdit_9);
         QWidget::setTabOrder(lineEdit_9, lineEdit_10);
         QWidget::setTabOrder(lineEdit_10, pushButton_4);
         QWidget::setTabOrder(pushButton_4, pushButton_3);
@@ -568,24 +626,32 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "CAClient", 0));
-        label_12->setText(QApplication::translate("MainWindow", "\350\257\201\344\271\246\347\233\270\345\205\263\344\277\241\346\201\257", 0));
+        groupBox_2->setTitle(QApplication::translate("MainWindow", "\350\257\201\344\271\246\344\277\241\346\201\257", 0));
         label_3->setText(QApplication::translate("MainWindow", "         CountryName", 0));
         label->setText(QApplication::translate("MainWindow", "        LocalityName", 0));
         label_2->setText(QApplication::translate("MainWindow", "    OrganizationName", 0));
         label_5->setText(QApplication::translate("MainWindow", " StateOrProvinceName", 0));
         label_7->setText(QApplication::translate("MainWindow", "OrganizationUnitName", 0));
         label_4->setText(QApplication::translate("MainWindow", "         Emailddress", 0));
-        label_8->setText(QApplication::translate("MainWindow", "         RequestDays", 0));
+        label_8->setText(QApplication::translate("MainWindow", "     RequsetFileName", 0));
         label_6->setText(QApplication::translate("MainWindow", "          CommonName", 0));
         pushButton->setText(QApplication::translate("MainWindow", "\347\224\237\346\210\220\350\257\267\346\261\202\346\226\207\344\273\266", 0));
-        label_11->setText(QApplication::translate("MainWindow", "\346\223\215\344\275\234\346\230\276\347\244\272\346\240\217", 0));
-        label_13->setText(QApplication::translate("MainWindow", "\350\257\201\344\271\246\344\270\255\345\277\203\346\234\215\345\212\241\345\231\250", 0));
-        label_9->setText(QApplication::translate("MainWindow", "\346\234\215\345\212\241\345\231\250IP", 0));
+        label_12->setText(QApplication::translate("MainWindow", "\345\205\254\347\247\201\351\222\245\345\257\271\346\257\224\347\211\271\351\225\277\345\272\246", 0));
+        comboBox->clear();
+        comboBox->insertItems(0, QStringList()
+         << QApplication::translate("MainWindow", "512", 0)
+         << QApplication::translate("MainWindow", "1024", 0)
+         << QApplication::translate("MainWindow", "2048", 0)
+        );
+        groupBox->setTitle(QApplication::translate("MainWindow", "\346\223\215\344\275\234\346\230\276\347\244\272", 0));
+        groupBox_3->setTitle(QApplication::translate("MainWindow", "\346\226\207\344\273\266\344\274\240\350\276\223", 0));
+        label_9->setText(QApplication::translate("MainWindow", "\350\257\201\344\271\246\344\270\255\345\277\203\346\234\215\345\212\241\345\231\250IP", 0));
         lineEdit_9->setText(QApplication::translate("MainWindow", "127.0.0.1", 0));
         label_10->setText(QApplication::translate("MainWindow", "\346\234\215\345\212\241\345\231\250\347\253\257\345\217\243", 0));
         lineEdit_10->setText(QApplication::translate("MainWindow", "11223", 0));
         pushButton_4->setText(QApplication::translate("MainWindow", "\351\200\211\346\213\251\346\226\207\344\273\266", 0));
         pushButton_3->setText(QApplication::translate("MainWindow", "\345\217\221  \351\200\201", 0));
+        label_11->setText(QApplication::translate("MainWindow", "\344\274\240\350\276\223\350\277\233\345\272\246", 0));
     } // retranslateUi
 
 };

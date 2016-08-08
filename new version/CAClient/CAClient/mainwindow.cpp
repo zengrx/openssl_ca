@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     dir = "../reqfile/";
 
     //请求文件部分
-    bits = 512;
+    bits = 0;//推荐1024;
     req = X509_REQ_new();
     version = 1;
     /***********************初始化数据部分*************************/
@@ -184,7 +184,12 @@ void MainWindow::on_pushButton_3_clicked()
 void MainWindow::on_pushButton_clicked()
 {
     int ret1; //接收certReq函数返回值
-    ret1 = certReq();
+    bits = ui->comboBox->currentText().toInt();
+    if(!bits)
+    {
+        ui->textBrowser->append(getTime() + "请选择生成RSA公私钥对的比特长度");
+    }
+    ret1 = certReq(); //调用生成请求文件函数并接受返回值
     if(ret1 != 1)
     {
         ui->textBrowser->append(getTime() + "生成证书请求文件失败，请更新版本或联系开发人员");

@@ -103,9 +103,15 @@ int MainWindow::certReq()
         return -1;
     }
     /* 写入文件 PEM 格式 */
-    char name1[100];
-    //路径写死在上层目录reqfile中，根据自己的需要修改
-    strcpy(name1,(dir + ui->lineEdit_4->text()+".csr").toStdString().c_str());
+    char name1[100]; //生成的请求文件名称
+    //路径变量'dir'写死在上层目录reqfile中，根据自己的需要修改
+    QString c_filename = ui->lineEdit_8->text();
+    if(c_filename.isEmpty())
+    {
+        ui->textBrowser->append(getTime() + "请填写请求文件名称");
+        return 0;
+    }
+    strcpy(name1,(dir + c_filename +".csr").toStdString().c_str());
     b = BIO_new_file(name1, "w");
     PEM_write_bio_X509_REQ(b, req);
     BIO_free(b);
