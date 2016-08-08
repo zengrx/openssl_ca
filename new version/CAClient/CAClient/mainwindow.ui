@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>620</width>
+    <width>495</width>
     <height>570</height>
    </rect>
   </property>
@@ -685,7 +685,7 @@
            <item>
             <widget class="QLabel" name="label_12">
              <property name="text">
-              <string>公私钥对比特长度</string>
+              <string>密钥对比特长度</string>
              </property>
             </widget>
            </item>
@@ -865,7 +865,7 @@
            <item>
             <widget class="QLineEdit" name="lineEdit_10">
              <property name="text">
-              <string>11223</string>
+              <string>12346</string>
              </property>
             </widget>
            </item>
@@ -948,7 +948,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>620</width>
+     <width>495</width>
      <height>23</height>
     </rect>
    </property>

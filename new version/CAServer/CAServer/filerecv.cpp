@@ -4,8 +4,8 @@
 
 ////
 /// \brief MainWindow::start
-///
-///
+/// 服务器启动监听函数
+/// 获取界面中的数据并开启服务
 ///
 void MainWindow::start()
 {
@@ -29,7 +29,7 @@ void MainWindow::start()
 
 ////
 /// \brief MainWindow::acceptConnection
-///
+/// 建立一个单线程的TCP通信
 ///
 void MainWindow::acceptConnection()
 {
@@ -44,7 +44,8 @@ void MainWindow::acceptConnection()
 
 ////
 /// \brief MainWindow::updateServerProgress
-///
+/// 更新进度条并接收文件
+/// 数据接收完成后清除缓存区数据
 ///
 void MainWindow::updateServerProgress()
 {
@@ -53,18 +54,20 @@ void MainWindow::updateServerProgress()
 
     if(bytesrecved <= sizeof(qint64)*2)
     { //如果接收到的数据小于16个字节，那么是刚开始接收数据，我们保存到//来的头文件信息
-        if((tcpserconn->bytesAvailable() >= sizeof(qint64)*2)&& (filenamesize == 0))
+        if((tcpserconn->bytesAvailable() >= sizeof(qint64)*2)&&
+                (filenamesize == 0))
         { //接收数据总大小信息和文件名大小信息
             in >> totalbytes >> filenamesize;
             bytesrecved += sizeof(qint64) * 2;
         }
-        if((tcpserconn->bytesAvailable() >= filenamesize)
-                && (filenamesize != 0))
+        if((tcpserconn->bytesAvailable() >= filenamesize)&&
+                (filenamesize != 0))
         {  //接收文件名，并建立文件
             in >> filename;
             ui->textBrowser->append(tr("正在接收文件 '%1' ...").arg(filename));
             bytesrecved += filenamesize;
-            localfile = new QFile(filename);
+            QString f_filename = reqdir+filename;
+            localfile = new QFile(f_filename);
             if(!localfile->open(QFile::WriteOnly))
             {
                 qDebug() << "open file error!";
@@ -101,7 +104,7 @@ void MainWindow::updateServerProgress()
 
 ////
 /// \brief MainWindow::displayError
-///
+/// TCP错误显示函数
 ///
 void MainWindow::displayError(QAbstractSocket::SocketError) //错误处理
 {
@@ -114,6 +117,7 @@ void MainWindow::displayError(QAbstractSocket::SocketError) //错误处理
 
 ////
 /// \brief MainWindow::getLocalIpAddr
+/// 自动获取本机所处网络环境IP地址
 ///
 void MainWindow::getLocalIpAddr()
 {
@@ -133,7 +137,8 @@ void MainWindow::getLocalIpAddr()
 }
 ////
 /// \brief MainWindow::getTime
-/// \return
+/// \return 系统当前时间
+/// 获取系统时间函数，用于textbrowser信息显示
 ///
 QString MainWindow::getTime()
 {

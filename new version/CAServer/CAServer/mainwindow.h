@@ -4,8 +4,15 @@
 #include <QMainWindow>
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <openssl/x509.h>
+#include <openssl/rsa.h>
+#include <openssl/pem.h>
+#include <openssl/bio.h>
+#include <fstream>
 #include <QFile>
+#include <QFileDialog>
 #include <QDateTime>
+#include <qstring.h>
 
 namespace Ui {
 class MainWindow;
@@ -16,7 +23,15 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 private:
-    /****************************************/
+    /*/----------------------公共变量-----------------------\*/
+    QString coredir;        //储存core文件夹路径
+    QString reqdir;         //储存reqfiles文件夹路径
+    QString signdir;        //存储signedfiles文件夹路径
+    QString reqfilename;    //接受的证书请求文件名
+    /*\---------------------------------------------------/*/
+
+
+    /*/-----------------文件接收使用到的变量------------------\*/
     QTcpServer tcpserver;   //tcpserver对象
     QTcpSocket *tcpserconn; //tcp套接字连接对象
     qint64 totalbytes;      //接收数据总大小
@@ -25,7 +40,7 @@ private:
     QString filename;       //接收文件名
     QFile *localfile;       //本地文件
     QByteArray inblock;     //接收数据缓冲区
-    /****************************************/
+    /*\---------------------------------------------------/*/
 
 public:
     explicit MainWindow(QWidget *parent = 0);
@@ -44,9 +59,26 @@ private slots:
 
     QString getTime(); //获取当前系统时间函数
 
-    void on_pushButton_clicked(); //[]槽函数
+    X509 * LoadCert(); //X509 载入根证书函数
 
-    void on_pushButton_6_clicked();
+    EVP_PKEY * LoadKey(); //载入根证书私钥函数
+
+    //根证书签名
+    bool CreateCertFromRequestFile(int serialNumber,int days,
+                                   char *requestFile,char *pubCert,
+                                   char *priCert, int format);
+
+    void SignCertFile(); //签名处理函数
+
+    void selectFile(); //选择文件函数
+
+    void on_pushButton_clicked(); //点击[接收文件]按钮
+
+    void on_pushButton_6_clicked(); //点击[刷新IP]按钮
+
+    void on_pushButton_5_clicked(); //点击[根证书签名]按钮
+
+    void on_pushButton_4_clicked(); //点击[选择文件]按钮
 
 private:
     Ui::MainWindow *ui;

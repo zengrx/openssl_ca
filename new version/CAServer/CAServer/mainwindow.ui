@@ -38,7 +38,7 @@
             </size>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>1</number>
            </property>
            <widget class="QWidget" name="tab">
             <attribute name="title">
@@ -590,8 +590,6 @@
                      </widget>
                     </item>
                    </layout>
-                   <zorder>groupBox_7</zorder>
-                   <zorder>pushButton_8</zorder>
                   </widget>
                  </item>
                 </layout>
