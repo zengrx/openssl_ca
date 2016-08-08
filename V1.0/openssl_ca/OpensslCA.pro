@@ -29,10 +29,10 @@ FORMS    += mainwindow.ui
 #LIBS+= -LG:\Git\GitOSC\lib32 -llibeay32
 #LIBS+= -LG:\Git\GitOSC\lib32 -lssleay32
 
-INCLUDEPATH +=E:\git\OpenSSLCA_program\include
+INCLUDEPATH +=E:\git\OpenSSLCA_program\V1.0\include
 
-LIBS+= -LE:\git\OpenSSLCA_program\lib32 -llibeay32
-LIBS+= -LE:\git\OpenSSLCA_program\lib32 -lssleay32
+LIBS+= -LE:\git\OpenSSLCA_program\V1.0\lib32 -llibeay32
+LIBS+= -LE:\git\OpenSSLCA_program\V1.0\lib32 -lssleay32
 
 DISTFILES += \
     ReadMe
