@@ -38,14 +38,14 @@ private:
 
 
     /*/--------------------文件传输中用到的变量----------------------\*/
-    QTcpSocket *tcpClient;         //tcp连接
-    QFile *localFile;              //本地需要发送的文件
-    qint64 totalBytes;             //文件总大小
-    qint64 bytesWritten;           //已经发送的数据大小
-    qint64 bytesToWrite;           //剩余数据大小
-    qint64 loadSize;               //一次发送数据大小
-    QString fileName;              //文件路径
-    QByteArray outBlock;           //数据缓冲区，用于存放每次发送的数据
+    QTcpSocket *tcpclient;         //tcp连接
+    QFile *localfile;              //本地需要发送的文件
+    qint64 totalbytes;             //文件总大小
+    qint64 byteswritten;           //已经发送的数据大小
+    qint64 bytestowrite;           //剩余数据大小
+    qint64 loadsize;               //一次发送数据大小
+    QString filename;              //文件路径
+    QByteArray outblock;           //数据缓冲区，用于存放每次发送的数据
     /*\----------------------------------------------------------/*/
 
 
@@ -66,7 +66,7 @@ private:
     const EVP_MD *md;              //EVP对象，生成请求用
     X509 *x509;                    //x509对象
     BIO *b;                        //BIO对象
-    /*------------------------------------------------------------/*/
+    /*\-----------------------------------------------------------/*/
 
 public:
     explicit MainWindow(QWidget *parent = 0);

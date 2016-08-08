@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>520</width>
+    <width>620</width>
     <height>570</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>数字证书客户端</string>
+   <string>CAClient</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -892,7 +892,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>520</width>
+     <width>620</width>
      <height>23</height>
     </rect>
    </property>
