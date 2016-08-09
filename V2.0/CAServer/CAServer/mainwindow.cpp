@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //公共部分
     coredir = "../core/";        //根证书及根证书私钥相对路径
     reqdir = "../reqfiles/";     //存储请求文件相对路径
+    reqfindir = "../reqfin/";    //存储完成签发的请求文件相对路径
     signdir = "../signedfiles/"; //存储签发文件相对路径
 
     //文件接收部分
@@ -31,6 +32,7 @@ MainWindow::~MainWindow()
 
 ////
 /// \brief MainWindow::selectFile
+/// 选择文件函数
 ///
 void MainWindow::selectFile()
 {
@@ -44,7 +46,7 @@ void MainWindow::selectFile()
     }
     else
     {
-        QString filename;
+        QString filename; //局部变量 储存无后缀文件名
         fileinfo = QFileInfo(absurl);
         //获取文件名
         filename = fileinfo.fileName();
@@ -74,10 +76,12 @@ void MainWindow::on_pushButton_6_clicked()
 void MainWindow::on_pushButton_5_clicked()
 {
     SignCertFile();
+    ui->pushButton_5->setEnabled(false);
 }
 
 //点击[选择文件]按钮事件
 void MainWindow::on_pushButton_4_clicked()
 {
     selectFile();
+    ui->pushButton_5->setEnabled(true);
 }

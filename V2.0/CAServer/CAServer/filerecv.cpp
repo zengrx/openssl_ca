@@ -17,13 +17,13 @@ void MainWindow::start()
     hostport = ui->lineEdit->text().toInt();
     if(!tcpserver.listen(QHostAddress(hostip), hostport))
     {
-        ui->textBrowser->append("error");
+        ui->textBrowser->append(getTime() + "error");
         close();
         return;
     }
     else
     {
-        ui->textBrowser->append("服务器开启...正在监听...");
+        ui->textBrowser->append(getTime() + "服务器开启...正在监听...");
     }
 }
 
@@ -38,7 +38,7 @@ void MainWindow::acceptConnection()
     connect(tcpserconn,SIGNAL(readyRead()),this,SLOT(updateServerProgress()));
     connect(tcpserconn,SIGNAL(error(QAbstractSocket::SocketError)),this,
             SLOT(displayError(QAbstractSocket::SocketError)));
-    ui->textBrowser->append("接受连接");
+    ui->textBrowser->append(getTime() + "接受连接");
     tcpserver.close(); //单线程
 }
 
@@ -64,7 +64,7 @@ void MainWindow::updateServerProgress()
                 (filenamesize != 0))
         {  //接收文件名，并建立文件
             in >> filename;
-            ui->textBrowser->append(tr("正在接收文件 '%1' ...").arg(filename));
+            ui->textBrowser->append(getTime() + QString("正在接收文件 '%1' ...").arg(filename));
             bytesrecved += filenamesize;
             QString f_filename = reqdir+filename;
             localfile = new QFile(f_filename);
@@ -94,7 +94,7 @@ void MainWindow::updateServerProgress()
         tcpserconn->close();
         localfile->close();
         ui->pushButton->setEnabled(true);
-        ui->textBrowser->append(QString("接收文件 '%1' 成功！").arg(filename));
+        ui->textBrowser->append(getTime() + QString("接收文件 '%1' 成功！").arg(filename));
         //完成一个传输，数据清零
         totalbytes = 0;
         bytesrecved = 0;

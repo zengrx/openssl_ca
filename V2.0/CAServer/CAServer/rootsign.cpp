@@ -49,7 +49,8 @@ X509 * MainWindow::LoadCert()
 
 ////
 /// \brief MainWindow::LoadKey
-/// \return
+/// \return EVP_PKEY指针
+/// EVP系列RSA加密函数
 ///
 EVP_PKEY * MainWindow::LoadKey()
 {
@@ -61,7 +62,7 @@ EVP_PKEY * MainWindow::LoadKey()
     in = BIO_new_file(name1, "r");
     if(in == NULL)
     {
-        ui->textBrowser->append(getTime() + "载入根证书秘钥错误，请检查文件");
+        ui->textBrowser->append(getTime() + "载入根证书密钥错误，请检查文件");
     }
     //将BIO类型变量读取到X509对象中
     pkey = PEM_read_bio_PrivateKey(in, NULL, 0, NULL);
@@ -72,7 +73,7 @@ EVP_PKEY * MainWindow::LoadKey()
     }
     else
     {
-        ui->textBrowser->append(getTime() + "无法载入根证书秘钥，请检查文件完整性");
+        ui->textBrowser->append(getTime() + "无法载入根证书密钥，请检查文件完整性");
         return NULL;
     }
 }
@@ -84,8 +85,8 @@ EVP_PKEY * MainWindow::LoadKey()
 /// \param requestFile 需要读取的请求文件
 /// \param pubCert 公钥信息
 /// \param priCert 私钥信息
-/// \param format 签发文件格式
-/// \return
+/// \param format 签发文件格式 参照宏定义处
+/// \return true or false
 /// 根据证书请求文件签发证书
 ///
 bool MainWindow::CreateCertFromRequestFile(int serialNumber,
@@ -93,7 +94,7 @@ bool MainWindow::CreateCertFromRequestFile(int serialNumber,
                         char *pubCert, char *priCert, int format)
 {
     X509 * rootCert = NULL; //x509根证书对象
-    EVP_PKEY * rootKey = NULL; //根证书秘钥对象
+    EVP_PKEY * rootKey = NULL; //根证书密钥对象
     int i, j;
     bool ret; //返回值 太多写了一部分
     //调用上边两个函数生成对象
@@ -101,7 +102,7 @@ bool MainWindow::CreateCertFromRequestFile(int serialNumber,
     rootCert = LoadCert();
     if (rootKey == NULL || rootCert == NULL)
     {
-        ui->textBrowser->append(getTime() + "加载根证书或秘钥失败，请重试");
+        ui->textBrowser->append(getTime() + "加载根证书或密钥失败，请重试");
         return false;
     }
     X509 * userCert = NULL;
@@ -161,18 +162,21 @@ bool MainWindow::CreateCertFromRequestFile(int serialNumber,
     return true;
 }
 
+////
+/// \brief MainWindow::SignCertFile
+/// 主签名函数
+///
 void MainWindow::SignCertFile()
 {
     int serial;         //证书编号
     int days;           //申请天数
-    QString msgout;     //输出内容
     char name1[100];    //申请文件名
     char name2[100];    //签发证书名
     char name3[100];    //子证书私钥
     QString r_reqfname; //局部变量 签名时暂存值
     r_reqfname = reqdir + reqfilename; //接收的请求文件相对路径
     strcpy(name1,(r_reqfname+".csr").toStdString().c_str());
-    r_reqfname = signdir + reqfilename; //生成证书及秘钥文件相对路径
+    r_reqfname = signdir + reqfilename; //生成证书及密钥文件相对路径
     strcpy(name2,(r_reqfname+".crt").toStdString().c_str());
     strcpy(name3,(r_reqfname+".key").toStdString().c_str());
     days = ui->comboBox_2->currentText().toInt();
@@ -206,12 +210,16 @@ void MainWindow::SignCertFile()
         serial += 1; //签发后序列号自增1
         outfile << serial;
         outfile.close();
-        msgout = getTime() + "根证书签名成功，文件已生成";
+        ui->textBrowser->append(getTime() + "根证书签名成功，文件已生成");
+        //签名成功移动文件
+        QFile fremove;
+        fremove.rename(reqdir + reqfilename + ".csr", reqfindir + reqfilename + ".csr");
+        //fremove.remove(reqdir + reqfilename + ".csr");
+        //qDebug() << r_reqfname;
     }
     else
     {
-        msgout = getTime() + "根证书签名失败，请重试";
+        ui->textBrowser->append(getTime() + "根证书签名失败，请重试");
         return;
     }
-    ui->textBrowser->append(getTime() + msgout);
 }

@@ -13,6 +13,7 @@
 #include <QFileDialog>
 #include <QDateTime>
 #include <qstring.h>
+#include <qdir.h>
 
 namespace Ui {
 class MainWindow;
@@ -24,9 +25,10 @@ class MainWindow : public QMainWindow
 
 private:
     /*/----------------------公共变量-----------------------\*/
-    QString coredir;        //储存core文件夹路径
-    QString reqdir;         //储存reqfiles文件夹路径
-    QString signdir;        //存储signedfiles文件夹路径
+    QString coredir;        //储存core文件夹路径 存放根证书及密钥
+    QString reqdir;         //储存reqfiles文件夹路径 存放待处理请求文件
+    QString signdir;        //存储signedfiles文件夹路径 存放生成用户证书及密钥
+    QString reqfindir;      //储存reqfin文件夹路径 存放处理完成的请求文件
     QString reqfilename;    //接受的证书请求文件名
     /*\---------------------------------------------------/*/
 

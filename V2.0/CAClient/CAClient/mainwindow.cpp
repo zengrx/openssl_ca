@@ -61,6 +61,11 @@ void MainWindow::selectFile()
         ui->pushButton_3->setEnabled(true);
         ui->textBrowser->append(getTime() + QString("打开文件 '%1' 成功").arg(filename));
     }
+    else
+    {
+        ui->textBrowser->append(getTime() + "操作取消，未选择文件");
+        return;
+    }
 }
 
 //发送文件函数
@@ -123,7 +128,6 @@ void MainWindow::updateClientProgress(qint64 numBytes)
     else
     {
         localfile->close(); //没有发送任何数据，则关闭文件
-        ui->textBrowser->append(getTime() + "操作取消，未选择文件");
     }
     ui->progressBar->setMaximum(totalbytes); //设置进度条
     ui->progressBar->setValue(byteswritten); //更新进度条
