@@ -38,7 +38,7 @@
             </size>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>3</number>
            </property>
            <widget class="QWidget" name="tab">
             <attribute name="title">
@@ -477,6 +477,26 @@
                      </spacer>
                     </item>
                     <item>
+                     <widget class="QPushButton" name="pushButton_9">
+                      <property name="text">
+                       <string>生成撤销链</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <spacer name="verticalSpacer_7">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
                      <layout class="QHBoxLayout" name="horizontalLayout_17">
                       <item>
                        <widget class="QLabel" name="label_5">
@@ -522,7 +542,7 @@
                      </layout>
                     </item>
                     <item>
-                     <spacer name="verticalSpacer_5">
+                     <spacer name="verticalSpacer_6">
                       <property name="orientation">
                        <enum>Qt::Vertical</enum>
                       </property>
@@ -554,7 +574,7 @@
                      </widget>
                     </item>
                     <item>
-                     <spacer name="verticalSpacer_6">
+                     <spacer name="verticalSpacer_5">
                       <property name="orientation">
                        <enum>Qt::Vertical</enum>
                       </property>

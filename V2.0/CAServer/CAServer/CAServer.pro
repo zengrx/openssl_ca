@@ -15,7 +15,8 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     filerecv.cpp \
-    rootsign.cpp
+    rootsign.cpp \
+    rvkcert.cpp
 
 HEADERS  += mainwindow.h
 

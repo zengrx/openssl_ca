@@ -21,7 +21,9 @@ MainWindow::MainWindow(QWidget *parent) :
     /*\--------------------变量初始化部分----------------------/*/
     connect(&tcpserver,SIGNAL(newConnection()),this,SLOT(acceptConnection()));
 
+    /*---------------------函数功能初始化----------------------*/
     getLocalIpAddr(); //
+    initCrlList();    //
 
 }
 
@@ -56,6 +58,34 @@ void MainWindow::selectFile()
         filename.truncate(index);
         reqfilename = filename;
         ui->textBrowser->append(getTime() + "选择文件 '" + reqfilename + "' 成功");
+        ui->pushButton_5->setEnabled(true);
+    }
+}
+
+////
+/// \brief MainWindow::loadRootCA
+/// \return true or false
+/// 载入根证书信息函数
+/// 调用loadCert及loadKey为certop结构体赋值
+///
+bool MainWindow::loadRootCA()
+{
+    //声明变量及传值
+    X509 *rootcert = NULL;
+    EVP_PKEY *pkey = NULL;
+    rootcert = loadCert();
+    pkey = loadKey();
+    certop.rootcert = rootcert;
+    certop.pkey = pkey;
+    if (pkey == NULL || rootcert == NULL)
+    {
+        ui->textBrowser->append(getTime() + "加载根证书或密钥失败，请重试");
+        return false;
+    }
+    else
+    {
+        ui->textBrowser->append(getTime() + "加载根证书及密钥成功");
+        return true;
     }
 }
 
@@ -83,5 +113,21 @@ void MainWindow::on_pushButton_5_clicked()
 void MainWindow::on_pushButton_4_clicked()
 {
     selectFile();
-    ui->pushButton_5->setEnabled(true);
+}
+
+//点击[撤销证书]按钮事件
+void MainWindow::on_pushButton_7_clicked()
+{
+    certop.ser = ui->lineEdit_2->text();
+    if(revokeCert())
+    {
+        qDebug() << "seccess";
+        showCrlInfo();
+    }
+}
+
+//点击[生成撤销链]按钮事件
+void MainWindow::on_pushButton_9_clicked()
+{
+    createCrl();
 }

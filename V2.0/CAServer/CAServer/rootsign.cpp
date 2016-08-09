@@ -20,7 +20,7 @@
 /// X509函数
 /// 载入根证书，存储为PEM格式数据
 ///
-X509 * MainWindow::LoadCert()
+X509 * MainWindow::loadCert()
 {
     char name1[100]; //局部变量 存储根证书文件名
     X509 * x509 = NULL;
@@ -51,8 +51,9 @@ X509 * MainWindow::LoadCert()
 /// \brief MainWindow::LoadKey
 /// \return EVP_PKEY指针
 /// EVP系列RSA加密函数
+/// 载入私钥，存储为EVP_PKEY格式数据
 ///
-EVP_PKEY * MainWindow::LoadKey()
+EVP_PKEY * MainWindow::loadKey()
 {
     char name1[100]; //局部变量 储存根证书私钥名
     EVP_PKEY *pkey = NULL;
@@ -98,11 +99,13 @@ bool MainWindow::CreateCertFromRequestFile(int serialNumber,
     int i, j;
     bool ret; //返回值 太多写了一部分
     //调用上边两个函数生成对象
-    rootKey = LoadKey();
-    rootCert = LoadCert();
-    if (rootKey == NULL || rootCert == NULL)
+    if(loadRootCA())
     {
-        ui->textBrowser->append(getTime() + "加载根证书或密钥失败，请重试");
+        rootCert = certop.rootcert;
+        rootKey = certop.pkey;
+    }
+    else
+    {
         return false;
     }
     X509 * userCert = NULL;
