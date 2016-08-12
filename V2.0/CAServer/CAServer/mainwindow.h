@@ -34,11 +34,11 @@ struct certInfo
 //证书操作变量结构体
 struct certOpera
 {
-    X509 *usercert = NULL; //x509 用户证书
-    X509 *rootcert = NULL; //x509 根证书
-    X509_CRL * crl = NULL; //x509_crl 根证书撤销链
-    EVP_PKEY *pkey = NULL; //EVP 根证书私钥
-    QString ser;           //撤销证书时使用
+    X509 *usercert = NULL;  //x509 用户证书
+    X509 *rootcert = NULL;  //x509 根证书
+    X509_CRL * crl = NULL;  //x509_crl 根证书撤销链
+    EVP_PKEY *pkey = NULL;  //EVP 根证书私钥
+    QString ser;            //撤销证书时使用
 };
 
 class MainWindow : public QMainWindow
@@ -46,7 +46,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 private:
-    /*/----------------------公共变量-----------------------\*/
+    /*/----------------------共用变量-----------------------\*/
     QString coredir;        //储存core文件夹路径 存放根证书及密钥
     QString reqdir;         //储存reqfiles文件夹路径 存放待处理请求文件
     QString signdir;        //存储signedfiles文件夹路径 存放生成用户证书及密钥
@@ -54,6 +54,7 @@ private:
     QString reqfilename;    //接受的证书请求文件名
 
     certOpera certop;       //实例化证书操作结构体
+    int indexptr;           //ListWidget索引
     /*\---------------------------------------------------/*/
 
 
@@ -102,6 +103,8 @@ private slots:
 
     bool revokeCert(); //撤销证书函数
 
+    bool restoreCert(); //恢复被撤销的证书
+
     bool createCrl(); //生成证书撤销链函数
 
     void initCrlList(); //初始化证书撤销列表
@@ -120,7 +123,11 @@ private slots:
 
     void on_pushButton_7_clicked(); //点击[撤销证书]按钮
 
-    void on_pushButton_9_clicked();
+    void on_pushButton_9_clicked(); //点击[生成撤销链]按钮
+
+    void on_pushButton_8_clicked(); //点击[恢复证书]按钮
+
+    void on_listWidget_2_currentRowChanged(int currentRow);
 
 private:
     Ui::MainWindow *ui;

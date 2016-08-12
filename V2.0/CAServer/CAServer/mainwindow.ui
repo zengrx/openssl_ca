@@ -601,6 +601,9 @@
                    <layout class="QHBoxLayout" name="horizontalLayout_15">
                     <item>
                      <widget class="QPushButton" name="pushButton_8">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
                       <property name="maximumSize">
                        <size>
                         <width>100</width>

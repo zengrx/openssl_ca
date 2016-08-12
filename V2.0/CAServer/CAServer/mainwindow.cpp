@@ -14,16 +14,23 @@ MainWindow::MainWindow(QWidget *parent) :
     reqfindir = "../reqfin/";    //存储完成签发的请求文件相对路径
     signdir = "../signedfiles/"; //存储签发文件相对路径
 
+    indexptr = -1;               //ListWidget索引
+
     //文件接收部分
-    totalbytes = 0;
-    bytesrecved = 0;
-    filenamesize = 0;
-    /*\--------------------变量初始化部分----------------------/*/
+    totalbytes = 0;              //接收文件全部大小=文件真实大小+文件名等信息大小
+    bytesrecved = 0;             //已接收的文件大小
+    filenamesize = 0;            //文件名等信息大小
+    /*\-----------------------------------------------------/*/
+
+
+    /*/--------------------函数功能初始化---------------------\*/
+    getLocalIpAddr(); //获取本机IP地址
+    initCrlList();    //初始化撤销链信息
+    /*\-----------------------------------------------------/*/
+
     connect(&tcpserver,SIGNAL(newConnection()),this,SLOT(acceptConnection()));
 
-    /*---------------------函数功能初始化----------------------*/
-    getLocalIpAddr(); //
-    initCrlList();    //
+
 
 }
 
@@ -121,7 +128,7 @@ void MainWindow::on_pushButton_7_clicked()
     certop.ser = ui->lineEdit_2->text();
     if(revokeCert())
     {
-        qDebug() << "seccess";
+        ui->textBrowser->append(getTime() + "撤销证书成功，该证书已不具备效用");
         showCrlInfo();
     }
 }
@@ -129,5 +136,29 @@ void MainWindow::on_pushButton_7_clicked()
 //点击[生成撤销链]按钮事件
 void MainWindow::on_pushButton_9_clicked()
 {
-    createCrl();
+    if(createCrl())
+    {
+        ui->textBrowser->append(getTime() + "已生成新的撤销链");
+    }
+}
+
+//点击[恢复证书]按钮事件
+void MainWindow::on_pushButton_8_clicked()
+{
+    if(restoreCert())
+    {
+        ui->textBrowser->append(getTime() + "该证书已成功恢复");
+    }
+    else
+    {
+        ui->textBrowser->append(getTime() + "证书恢复失败，请重试");
+    }
+    ui->pushButton_8->setEnabled(false);
+}
+
+//ListWidget行点击事件
+void MainWindow::on_listWidget_2_currentRowChanged(int currentRow)
+{
+    ui->pushButton_8->setEnabled(true); //激活按键
+    indexptr = currentRow-1; //获取当前位置索引值
 }

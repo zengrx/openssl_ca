@@ -111,6 +111,7 @@ bool MainWindow::createCrl()
     /*设置下次发布时间*/
     nextUpdate = ASN1_TIME_new();
     t = time(NULL);
+    //设置下次发布时间，默认1000个单位
     ASN1_TIME_set(nextUpdate,t+1000);
     X509_CRL_set_nextUpdate(crl,nextUpdate);
     /*签名*/
@@ -199,8 +200,8 @@ void MainWindow::showCrlInfo()
     revoked = certop.crl->crl->revoked;
     int num = sk_X509_REVOKED_num(revoked);
     X509_REVOKED *rc = NULL;
-    ui->listWidget->clear();
-    ui->listWidget->addItem("序号\t撤销序列号\t证书撤销时间");
+    ui->listWidget_2->clear();
+    ui->listWidget_2->addItem("序号\t撤销序列号\t证书撤销时间");
     for(int i=0; i<num; i++)
     {
         rc = sk_X509_REVOKED_value(revoked,i);
@@ -208,7 +209,7 @@ void MainWindow::showCrlInfo()
         ASN1_TIME *rt = ASN1_STRING_dup(revTime);
         time_t tt = ASN1_GetTimeT(rt);
         QDateTime dt = QDateTime::fromTime_t(tt);
-        ui->listWidget->addItem(QString::number(i+1)+'\t'+
+        ui->listWidget_2->addItem(QString::number(i+1)+'\t'+
                                 i2s_ASN1_INTEGER(NULL,rc->serialNumber)+
                                 "\t"+dt.toString(Qt::TextDate));
     }
@@ -218,7 +219,7 @@ void MainWindow::showCrlInfo()
 //change ASN1_Time to time_t
 //copy from http://stackoverflow.com/questions/10975542/asn1-time-to-time-t-conversion
 //copy date 2016.2.1
-//from openssl_ca/v1.0
+//from openssl_ca/v1.0 authored by qool
 time_t MainWindow::ASN1_GetTimeT(ASN1_TIME* time)
 {
     struct tm t;
@@ -251,4 +252,48 @@ time_t MainWindow::ASN1_GetTimeT(ASN1_TIME* time)
     return mktime(&t);
 }
 
+////
+/// \brief MainWindow::restoreCert
+///
+bool MainWindow::restoreCert()
+{
+    int r_iptr=indexptr; //Bug maybe occurs here,indexPtr will begin a big num
+    QString r_crlserial; //局部变量 撤销序列号
+    char name1[100];    //局部变量 撤销链路径
+    STACK_OF(X509_REVOKED) *revoked = certop.crl->crl->revoked;
+    X509_REVOKED *rc=sk_X509_REVOKED_value(revoked,r_iptr);
+    r_crlserial = i2s_ASN1_INTEGER(NULL,rc->serialNumber);
+//    ReadJson(signlistjson);
+//    if(signlistjson.isEmpty())
+//    {
 
+//        qWarning("Error: json empty.");
+//        return false;
+//    }
+//    QJsonArray SignArray = signlistjson["signlist"].toArray();
+//    for(int i=0;i<SignArray.size();i++)
+//    {
+//        QJsonObject objson=SignArray[i].toObject();
+//        if(objson["serialNumber"]==CRLserial.toInt())
+//        {
+//            objson["stats"]=false;
+//            SignArray[i]=objson;
+//            signlistjson["signlist"]=SignArray;
+//            SaveJson(signlistjson);
+//        }
+//    }
+//    UpdataListWidget2();
+    BIO *bp=NULL;
+    if(certop.crl==NULL||indexptr<0)
+        return false;
+    sk_X509_REVOKED_delete(certop.crl->crl->revoked,indexptr); //restore
+    X509_CRL_sort(certop.crl);// 排序
+    QString r_crlname = coredir + "Crl.crl";
+    strcpy(name1,r_crlname.toStdString().c_str());
+    bp=BIO_new_file(name1,"wb");
+    PEM_write_bio_X509_CRL(bp,certop.crl);
+    showCrlInfo(); //刷新列表内容
+    BIO_free(bp);
+    indexptr=-1;
+    return true;
+}
