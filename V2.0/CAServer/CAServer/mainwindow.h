@@ -34,6 +34,7 @@ struct certInfo
 //证书操作变量结构体
 struct certOpera
 {
+    QString usrurl = NULL;  //待验证证书路径
     X509 *usercert = NULL;  //x509 用户证书
     X509 *rootcert = NULL;  //x509 根证书
     X509_CRL * crl = NULL;  //x509_crl 根证书撤销链
@@ -99,27 +100,31 @@ private slots:
 
     void SignCertFile(); //签名处理函数
 
-    void selectFile(); //选择文件函数
+    void selectReqFile(); //选择请求文件函数
 
     bool revokeCert(); //撤销证书函数
 
-    bool restoreCert(); //恢复被撤销的证书
+    bool restoreCert(); //恢复被撤销证书函数
 
     bool createCrl(); //生成证书撤销链函数
 
-    void initCrlList(); //初始化证书撤销列表
+    void initCrlList(); //初始化证书撤销列表函数
 
-    void showCrlInfo(); //显示撤销链信息
+    void showCrlInfo(); //显示撤销链信息函数
 
     time_t ASN1_GetTimeT(ASN1_TIME* time); //ASN1_Time时间转为time_t时间
 
-    void on_pushButton_clicked(); //点击[接收文件]按钮
+    void selectCertFile(); //选择证书文件函数
+
+    QString getCertSubInfo(certInfo *info); //获取待验证书内容函数
+
+    void on_pushButton_clicked();   //点击[接收文件]按钮
 
     void on_pushButton_6_clicked(); //点击[刷新IP]按钮
 
     void on_pushButton_5_clicked(); //点击[根证书签名]按钮
 
-    void on_pushButton_4_clicked(); //点击[选择文件]按钮
+    void on_pushButton_4_clicked(); //点击[选择请求文件]按钮
 
     void on_pushButton_7_clicked(); //点击[撤销证书]按钮
 
@@ -127,7 +132,9 @@ private slots:
 
     void on_pushButton_8_clicked(); //点击[恢复证书]按钮
 
-    void on_listWidget_2_currentRowChanged(int currentRow);
+    void on_pushButton_2_clicked(); //点击[选择证书文件]按钮
+
+    void on_listWidget_2_currentRowChanged(int currentRow); //ListWidget2行点击槽
 
 private:
     Ui::MainWindow *ui;

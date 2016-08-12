@@ -166,6 +166,36 @@ bool MainWindow::CreateCertFromRequestFile(int serialNumber,
 }
 
 ////
+/// \brief MainWindow::selectFile
+/// 选择请求文件函数
+///
+void MainWindow::selectReqFile()
+{
+    QFileInfo fileinfo;
+    //获取文件绝对路径
+    QString absurl = QFileDialog::getOpenFileName(this,"select file",reqdir,"*.csr");
+    if (absurl.isNull())
+    {
+        //QMessageBox::warning(NULL,"error","Select file failed!\n");
+        ui->textBrowser->append(getTime() + "选择签名文件失败");
+    }
+    else
+    {
+        QString filename; //局部变量 储存无后缀文件名
+        fileinfo = QFileInfo(absurl);
+        //获取文件名
+        filename = fileinfo.fileName();
+        //ui->lineEdit_10->setText(filename);
+        //除去后缀名
+        int index = filename.lastIndexOf(".");
+        filename.truncate(index);
+        reqfilename = filename;
+        ui->textBrowser->append(getTime() + "选择文件 '" + reqfilename + "' 成功");
+        ui->pushButton_5->setEnabled(true);
+    }
+}
+
+////
 /// \brief MainWindow::SignCertFile
 /// 主签名函数
 ///

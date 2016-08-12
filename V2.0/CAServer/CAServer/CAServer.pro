@@ -16,7 +16,8 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     filerecv.cpp \
     rootsign.cpp \
-    rvkcert.cpp
+    rvkcert.cpp \
+    rootverify.cpp
 
 HEADERS  += mainwindow.h
 

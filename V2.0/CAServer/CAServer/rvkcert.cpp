@@ -285,7 +285,9 @@ bool MainWindow::restoreCert()
 //    UpdataListWidget2();
     BIO *bp=NULL;
     if(certop.crl==NULL||indexptr<0)
+    {
         return false;
+    }
     sk_X509_REVOKED_delete(certop.crl->crl->revoked,indexptr); //restore
     X509_CRL_sort(certop.crl);// 排序
     QString r_crlname = coredir + "Crl.crl";
@@ -295,5 +297,6 @@ bool MainWindow::restoreCert()
     showCrlInfo(); //刷新列表内容
     BIO_free(bp);
     indexptr=-1;
+    ui->textBrowser->append(getTime() + "序列" + r_crlserial + "证书" + "恢复成功");
     return true;
 }

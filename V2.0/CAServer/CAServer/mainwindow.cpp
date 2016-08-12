@@ -40,36 +40,6 @@ MainWindow::~MainWindow()
 }
 
 ////
-/// \brief MainWindow::selectFile
-/// 选择文件函数
-///
-void MainWindow::selectFile()
-{
-    QFileInfo fileinfo;
-    //获取文件绝对路径
-    QString absurl = QFileDialog::getOpenFileName(this,"select file",reqdir,"*.csr");
-    if (absurl.isNull())
-    {
-        //QMessageBox::warning(NULL,"error","Select file failed!\n");
-        ui->textBrowser->append(getTime() + "选择文件失败");
-    }
-    else
-    {
-        QString filename; //局部变量 储存无后缀文件名
-        fileinfo = QFileInfo(absurl);
-        //获取文件名
-        filename = fileinfo.fileName();
-        //ui->lineEdit_10->setText(filename);
-        //除去后缀名
-        int index = filename.lastIndexOf(".");
-        filename.truncate(index);
-        reqfilename = filename;
-        ui->textBrowser->append(getTime() + "选择文件 '" + reqfilename + "' 成功");
-        ui->pushButton_5->setEnabled(true);
-    }
-}
-
-////
 /// \brief MainWindow::loadRootCA
 /// \return true or false
 /// 载入根证书信息函数
@@ -91,7 +61,7 @@ bool MainWindow::loadRootCA()
     }
     else
     {
-        ui->textBrowser->append(getTime() + "加载根证书及密钥成功");
+        ui->textBrowser->append(getTime() + "加载根证书及密钥成功...");
         return true;
     }
 }
@@ -116,10 +86,10 @@ void MainWindow::on_pushButton_5_clicked()
     ui->pushButton_5->setEnabled(false);
 }
 
-//点击[选择文件]按钮事件
+//点击[选择请求文件]按钮事件
 void MainWindow::on_pushButton_4_clicked()
 {
-    selectFile();
+    selectReqFile();
 }
 
 //点击[撤销证书]按钮事件
@@ -145,11 +115,7 @@ void MainWindow::on_pushButton_9_clicked()
 //点击[恢复证书]按钮事件
 void MainWindow::on_pushButton_8_clicked()
 {
-    if(restoreCert())
-    {
-        ui->textBrowser->append(getTime() + "该证书已成功恢复");
-    }
-    else
+    if(!restoreCert())
     {
         ui->textBrowser->append(getTime() + "证书恢复失败，请重试");
     }
@@ -161,4 +127,10 @@ void MainWindow::on_listWidget_2_currentRowChanged(int currentRow)
 {
     ui->pushButton_8->setEnabled(true); //激活按键
     indexptr = currentRow-1; //获取当前位置索引值
+}
+
+//点击[选择证书文件]按钮事件
+void MainWindow::on_pushButton_2_clicked()
+{
+    selectCertFile();
 }
