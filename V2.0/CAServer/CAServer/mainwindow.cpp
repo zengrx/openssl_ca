@@ -61,7 +61,7 @@ bool MainWindow::loadRootCA()
     }
     else
     {
-        ui->textBrowser->append(getTime() + "加载根证书及密钥成功...");
+        ui->textBrowser->append(getTime() + "根证书及密钥加载成功...");
         return true;
     }
 }
@@ -118,6 +118,7 @@ void MainWindow::on_pushButton_8_clicked()
     if(!restoreCert())
     {
         ui->textBrowser->append(getTime() + "证书恢复失败，请重试");
+        return;
     }
     ui->pushButton_8->setEnabled(false);
 }
@@ -127,10 +128,17 @@ void MainWindow::on_listWidget_2_currentRowChanged(int currentRow)
 {
     ui->pushButton_8->setEnabled(true); //激活按键
     indexptr = currentRow-1; //获取当前位置索引值
+    qDebug() << indexptr;
 }
 
 //点击[选择证书文件]按钮事件
 void MainWindow::on_pushButton_2_clicked()
 {
     selectCertFile();
+}
+
+//点击[验证证书]按钮事件
+void MainWindow::on_pushButton_10_clicked()
+{
+    rootCaVerify();
 }

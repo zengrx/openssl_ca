@@ -51,12 +51,12 @@ bool MainWindow::revokeCert()
     ret = ASN1_INTEGER_set(serial,certop.ser.toLong());
     //qDebug() << ret << serial;
     //qDebug() << certop.ser;
-//    if(!CheckSerialWithCrl(serial))    //验证是否重复撤销
-//    {
-//        QMessageBox::information(this,"提示","证书已经被吊销，请勿重复吊销!\n","确定");
-//        BIO_free(bpint);
-//        return false;
-//    }
+    if(!checkCrlSerial(serial))    //验证是否重复撤销
+    {
+        ui->textBrowser->append(getTime() + "该证书已被撤销，请勿重复撤销证书");
+        BIO_free(bpint);
+        return false;
+    }
     if(X509_REVOKED_set_serialNumber(revoked,serial))
     {
         rvtime = ASN1_TIME_new();
@@ -216,10 +216,34 @@ void MainWindow::showCrlInfo()
     BIO_free(biof);
 }
 
-//change ASN1_Time to time_t
-//copy from http://stackoverflow.com/questions/10975542/asn1-time-to-time-t-conversion
-//copy date 2016.2.1
-//from openssl_ca/v1.0 authored by qool
+////
+/// \brief MainWindow::checkCrlSerial
+/// \return true or false
+/// 判断证书的撤销状态，防止证书被重复撤销
+///
+bool MainWindow::checkCrlSerial(ASN1_INTEGER *serial)
+{
+    X509_CRL *crl = certop.crl;
+    STACK_OF(X509_REVOKED) *revoked = crl->crl->revoked;
+    X509_REVOKED *rc;
+    int num = sk_X509_REVOKED_num(revoked);
+    bool bf = true;
+    for(int i=0; i<num; i++)
+    {
+        rc = sk_X509_REVOKED_value(revoked,i);
+        if(ASN1_INTEGER_cmp(serial,rc->serialNumber)==0)
+        {
+            bf = false;
+        }
+    }
+    return bf;
+}
+
+////change ASN1_Time to time_t
+///copy from http://stackoverflow.com/questions/10975542/asn1-time-to-time-t-conversion
+///copy date 2016.2.1
+///from openssl_ca/v1.0 authored by qool
+///
 time_t MainWindow::ASN1_GetTimeT(ASN1_TIME* time)
 {
     struct tm t;
@@ -254,12 +278,18 @@ time_t MainWindow::ASN1_GetTimeT(ASN1_TIME* time)
 
 ////
 /// \brief MainWindow::restoreCert
+/// 恢复被撤销证书函数
 ///
 bool MainWindow::restoreCert()
 {
-    int r_iptr=indexptr; //Bug maybe occurs here,indexPtr will begin a big num
-    QString r_crlserial; //局部变量 撤销序列号
-    char name1[100];    //局部变量 撤销链路径
+    int r_iptr = indexptr; //Bug maybe occurs here,indexPtr will begin a big num
+    if(indexptr < 0)
+    {
+        ui->textBrowser->append(getTime() + "请选择要恢复的证书");
+        return false;
+    }
+    QString r_crlserial;   //局部变量 撤销序列号
+    char name1[100];       //局部变量 撤销链路径
     STACK_OF(X509_REVOKED) *revoked = certop.crl->crl->revoked;
     X509_REVOKED *rc=sk_X509_REVOKED_value(revoked,r_iptr);
     r_crlserial = i2s_ASN1_INTEGER(NULL,rc->serialNumber);
@@ -284,8 +314,9 @@ bool MainWindow::restoreCert()
 //    }
 //    UpdataListWidget2();
     BIO *bp=NULL;
-    if(certop.crl==NULL||indexptr<0)
+    if(certop.crl==NULL)
     {
+        ui->textBrowser->append(getTime() + "根证书撤销链未正确载入，请检查文件存在性");
         return false;
     }
     sk_X509_REVOKED_delete(certop.crl->crl->revoked,indexptr); //restore

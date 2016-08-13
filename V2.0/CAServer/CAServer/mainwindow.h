@@ -112,11 +112,23 @@ private slots:
 
     void showCrlInfo(); //显示撤销链信息函数
 
+    bool checkCrlSerial(ASN1_INTEGER *serial); //检查撤销状态
+
     time_t ASN1_GetTimeT(ASN1_TIME* time); //ASN1_Time时间转为time_t时间
 
     void selectCertFile(); //选择证书文件函数
 
     QString getCertSubInfo(certInfo *info); //获取待验证书内容函数
+
+    void setCertSubInfo(certInfo *info); //显示待验证内容函数
+
+    bool checkByRootCert(); //根证书验证函数
+
+    bool checkByCrl(); //根证书撤销链验证函数
+
+    bool checkByTime(); //时效验证函数
+
+    void rootCaVerify(); //CA服务器验证函数
 
     void on_pushButton_clicked();   //点击[接收文件]按钮
 
@@ -135,6 +147,8 @@ private slots:
     void on_pushButton_2_clicked(); //点击[选择证书文件]按钮
 
     void on_listWidget_2_currentRowChanged(int currentRow); //ListWidget2行点击槽
+
+    void on_pushButton_10_clicked(); //点击[验证证书]按钮
 
 private:
     Ui::MainWindow *ui;
