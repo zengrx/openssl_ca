@@ -78,6 +78,9 @@ QString MainWindow::getCertSubInfo(certInfo *info)
     QString r_str = "待验证证书内容如下：";
     //qDebug() << certop.usercert;
     X509_NAME *name = X509_get_subject_name(certop.usercert);
+    X509 *x509 = certop.usercert;
+    ASN1_INTEGER *serial = X509_get_serialNumber(x509); //获取序列号
+    QString q_serial = i2s_ASN1_INTEGER(NULL,serial); //转换为qstring类型
     int num = X509_NAME_entry_count(name); //条目总数
     //qDebug() << num;
     X509_NAME_ENTRY *entry;
@@ -117,6 +120,7 @@ QString MainWindow::getCertSubInfo(certInfo *info)
         {
             BIO_free(mem);
         }
+        //由于i的随机性，可以在这里建立一个字典
         switch(i)
         {
         case 0 :
@@ -148,9 +152,10 @@ QString MainWindow::getCertSubInfo(certInfo *info)
         r_str += objtmp;
         r_str += ":\t";
         r_str += out;
-        qDebug() << i << out;
+        //qDebug() << i << out;
         delete [] pbuf;
     }
+    r_str += + "\n            serialNumber:\t" + q_serial;
     return r_str;
 }
 
@@ -204,6 +209,7 @@ bool MainWindow::checkByCrl()
     STACK_OF(X509_REVOKED) *revoked = crl->crl->revoked;
     X509_REVOKED *rc;
     ASN1_INTEGER *serial = X509_get_serialNumber(x509);
+    //qDebug() << serial  <<", " << q_serial;
     int num = sk_X509_REVOKED_num(revoked);
     bool bf = true;
     for(int i=0; i<num; i++)
@@ -257,7 +263,7 @@ void MainWindow::rootCaVerify()
     else
     {
         r_allchecked = false;
-        ui->textBrowser->append(getTime() + "这是一个不受信任的证书");
+        ui->textBrowser->append(getTime() + "这是一个不受信任的证书[!]");
     }
     if(checkByCrl())
     {
@@ -266,23 +272,23 @@ void MainWindow::rootCaVerify()
     else
     {
         r_allchecked = false;
-        ui->textBrowser->append(getTime() + "该证书已被撤销");
+        ui->textBrowser->append(getTime() + "该证书已被撤销[!]");
     }
     if(checkByTime())
     {
-        ui->textBrowser->append(getTime() + "通过时效验证，该证书仍在有效期内");
+        ui->textBrowser->append(getTime() + "通过中心系统时效验证，该证书仍在有效期内");
     }
     else
     {
         r_allchecked = false;
-        ui->textBrowser->append(getTime() + "该证书已过期");
+        ui->textBrowser->append(getTime() + "该证书已过期[!]");
     }
     if(r_allchecked)
     {
-        ui->textBrowser->append(getTime() + "该证书已通过中心验证，为有效证书");
+        ui->textBrowser->append(getTime() + "该证书已通过中心验证，认定为有效证书");
     }
     else
     {
-        ui->textBrowser->append(getTime() + "该证书未通过中心验证，为无效证书");
+        ui->textBrowser->append(getTime() + "该证书未通过中心验证，认定为无效证书");
     }
 }
