@@ -24,8 +24,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     /*/--------------------函数功能初始化---------------------\*/
-    getLocalIpAddr(); //获取本机IP地址
-    initCrlList();    //初始化撤销链信息
+    getLocalIpAddr();   //获取本机IP地址
+    initCrlList();      //初始化撤销链信息
+    updateListWidget(); //初始化证书签发列表
     /*\-----------------------------------------------------/*/
 
     connect(&tcpserver,SIGNAL(newConnection()),this,SLOT(acceptConnection()));

@@ -14,6 +14,9 @@
 #include <QDateTime>
 #include <qstring.h>
 #include <qdir.h>
+#include <QQueue>
+#include <QJsonObject>
+#include <QJsonArray>
 
 namespace Ui {
 class MainWindow;
@@ -56,6 +59,9 @@ private:
 
     certOpera certop;       //实例化证书操作结构体
     int indexptr;           //ListWidget索引
+
+    QList<QString> queue;   //未用
+    QJsonObject jsignlist;  //JSON对象
     /*\---------------------------------------------------/*/
 
 
@@ -129,6 +135,14 @@ private slots:
     bool checkByTime(); //时效验证函数
 
     void rootCaVerify(); //CA服务器验证函数
+
+    bool readJsonFile(QJsonObject &json); //读取JSON文件函数
+
+    bool saveJsonFile(QJsonObject &json); //保存JSON文件函数
+
+    bool writeSerial2Json(const int &serial); //写入签发序列号
+
+    bool updateListWidget(); //更新ListWidget内容
 
     void on_pushButton_clicked();   //点击[接收文件]按钮
 

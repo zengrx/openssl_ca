@@ -14,8 +14,8 @@ bool MainWindow::revokeCert()
     int ret;               //接收返回值
     BIO *bpint = NULL;     //BIO大数对象
     char name1[100];       //局部变量 数据类型转换中间值
-    X509 *x509;            //x509根证书对象
-    EVP_PKEY *pkey;        //根证书密钥对象
+    X509 *x509 = NULL;     //x509根证书对象
+    EVP_PKEY *pkey = NULL; //根证书密钥对象
     time_t t;              //time_t类型时间
     ASN1_TIME *rvtime;     //用户证书被撤销时间
     X509_REVOKED *revoked; //
@@ -227,7 +227,7 @@ bool MainWindow::checkCrlSerial(ASN1_INTEGER *serial)
     STACK_OF(X509_REVOKED) *revoked = crl->crl->revoked;
     X509_REVOKED *rc;
     int num = sk_X509_REVOKED_num(revoked);
-    bool bf = true;
+    bool bf = true; //flag
     for(int i=0; i<num; i++)
     {
         rc = sk_X509_REVOKED_value(revoked,i);

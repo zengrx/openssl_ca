@@ -233,10 +233,12 @@ void MainWindow::SignCertFile()
     {
         //+++++++++++++++++++++++++++++++++++++++++++++++
         //append by Qool in order to write serial to file
-        /*if(WriteSerial2Json(serial))
-            UpdataListWidget2();
+        if(writeSerial2Json(serial))
+        {
+            updateListWidget();
+        }
         else
-            qWarning("Write json failed.")*/;
+            qDebug() << "write to json failed.";
         //+++++++++++++++++++++++++++++++++++++++++++++++
         std::ofstream outfile;
         outfile.open(m_dir.toStdString());
@@ -255,4 +257,33 @@ void MainWindow::SignCertFile()
         ui->textBrowser->append(getTime() + "根证书签名失败，请重试");
         return;
     }
+}
+
+bool MainWindow::updateListWidget()
+{
+    if(false == readJsonFile(jsignlist))
+    {
+        return false;
+        qDebug() << "read json file failed" << endl;
+    }
+    ui->listWidget->clear();
+    ui->listWidget->addItem("序列号\t发布时间\t\t证书状态");
+    QJsonArray signArray = jsignlist["signlist"].toArray();
+    for(int i=0;i<signArray.size();i++)
+    {
+        QJsonObject objson = signArray[i].toObject();
+        QString list;
+        if(true == objson["status"].toBool())
+        {
+            list = QString::number(objson["serialNumber"].toInt())
+                +"\t"+objson["time"].toString()+"\t已撤销";
+        }
+        else
+        {
+            list = QString::number(objson["serialNumber"].toInt())
+                +"\t"+objson["time"].toString()+"\t未撤销";
+        }
+        ui->listWidget->addItem(list);
+    }
+    return true;
 }
