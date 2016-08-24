@@ -18,9 +18,10 @@ bool MainWindow::revokeCert()
     EVP_PKEY *pkey = NULL; //根证书密钥对象
     time_t t;              //time_t类型时间
     ASN1_TIME *rvtime;     //用户证书被撤销时间
-    X509_REVOKED *revoked; //
-    ASN1_INTEGER *serial;  //
+    X509_REVOKED *revoked; //x509类型序列号 如0x1c3d87e0
+    ASN1_INTEGER *serial;  //ASN1类型序列号 如0x1c3ad100
     QString r_crlname;     //局部变量 存储core路径
+    QString r_tmpinput;    //存储序列号输入
     loadRootCA(); //调用载入根证书信息函数
     x509 = certop.rootcert;
     pkey = certop.pkey;
@@ -51,6 +52,12 @@ bool MainWindow::revokeCert()
     ret = ASN1_INTEGER_set(serial,certop.ser.toLong());
     //qDebug() << ret << serial;
     //qDebug() << certop.ser;
+    r_tmpinput = ui->lineEdit_2->text();
+    if(r_tmpinput.isEmpty())
+    {
+        ui->textBrowser->append(getTime() + "序列号输入值为空，请重试");
+        return false;
+    }
     if(!checkCrlSerial(serial))    //验证是否重复撤销
     {
         ui->textBrowser->append(getTime() + "该证书已被撤销，请勿重复撤销证书");
@@ -66,12 +73,35 @@ bool MainWindow::revokeCert()
         X509_REVOKED_set_revocationDate(revoked,rvtime);
         if(X509_CRL_add0_revoked(certop.crl,revoked))
         {
-            qDebug() << "ok1";
+            //qDebug() << "ok1";
             X509_CRL_sort(certop.crl);// 排序
             bpint = BIO_new_file(name1,"wb");
             //qDebug() << name1;
             PEM_write_bio_X509_CRL(bpint,certop.crl);
             BIO_free(bpint);
+            /*对应更新ListWidget*/
+            readJsonFile(jsignlist);
+            if(jsignlist.isEmpty())
+            {
+                qDebug()<<"json file is empty";
+                return false;
+            }
+            QJsonArray array = jsignlist["signlist"].toArray();
+            //qDebug()<<array;
+            //qDebug()<<certop.ser<<"to int"<<certop.ser.toInt();
+            //array[0].toObject();
+            for(int i=0;i<array.size();i++)
+            {
+                QJsonObject objson = array[i].toObject();
+                if(objson["serialNumber"]==certop.ser.toInt())
+                {
+                    objson["status"] = true;
+                    array[i] = objson;
+                    jsignlist["signlist"] = array;
+                    saveJsonFile(jsignlist);
+                }
+            }
+            updateListWidget();
             return true;
         }
         else
@@ -293,26 +323,28 @@ bool MainWindow::restoreCert()
     STACK_OF(X509_REVOKED) *revoked = certop.crl->crl->revoked;
     X509_REVOKED *rc=sk_X509_REVOKED_value(revoked,r_iptr);
     r_crlserial = i2s_ASN1_INTEGER(NULL,rc->serialNumber);
-//    ReadJson(signlistjson);
-//    if(signlistjson.isEmpty())
-//    {
+    /*json操作*/
+    readJsonFile(jsignlist);
+    if(jsignlist.isEmpty())
+    {
 
-//        qWarning("Error: json empty.");
-//        return false;
-//    }
-//    QJsonArray SignArray = signlistjson["signlist"].toArray();
-//    for(int i=0;i<SignArray.size();i++)
-//    {
-//        QJsonObject objson=SignArray[i].toObject();
-//        if(objson["serialNumber"]==CRLserial.toInt())
-//        {
-//            objson["stats"]=false;
-//            SignArray[i]=objson;
-//            signlistjson["signlist"]=SignArray;
-//            SaveJson(signlistjson);
-//        }
-//    }
-//    UpdataListWidget2();
+        qWarning("Error: json empty.");
+        return false;
+    }
+    QJsonArray signArray = jsignlist["signlist"].toArray();
+    for(int i=0;i<signArray.size();i++)
+    {
+        QJsonObject objson = signArray[i].toObject();
+        if(objson["serialNumber"]==r_crlserial.toInt())
+        {
+            objson["status"] = false;
+            signArray[i] = objson;
+            jsignlist["signlist"] = signArray;
+            saveJsonFile(jsignlist);
+        }
+    }
+    updateListWidget();
+    /*--------*/
     BIO *bp=NULL;
     if(certop.crl==NULL)
     {
