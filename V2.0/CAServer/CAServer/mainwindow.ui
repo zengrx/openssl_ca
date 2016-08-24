@@ -1008,6 +1008,11 @@
             <attribute name="title">
              <string>其他</string>
             </attribute>
+            <layout class="QHBoxLayout" name="horizontalLayout_27">
+             <item>
+              <widget class="QTableView" name="tableView"/>
+             </item>
+            </layout>
            </widget>
           </widget>
          </item>

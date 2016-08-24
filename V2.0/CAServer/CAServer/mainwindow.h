@@ -58,7 +58,8 @@ private:
     QString reqfilename;    //接受的证书请求文件名
 
     certOpera certop;       //实例化证书操作结构体
-    int indexptr;           //ListWidget索引
+    int indexptr1;          //ListWidget1索引
+    int indexptr2;          //ListWidget2索引
 
     QList<QString> queue;   //未用
     QJsonObject jsignlist;  //JSON对象
@@ -91,6 +92,8 @@ private slots:
 
     void displayError(QAbstractSocket::SocketError socketerror); //网络错误显示
 
+
+
     QString getTime(); //获取当前系统时间函数
 
     X509 * loadCert(); //X509 载入根证书函数
@@ -100,13 +103,17 @@ private slots:
     bool loadRootCA(); //整合载入根证书信息函数
 
     //根证书签名
-    bool CreateCertFromRequestFile(int serialNumber,int days,
+    bool createCertFromRequestFile(int serialNumber,int days,
                                    char *requestFile,char *pubCert,
                                    char *priCert, int format);
 
     void SignCertFile(); //签名处理函数
 
     void selectReqFile(); //选择请求文件函数
+
+    void lightRevokeCert(); //证书签发tab处理撤销证书函数
+
+
 
     bool revokeCert(); //撤销证书函数
 
@@ -122,6 +129,8 @@ private slots:
 
     time_t ASN1_GetTimeT(ASN1_TIME* time); //ASN1_Time时间转为time_t时间
 
+
+
     void selectCertFile(); //选择证书文件函数
 
     QString getCertSubInfo(certInfo *info); //获取待验证书内容函数
@@ -136,13 +145,19 @@ private slots:
 
     void rootCaVerify(); //CA服务器验证函数
 
+
+
     bool readJsonFile(QJsonObject &json); //读取JSON文件函数
 
     bool saveJsonFile(QJsonObject &json); //保存JSON文件函数
 
     bool writeSerial2Json(const int &serial); //写入签发序列号
 
+    bool writeStatus2Json(int flag, QString serial); //写入证书状态
+
     bool updateListWidget(); //更新ListWidget内容
+
+
 
     void on_pushButton_clicked();   //点击[接收文件]按钮
 
@@ -163,6 +178,10 @@ private slots:
     void on_listWidget_2_currentRowChanged(int currentRow); //ListWidget2行点击槽
 
     void on_pushButton_10_clicked(); //点击[验证证书]按钮
+
+    void on_listWidget_currentRowChanged(int currentRow); //ListWidget行点击槽
+
+    void on_pushButton_3_clicked(); //证书签发tab点击[撤销证书]按钮
 
 private:
     Ui::MainWindow *ui;

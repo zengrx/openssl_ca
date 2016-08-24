@@ -14,7 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
     reqfindir = "../reqfin/";    //存储完成签发的请求文件相对路径
     signdir = "../signedfiles/"; //存储签发文件相对路径
 
-    indexptr = -1;               //ListWidget索引
+    indexptr1 = -1;              //ListWidget2索引
+    indexptr2 = -1;              //ListWidget2索引
 
     //文件接收部分
     totalbytes = 0;              //接收文件全部大小=文件真实大小+文件名等信息大小
@@ -97,9 +98,15 @@ void MainWindow::on_pushButton_4_clicked()
 void MainWindow::on_pushButton_7_clicked()
 {
     certop.ser = ui->lineEdit_2->text();
+    if(certop.ser.isEmpty())
+    {
+        ui->textBrowser->append(getTime() + "序列号输入值为空，请重试");
+        return;
+    }
     if(revokeCert())
     {
         ui->textBrowser->append(getTime() + "撤销证书成功，该证书已不具备效用");
+        writeStatus2Json(1, NULL);
         showCrlInfo();
     }
 }
@@ -124,12 +131,13 @@ void MainWindow::on_pushButton_8_clicked()
     ui->pushButton_8->setEnabled(false);
 }
 
-//ListWidget行点击事件
+//ListWidget2行点击事件
 void MainWindow::on_listWidget_2_currentRowChanged(int currentRow)
 {
     ui->pushButton_8->setEnabled(true); //激活按键
-    indexptr = currentRow-1; //获取当前位置索引值
-    qDebug() << indexptr;
+    ui->pushButton_3->setEnabled(false); //disable另一个tab按键
+    indexptr2 = currentRow - 1; //获取当前位置索引值
+    qDebug() << "lw2" << indexptr2;
 }
 
 //点击[选择证书文件]按钮事件
@@ -142,4 +150,19 @@ void MainWindow::on_pushButton_2_clicked()
 void MainWindow::on_pushButton_10_clicked()
 {
     rootCaVerify();
+}
+
+//ListWidget行点击事件
+void MainWindow::on_listWidget_currentRowChanged(int currentRow)
+{
+    ui->pushButton_3->setEnabled(true);
+    ui->pushButton_8->setEnabled(false);
+    indexptr1 = currentRow - 1;
+    qDebug() << "lw1" << indexptr1;
+}
+
+//证书签发tab点击[撤销证书按钮事件]
+void MainWindow::on_pushButton_3_clicked()
+{
+    lightRevokeCert();
 }

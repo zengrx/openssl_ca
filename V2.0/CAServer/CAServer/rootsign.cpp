@@ -80,7 +80,7 @@ EVP_PKEY * MainWindow::loadKey()
 }
 
 ////
-/// \brief MainWindow::CreateCertFromRequestFile
+/// \brief MainWindow::createCertFromRequestFile
 /// \param serialNumber 序列号
 /// \param days 签发天数
 /// \param requestFile 需要读取的请求文件
@@ -90,7 +90,7 @@ EVP_PKEY * MainWindow::loadKey()
 /// \return true or false
 /// 根据证书请求文件签发证书
 ///
-bool MainWindow::CreateCertFromRequestFile(int serialNumber,
+bool MainWindow::createCertFromRequestFile(int serialNumber,
                         int days, char *requestFile,
                         char *pubCert, char *priCert, int format)
 {
@@ -229,7 +229,7 @@ void MainWindow::SignCertFile()
         infile.close();
     }
     //调用签名函数
-    if(CreateCertFromRequestFile(serial,days,name1,name2,name3,3))
+    if(createCertFromRequestFile(serial,days,name1,name2,name3,3))
     {
         //+++++++++++++++++++++++++++++++++++++++++++++++
         //append by Qool in order to write serial to file
@@ -259,6 +259,11 @@ void MainWindow::SignCertFile()
     }
 }
 
+////
+/// \brief MainWindow::updateListWidget
+/// \return true or false
+/// 更新ListWidget信息
+///
 bool MainWindow::updateListWidget()
 {
     if(false == readJsonFile(jsignlist))
@@ -286,4 +291,16 @@ bool MainWindow::updateListWidget()
         ui->listWidget->addItem(list);
     }
     return true;
+}
+
+////
+/// \brief MainWindow::lightRevokeCert
+/// 在签发证书tab中快捷撤销函数
+///
+void MainWindow::lightRevokeCert()
+{
+    if(writeStatus2Json(3, NULL))
+    {
+        ui->textBrowser->append(getTime() + "该证书已被撤销");
+    }
 }
