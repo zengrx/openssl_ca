@@ -72,13 +72,16 @@ bool MainWindow::writeSerial2Json(const int &serial)
     return true;
 }
 
-////
+/////
 /// \brief MainWindow::writeStatus2Json
-/// \param json JSON对象
-/// \param flag 更新证书状态标识 1-填充撤销 2-填充恢复
+/// \param flag 更新证书状态标识 1-填充撤销 2-填充恢复 3-快捷撤销
 /// \return true or false
+/// 撤销或恢复操作对JSON文件的更新函数
+/// flag为1或2时都是使用相同的逻辑对JSON文件中status键值对进行修改
+/// flag为3时为ListWidget1中的操作
+/// 区别在于3从LW中按Row编号取值，1 2都是循环json[]取值判断
 ///
-bool MainWindow::writeStatus2Json(int flag, QString serial)
+bool MainWindow::writeStatus2Json(int flag)
 {
     readJsonFile(jsignlist);
     if(jsignlist.isEmpty())
@@ -114,34 +117,29 @@ bool MainWindow::writeStatus2Json(int flag, QString serial)
         for(int i=0;i<array.size();i++)
         {
             QJsonObject objson = array[i].toObject();
-            if(flag == 1)
+            if(objson["serialNumber"]==certop.ser.toInt())
             {
-                if(objson["serialNumber"]==certop.ser.toInt())
+                if(flag == 1)
                 {
                     objson["status"] = true;
-                    array[i] = objson;
-                    jsignlist["signlist"] = array;
-                    saveJsonFile(jsignlist);
                 }
-            }
-            else if(flag == 2)
-            {
-                if(objson["serialNumber"]==serial.toInt())
+                else if(flag == 2)
                 {
                     objson["status"] = false;
-                    array[i] = objson;
-                    jsignlist["signlist"] = array;
-                    saveJsonFile(jsignlist);
                 }
-            }
-            else
-            {
-                qDebug() << "wrong arg2 set";
-                return false;
+                else
+                {
+                    qDebug() << "wrong arg2 set";
+                    return false;
+                }
+                array[i] = objson;
+                jsignlist["signlist"] = array;
+                saveJsonFile(jsignlist);
             }
         }
         updateListWidget();
         return true;
     }
+    return false;
 }
 

@@ -84,7 +84,7 @@ void MainWindow::on_pushButton_6_clicked()
 //点击[根证书签名]按钮事件
 void MainWindow::on_pushButton_5_clicked()
 {
-    SignCertFile();
+    signCertFile();
     ui->pushButton_5->setEnabled(false);
 }
 
@@ -106,7 +106,7 @@ void MainWindow::on_pushButton_7_clicked()
     if(revokeCert())
     {
         ui->textBrowser->append(getTime() + "撤销证书成功，该证书已不具备效用");
-        writeStatus2Json(1, NULL);
+        writeStatus2Json(1);
         showCrlInfo();
     }
 }

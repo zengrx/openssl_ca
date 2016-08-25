@@ -162,7 +162,7 @@ bool MainWindow::createCertFromRequestFile(int serialNumber,
     X509_free(userCert);
     X509_free(rootCert);
     EVP_PKEY_free(rootKey);
-    return true;
+    return ret;
 }
 
 ////
@@ -199,7 +199,7 @@ void MainWindow::selectReqFile()
 /// \brief MainWindow::SignCertFile
 /// 主签名函数
 ///
-void MainWindow::SignCertFile()
+void MainWindow::signCertFile()
 {
     int serial;         //证书编号
     int days;           //申请天数
@@ -272,7 +272,7 @@ bool MainWindow::updateListWidget()
         qDebug() << "read json file failed" << endl;
     }
     ui->listWidget->clear();
-    ui->listWidget->addItem("序列号\t发布时间\t\t证书状态");
+    ui->listWidget->addItem("序列号\t发布时间(GMT+8)\t证书状态");
     QJsonArray signArray = jsignlist["signlist"].toArray();
     for(int i=0;i<signArray.size();i++)
     {
@@ -299,8 +299,8 @@ bool MainWindow::updateListWidget()
 ///
 void MainWindow::lightRevokeCert()
 {
-    if(writeStatus2Json(3, NULL))
+    if(writeStatus2Json(3))
     {
-        ui->textBrowser->append(getTime() + "该证书已被撤销");
+        ui->textBrowser->append(getTime() + "撤销证书成功，该证书已不具备效用");
     }
 }

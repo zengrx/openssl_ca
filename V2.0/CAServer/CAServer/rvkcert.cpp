@@ -294,7 +294,10 @@ bool MainWindow::restoreCert()
     X509_REVOKED *rc=sk_X509_REVOKED_value(revoked,r_iptr);
     r_crlserial = i2s_ASN1_INTEGER(NULL,rc->serialNumber);
     /*json操作*/
-    writeStatus2Json(2, r_crlserial);
+    //可以将r_crlserial值传入certop结构体中简化writeStatus2Json函数
+    certop.ser = i2s_ASN1_INTEGER(NULL,rc->serialNumber);
+    writeStatus2Json(2);
+    //writeStatus2Json(2, r_crlserial);
 //    readJsonFile(jsignlist);
 //    if(jsignlist.isEmpty())
 //    {

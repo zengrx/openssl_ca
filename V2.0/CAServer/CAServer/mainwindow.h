@@ -107,7 +107,7 @@ private slots:
                                    char *requestFile,char *pubCert,
                                    char *priCert, int format);
 
-    void SignCertFile(); //签名处理函数
+    void signCertFile(); //签名处理函数
 
     void selectReqFile(); //选择请求文件函数
 
@@ -153,7 +153,7 @@ private slots:
 
     bool writeSerial2Json(const int &serial); //写入签发序列号
 
-    bool writeStatus2Json(int flag, QString serial); //写入证书状态
+    bool writeStatus2Json(int flag); //写入证书状态
 
     bool updateListWidget(); //更新ListWidget内容
 
