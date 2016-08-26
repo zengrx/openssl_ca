@@ -103,9 +103,8 @@ private slots:
     bool loadRootCA(); //整合载入根证书信息函数
 
     //根证书签名
-    bool createCertFromRequestFile(int serialNumber,int days,
-                                   char *requestFile,char *pubCert,
-                                   char *priCert, int format);
+    bool createCertFromRequestFile(int serialNumber, int days,
+                                   char *requestFile, char *pubCert, int format);
 
     void signCertFile(); //签名处理函数
 

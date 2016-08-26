@@ -3,19 +3,23 @@
 
 ////
 /// \brief MainWindow::certReq
-/// \return a int number
+/// \param rsapair 公私钥对
+/// \return 1 for success
 /// 证书请求生成函数说明：
 ///     ret为x509等openssl提供函数的返回值
-///     该返回值为1即表示函数执行成功，为0则表示失败
+///     该返回值为1即表示函数执行成功，其他则表示失败
 ///     函数生成的请求为PEM格式
 /// 其他部分：
 ///     1.attribute：此段注释为添加证书请求信息函数
 ///         具体参数及使用在注释的描述示例中给出
-///     2.DEM编码：程序可以生成DEM编码内容
+///     2.DEM编码(已注释)：程序可以生成DEM编码内容
 ///         具体操作在注释中给出，生成文件后缀名建议改为.pem
-///     3.关于公钥和私钥：应该还有用户口令验证函数，不想写
+///     3.公钥和私钥：公私钥对的生成在genkeypair.cpp中实现
+///         生成请求文件时需要载入签名摘要等信息
+///     4.选择私钥加密的下拉菜单是假的啊哈哈哈
+///     5.证书版本和生成rsapair根据自己需求修改
 ///
-int MainWindow::certReq()
+int MainWindow::certReq(RSA *rsapair)
 {
     certInfo certinfo;
     ret = X509_REQ_set_version(req, version);
@@ -72,9 +76,8 @@ int MainWindow::certReq()
     }
     /* pub key */
     pkey = EVP_PKEY_new();
-    rsa = RSA_generate_key(bits, e, NULL, NULL);
-    EVP_PKEY_assign_RSA(pkey, rsa);
-    ret = X509_REQ_set_pubkey(req, pkey);
+    EVP_PKEY_assign_RSA(pkey, rsapair); //使用自己的私钥签名
+    ret = X509_REQ_set_pubkey(req, pkey); //将公钥放入证书请求中
     if (!ret)
     {
         printf("sign err at X509_REQ_set_pubkey!\n");
@@ -87,7 +90,7 @@ int MainWindow::certReq()
 //    len = strlen(bytes);
 //    ret = X509_REQ_add1_attr_by_txt(req, "organizationName", V_ASN1_UTF8STRING, (unsigned char *)bytes, len);
     /************/
-    md = EVP_sha1();
+    md = EVP_sha1(); //摘要
     ret = X509_REQ_digest(req, md, (unsigned char *)mdout, (unsigned int*)&mdlen);
     if(!ret)
     {
@@ -95,7 +98,7 @@ int MainWindow::certReq()
         X509_REQ_free(req);
         return -1;
     }
-    ret = X509_REQ_sign(req, pkey, md);
+    ret = X509_REQ_sign(req, pkey, md); //放置摘要值
     if (!ret)
     {
         printf("sign err at X509_REQ_sign!\n");
@@ -104,16 +107,16 @@ int MainWindow::certReq()
     }
     /* 写入文件 PEM 格式 */
     char name1[100]; //生成的请求文件名称
-    //路径变量'dir'写死在上层目录reqfile中，根据自己的需要修改
+    //路径变量'reqdir'写死在上层目录reqfile中，根据自己的需要修改
     QString c_filename = ui->lineEdit_8->text();
     if(c_filename.isEmpty())
     {
         ui->textBrowser->append(getTime() + "请填写请求文件名称");
         return 0;
     }
-    strcpy(name1,(dir + c_filename +".csr").toStdString().c_str());
+    strcpy(name1,(reqdir + c_filename +".csr").toStdString().c_str());
     b = BIO_new_file(name1, "w");
-    PEM_write_bio_X509_REQ(b, req);
+    PEM_write_bio_X509_REQ(b, req); //生成请求文件
     BIO_free(b);
 //    /* DER 编码 */
 //    len = i2d_X509_REQ(req, NULL);

@@ -33,7 +33,8 @@ class MainWindow : public QMainWindow
 
 private:
     /*/-------------------------公用变量---------------------------\*/
-    QString dir;                   //定义的操作目录
+    QString reqdir;                //请求文件操作目录
+    QString pradir;                //存储用户私钥目录
     /*\----------------------------------------------------------/*/
 
 
@@ -54,16 +55,16 @@ private:
     int ret;                       //返回值
     long version;                  //版本号
     X509_NAME *name;               //x509文件对象
-    EVP_PKEY *pkey;                //秘钥
-    RSA *rsa;                      //公钥参数
+    EVP_PKEY *pkey;                //用户公钥
+    RSA *rsapair;                      //RSA公私钥对
     X509_NAME_ENTRY *entry = NULL; //信息填充对象
     char bytes[100], mdout[20];    //strcpy参数及x509请求参数
     int len, mdlen;                //字符串长度
-    int bits;                      //rsa参数1
-    unsigned long e = RSA_3;       //rsa参数2
+    int bits;                      //rsa参数1 密钥对比特长度
+    unsigned long e = RSA_3;       //rsa参数2 加密算法参数
     unsigned char *der, *p;        //der请求参数
     FILE *fp;                      //文件对象
-    const EVP_MD *md;              //EVP对象，生成请求用
+    const EVP_MD *md;              //EVP对象 摘要值
     X509 *x509;                    //x509对象
     BIO *b;                        //BIO对象
     /*\-----------------------------------------------------------/*/
@@ -72,12 +73,16 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    int certReq(); //生成证书请求文件函数
+    int certReq(RSA *rsapair); //生成证书请求文件函数
+
+    bool generateKeypair(); //生成密钥对函数
 
 private slots:
+
     QString setAline(); //设置信息栏对齐
 
     QString getTime(); //获取当前时间
+
 
     void sendFile(); //连接服务器并发送文件函数
 
@@ -89,11 +94,14 @@ private slots:
 
     void displayError(QAbstractSocket::SocketError); //显示错误信息
 
+
     void on_pushButton_4_clicked(); //点击[选择文件]按钮
 
     void on_pushButton_3_clicked(); //点击[发送]按钮
 
     void on_pushButton_clicked(); //点击[生成请求文件]按钮
+
+    void on_pushButton_2_clicked(); //点击[生成用户私钥]按钮
 
 private:
     Ui::MainWindow *ui;

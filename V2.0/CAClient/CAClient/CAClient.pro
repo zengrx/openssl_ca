@@ -14,7 +14,8 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    certreq.cpp
+    certreq.cpp \
+    genkeypair.cpp
 
 HEADERS  += mainwindow.h
 

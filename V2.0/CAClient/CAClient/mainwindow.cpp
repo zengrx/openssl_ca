@@ -27,10 +27,11 @@ MainWindow::MainWindow(QWidget *parent) :
     tcpclient = new QTcpSocket(this);
 
     //公共部分
-    dir = "../reqfile/";
+    reqdir = "../reqfile/";
+    pradir = "../core/";
 
     //请求文件部分
-    bits = 0;//推荐1024;
+    bits = 0; //推荐1024;
     req = X509_REQ_new();
     version = 1;
     /***********************初始化数据部分*************************/
@@ -55,7 +56,7 @@ MainWindow::~MainWindow()
 void MainWindow::selectFile()
 {
     //打开单个文件，默认目录为[...\CAClient\reqfile],文件类型为.csr
-    filename = QFileDialog::getOpenFileName(this,"select file",dir);//*/,"*.csr");
+    filename = QFileDialog::getOpenFileName(this,"select file",reqdir);//*/,"*.csr");
     if(!filename.isEmpty())
     {
         ui->pushButton_3->setEnabled(true);
@@ -188,12 +189,7 @@ void MainWindow::on_pushButton_3_clicked()
 void MainWindow::on_pushButton_clicked()
 {
     int ret1; //接收certReq函数返回值
-    bits = ui->comboBox->currentText().toInt();
-    if(!bits)
-    {
-        ui->textBrowser->append(getTime() + "请选择生成RSA公私钥对的比特长度");
-    }
-    ret1 = certReq(); //调用生成请求文件函数并接受返回值
+    ret1 = certReq(rsapair); //调用生成请求文件函数并接受返回值
     if(ret1 != 1)
     {
         ui->textBrowser->append(getTime() + "生成证书请求文件失败，请更新版本或联系开发人员");
@@ -201,5 +197,25 @@ void MainWindow::on_pushButton_clicked()
     else
     {
         ui->textBrowser->append(getTime() + "证书文件生成成功");
+        ui->pushButton->setEnabled(false);
+    }
+}
+
+//[生成用户私钥]按钮事件
+void MainWindow::on_pushButton_2_clicked()
+{
+    bits = ui->comboBox->currentText().toInt();
+    if(!bits)
+    {
+        ui->textBrowser->append(getTime() + "请选择生成RSA公私钥对的比特长度");
+    }
+    if(generateKeypair())
+    {
+        ui->textBrowser->append(getTime() + "生成用户密钥对成功");
+        ui->pushButton->setEnabled(true);
+    }
+    else
+    {
+        ui->textBrowser->append(getTime() + "生成密钥对失败，请更新版本或联系开发人员");
     }
 }

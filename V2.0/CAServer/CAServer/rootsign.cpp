@@ -92,11 +92,11 @@ EVP_PKEY * MainWindow::loadKey()
 ///
 bool MainWindow::createCertFromRequestFile(int serialNumber,
                         int days, char *requestFile,
-                        char *pubCert, char *priCert, int format)
+                        char *pubCert, int format)
 {
     X509 * rootCert = NULL; //x509根证书对象
     EVP_PKEY * rootKey = NULL; //根证书密钥对象
-    int i, j;
+    int i;
     bool ret; //返回值 太多写了一部分
     //调用上边两个函数生成对象
     if(loadRootCA())
@@ -116,24 +116,23 @@ bool MainWindow::createCertFromRequestFile(int serialNumber,
     req = PEM_read_bio_X509_REQ(in, NULL, NULL, NULL);
     BIO_free(in);
 
-    userKey = X509_REQ_get_pubkey(req);
-    userCert = X509_new();
+    userKey = X509_REQ_get_pubkey(req); //从请求文件中获取公钥
+    userCert = X509_new(); //x509对象 用于生成证书
 
     X509_set_version(userCert, 2);
     ASN1_INTEGER_set(X509_get_serialNumber(userCert), serialNumber);
     X509_gmtime_adj(X509_get_notBefore(userCert), 0);
     X509_gmtime_adj(X509_get_notAfter(userCert), (long)60 * 60 * 24 * days);
-    X509_set_pubkey(userCert, userKey);
+    X509_set_pubkey(userCert, userKey); //将公钥载入至用户证书
     EVP_PKEY_free(userKey);
 
     X509_set_subject_name(userCert, req->req_info->subject);
 
     X509_set_issuer_name(userCert, X509_get_issuer_name(rootCert));
-    X509_sign(userCert, rootKey, EVP_sha1());
+    X509_sign(userCert, rootKey, EVP_sha1()); //CA私钥签名
 
     BIO * bcert = NULL, *bkey = NULL;
-    if(((bcert = BIO_new_file(pubCert, "w")) == NULL) ||
-            ((bkey = BIO_new_file(priCert, "w")) == NULL))
+    if(((bcert = BIO_new_file(pubCert, "w")) == NULL)) //公钥
     {
         ui->textBrowser->append(getTime() + "生成BIO型中间数据时发生错误");
         return false;
@@ -143,16 +142,16 @@ bool MainWindow::createCertFromRequestFile(int serialNumber,
     {
         ret = true;
         i = i2d_X509_bio(bcert, userCert);
-        j = i2d_PrivateKey_bio(bkey, userKey);
+        //j = i2d_PrivateKey_bio(bkey, userKey);
     }
     else if(format == FORMAT_PEM)
     {
         ret = true;
         i = PEM_write_bio_X509(bcert, userCert);
-        j = PEM_write_bio_PrivateKey(bkey, userKey, NULL, NULL, 0, NULL, NULL);
+        //j = PEM_write_bio_PrivateKey(bkey, userKey, NULL, NULL, 0, NULL, NULL);
     }
 
-    if(!i || !j)
+    if(!i)
     {
         ui->textBrowser->append(getTime() + "签发PEM或DER用户文件时发生错误");
         ret = false;
@@ -185,7 +184,6 @@ void MainWindow::selectReqFile()
         fileinfo = QFileInfo(absurl);
         //获取文件名
         filename = fileinfo.fileName();
-        //ui->lineEdit_10->setText(filename);
         //除去后缀名
         int index = filename.lastIndexOf(".");
         filename.truncate(index);
@@ -205,13 +203,11 @@ void MainWindow::signCertFile()
     int days;           //申请天数
     char name1[100];    //申请文件名
     char name2[100];    //签发证书名
-    char name3[100];    //子证书私钥
     QString r_reqfname; //局部变量 签名时暂存值
     r_reqfname = reqdir + reqfilename; //接收的请求文件相对路径
     strcpy(name1,(r_reqfname+".csr").toStdString().c_str());
     r_reqfname = signdir + reqfilename; //生成证书及密钥文件相对路径
     strcpy(name2,(r_reqfname+".crt").toStdString().c_str());
-    strcpy(name3,(r_reqfname+".key").toStdString().c_str());
     days = ui->comboBox_2->currentText().toInt();
     //读写存储签名序列号的文本
     std::ifstream infile; //文件流对象
@@ -229,7 +225,7 @@ void MainWindow::signCertFile()
         infile.close();
     }
     //调用签名函数
-    if(createCertFromRequestFile(serial,days,name1,name2,name3,3))
+    if(createCertFromRequestFile(serial,days,name1,name2,3))
     {
         //+++++++++++++++++++++++++++++++++++++++++++++++
         //append by Qool in order to write serial to file
