@@ -12,11 +12,16 @@ MainWindow::MainWindow(QWidget *parent) :
     //设置lineEdit正则
     QRegExp regExpIP("((2[0-4]\\d|25[0-5]|[01]?\\d\\d?)\\.){3}(2[0-4]\\d|25[0-4]|[01]?\\d\\d?)");
     QRegExp regExpPort("([0-9]{0,5})");
-    QRegExp regExpReq("[A-Za-z_0-9]+"); //请求信息输入框正则
+    QRegExp regExpReq("[A-Za-z_0-9]+"); //请求信息输入框正则 文件名使用
+    QRegExp regExpEml("[a-zA-Z_0-9]+@([-A-Za-z]+\\.)+[a-zA-Z]{2,}"); //Email
     QRegExpValidator *pRegExpValidatorIp = new QRegExpValidator(regExpIP,this);
     QRegExpValidator *pRegExpValidatorPort = new QRegExpValidator(regExpPort,this);
+    QRegExpValidator *pRegExpValidatorReq = new QRegExpValidator(regExpReq,this);
+    QRegExpValidator *pRegExpValidatorEml = new QRegExpValidator(regExpEml,this);
     ui->lineEdit_9->setValidator(pRegExpValidatorIp);
     ui->lineEdit_10->setValidator(pRegExpValidatorPort);
+    ui->lineEdit_8->setValidator(pRegExpValidatorReq);
+    ui->lineEdit_6->setValidator(pRegExpValidatorEml);
 
     /***********************初始化数据部分*************************/
     //文件传输部分
