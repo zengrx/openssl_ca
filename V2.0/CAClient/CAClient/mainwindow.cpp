@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //公共部分
     reqdir = "../reqfile/";
-    pradir = "../core/";
+    pridir = "../core/";
 
     //请求文件部分
     bits = 0; //推荐1024;
@@ -223,4 +223,11 @@ void MainWindow::on_pushButton_2_clicked()
     {
         ui->textBrowser->append(getTime() + "生成密钥对失败，请更新版本或联系开发人员");
     }
+}
+
+//下拉菜单2响应事件
+void MainWindow::on_comboBox_2_currentIndexChanged(int index)
+{
+    ui->lineEdit_11->setEnabled(true);
+    setEncryptedForm(index);
 }

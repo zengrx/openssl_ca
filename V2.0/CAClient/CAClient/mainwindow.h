@@ -34,7 +34,7 @@ class MainWindow : public QMainWindow
 private:
     /*/-------------------------公用变量---------------------------\*/
     QString reqdir;                //请求文件操作目录
-    QString pradir;                //存储用户私钥目录
+    QString pridir;                //存储用户私钥目录
     /*\----------------------------------------------------------/*/
 
 
@@ -56,7 +56,7 @@ private:
     long version;                  //版本号
     X509_NAME *name;               //x509文件对象
     EVP_PKEY *pkey;                //用户公钥
-    RSA *rsapair;                      //RSA公私钥对
+    RSA *rsapair;                  //RSA公私钥对
     X509_NAME_ENTRY *entry = NULL; //信息填充对象
     char bytes[100], mdout[20];    //strcpy参数及x509请求参数
     int len, mdlen;                //字符串长度
@@ -67,6 +67,7 @@ private:
     const EVP_MD *md;              //EVP对象 摘要值
     X509 *x509;                    //x509对象
     BIO *b;                        //BIO对象
+    const EVP_CIPHER *ecpform;     //私钥加密函数
     /*\-----------------------------------------------------------/*/
 
 public:
@@ -76,6 +77,8 @@ public:
     int certReq(RSA *rsapair); //生成证书请求文件函数
 
     bool generateKeypair(); //生成密钥对函数
+
+    void setEncryptedForm(int index1); //设置加密方式
 
 private slots:
 
@@ -102,6 +105,8 @@ private slots:
     void on_pushButton_clicked(); //点击[生成请求文件]按钮
 
     void on_pushButton_2_clicked(); //点击[生成用户私钥]按钮
+
+    void on_comboBox_2_currentIndexChanged(int index); //combobox点击槽
 
 private:
     Ui::MainWindow *ui;

@@ -76,7 +76,7 @@ int MainWindow::certReq(RSA *rsapair)
     }
     /* pub key */
     pkey = EVP_PKEY_new();
-    EVP_PKEY_assign_RSA(pkey, rsapair); //使用自己的私钥签名
+    EVP_PKEY_assign_RSA(pkey, rsapair); //使用自己的私钥?签名
     ret = X509_REQ_set_pubkey(req, pkey); //将公钥放入证书请求中
     if (!ret)
     {
