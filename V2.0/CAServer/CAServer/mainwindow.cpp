@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QDirModel *model = new QDirModel;
     //从缺省目录创建数据
     ui->treeView->setModel(model);
-    ui->treeView->setRootIndex(model->index("E:/project/QTProject/OpenSSLCA/CAServer"));
+    ui->treeView->setRootIndex(model->index("../"));
 
 }
 
@@ -169,4 +169,15 @@ void MainWindow::on_listWidget_currentRowChanged(int currentRow)
 void MainWindow::on_pushButton_3_clicked()
 {
     lightRevokeCert();
+}
+
+//treeview单击事件
+void MainWindow::on_treeView_clicked(const QModelIndex &index)
+{
+    //qDebug() << index << index.data().toString() <<index.parent().data().toString();
+    QString index1, index2;
+    index1 = index.parent().data().toString();
+    index2 = index.data().toString();
+    index1 = "../" + index1 + "/" + index2;
+    ui->textBrowser->append(index1);
 }

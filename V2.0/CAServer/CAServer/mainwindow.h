@@ -185,6 +185,8 @@ private slots:
 
     void on_pushButton_3_clicked(); //证书签发tab点击[撤销证书]按钮
 
+    void on_treeView_clicked(const QModelIndex &index);
+
 private:
     Ui::MainWindow *ui;
 };
