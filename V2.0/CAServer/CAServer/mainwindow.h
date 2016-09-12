@@ -17,6 +17,9 @@
 #include <QQueue>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QTreeWidgetItem>
+#include <qdirmodel.h>
+#include <qtreeview.h>
 
 namespace Ui {
 class MainWindow;

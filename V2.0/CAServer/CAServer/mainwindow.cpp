@@ -32,7 +32,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(&tcpserver,SIGNAL(newConnection()),this,SLOT(acceptConnection()));
 
-
+    //设置treeview内容，临时
+    QDirModel *model = new QDirModel;
+    //从缺省目录创建数据
+    ui->treeView->setModel(model);
+    ui->treeView->setRootIndex(model->index("E:/project/QTProject/OpenSSLCA/CAServer"));
 
 }
 
