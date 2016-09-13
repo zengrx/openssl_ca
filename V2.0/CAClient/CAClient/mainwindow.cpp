@@ -62,6 +62,8 @@ void MainWindow::selectFile()
 {
     //打开单个文件，默认目录为[...\CAClient\reqfile],文件类型为.csr
     filename = QFileDialog::getOpenFileName(this,"select file",reqdir);//*/,"*.csr");
+    //清空进度条
+    ui->progressBar->setValue(0);
     if(!filename.isEmpty())
     {
         ui->pushButton_3->setEnabled(true);

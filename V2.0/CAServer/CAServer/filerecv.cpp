@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QHostInfo>
+#include <qdir.h>
 
 ////
 /// \brief MainWindow::start
@@ -10,6 +11,8 @@
 void MainWindow::start()
 {
     ui->pushButton->setEnabled(false);
+    //进度条置0
+    ui->progressBar->setValue(0);
     //bytesrecved = 0; //开始监听时清空之前数据
     QString hostip; //服务器ip
     int hostport; //服务器端口号
@@ -64,18 +67,51 @@ void MainWindow::updateServerProgress()
                 (filenamesize != 0))
         {  //接收文件名，并建立文件
             in >> filename;
+            QString tmpfname, tmpcurtime, tmpdirname;
+            tmpfname = filename;
+            int index = tmpfname.lastIndexOf(".");
+            tmpfname.truncate(index);
+            //qDebug() << tmpfname;
+            QDateTime current_date_time = QDateTime::currentDateTime();
+            tmpcurtime = current_date_time.toString("_MMdd");
+            //qDebug() << tmpcurtime;
+            tmpdirname = reqdir + tmpfname + tmpcurtime;
+            QDir *rdir = new QDir; //建立附件文件夹
+            bool exist = rdir->exists(tmpdirname);
+            QString f_filename; //接收文件
+            if (exist)
+            {
+                ui->textBrowser->append(getTime() + "附件文件夹已存在，文件已存入" + tmpdirname);
+                f_filename = tmpdirname + "/" + filename;
+            }
+            else
+            {
+
+                bool ok = rdir->mkdir(tmpdirname);
+                if (ok)
+                {
+                    ui->textBrowser->append(getTime() + "接收请求文件并附件文件夹");
+                    f_filename = reqdir + filename;
+                }
+                else
+                {
+                    ui->textBrowser->append(getTime() + "创建文件夹失败");
+                    return;
+                }
+            }
             ui->textBrowser->append(getTime() + QString("正在接收文件 '%1' ...").arg(filename));
             bytesrecved += filenamesize;
-            QString f_filename = reqdir+filename;
+            //QString f_filename = reqdir + filename;
             localfile = new QFile(f_filename);
             if(!localfile->open(QFile::WriteOnly))
             {
-                qDebug() << "open file error!";
+                ui->textBrowser->append(getTime() + "接收文件失败");
                 return;
             }
         }
         else
         {
+            ui->textBrowser->append(getTime() + "有一个忘了叫什么的错误");
             return;
         }
     }
@@ -95,6 +131,10 @@ void MainWindow::updateServerProgress()
         localfile->close();
         ui->pushButton->setEnabled(true);
         ui->textBrowser->append(getTime() + QString("接收文件 '%1' 成功！").arg(filename));
+        //更新treeview
+        QDirModel *model = new QDirModel;
+        ui->treeView->setModel(model);
+        ui->treeView->setRootIndex(model->index("../reqfiles"));
         //完成一个传输，数据清零
         totalbytes = 0;
         bytesrecved = 0;

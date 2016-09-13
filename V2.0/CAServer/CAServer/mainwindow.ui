@@ -38,7 +38,7 @@
             </size>
            </property>
            <property name="currentIndex">
-            <number>4</number>
+            <number>0</number>
            </property>
            <widget class="QWidget" name="tab">
             <attribute name="title">
@@ -1006,7 +1006,7 @@
            </widget>
            <widget class="QWidget" name="tab_5">
             <attribute name="title">
-             <string>其他</string>
+             <string>附件预览</string>
             </attribute>
             <layout class="QHBoxLayout" name="horizontalLayout_27">
              <item>

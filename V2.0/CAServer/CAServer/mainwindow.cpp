@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QDirModel *model = new QDirModel;
     //从缺省目录创建数据
     ui->treeView->setModel(model);
-    ui->treeView->setRootIndex(model->index("../"));
+    ui->treeView->setRootIndex(model->index("../reqfiles"));
 
 }
 
@@ -175,9 +175,17 @@ void MainWindow::on_pushButton_3_clicked()
 void MainWindow::on_treeView_clicked(const QModelIndex &index)
 {
     //qDebug() << index << index.data().toString() <<index.parent().data().toString();
-    QString index1, index2;
+    QString index1, index2, index3;
     index1 = index.parent().data().toString();
     index2 = index.data().toString();
-    index1 = "../" + index1 + "/" + index2;
-    ui->textBrowser->append(index1);
+    index3 = index1 + "/" + index2;
+    if("reqfiles" == index1)
+    {
+        ui->textBrowser->append(getTime() + "进入" + index3 + "文件夹");
+    }
+    else
+    {
+        index3 = reqdir + index3;
+        ui->textBrowser->append(getTime() + "选中" + index3 + "文件");
+    }
 }
