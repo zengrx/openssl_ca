@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
 #include <qprocess.h>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -25,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //shell命令
     shellcmd = "";
+    clickflag = 0;
     /*\-----------------------------------------------------/*/
 
 
@@ -33,6 +35,9 @@ MainWindow::MainWindow(QWidget *parent) :
     initCrlList();      //初始化撤销链信息
     updateListWidget(); //初始化证书签发列表
     /*\-----------------------------------------------------/*/
+
+    clicktimer = new QTimer(this);
+    connect(clicktimer, SIGNAL(timeout()), this, SLOT(mouseClicked()));
 
     connect(&tcpserver,SIGNAL(newConnection()),this,SLOT(acceptConnection()));
 
@@ -178,11 +183,41 @@ void MainWindow::on_pushButton_3_clicked()
 //treeview单击事件
 void MainWindow::on_treeView_clicked(const QModelIndex &index)
 {
-    //qDebug() << index << index.data().toString() <<index.parent().data().toString();
-    QString index1, index2, index3;
+    //idx = index;
+    if(1 == clickflag)
+    {
+        clickflag = 0;
+        return;
+    }
     index1 = index.parent().data().toString();
     index2 = index.data().toString();
     index3 = index1 + "/" + index2;
+    clicktimer->start(300);
+}
+
+//treeview双击事件
+void MainWindow::on_treeView_doubleClicked(const QModelIndex &index)
+{
+    qDebug() << shellcmd;
+    clickflag += 1;
+    clicktimer->stop();
+    QFileInfo fileInfo("../" + index3);
+    if("" == shellcmd && "" != fileInfo.suffix())
+    {
+        ui->textBrowser->append(getTime() + "无法打开，请确认文件");
+        return;
+    }
+    else
+    {
+        ui->textBrowser->append(getTime() + "打开" + index3);
+        QProcess::execute(shellcmd);
+    }
+}
+
+void MainWindow::mouseClicked()
+{
+    //qDebug() << "单击";
+    clicktimer->stop();
     if("reqfiles" == index1)
     {
         shellcmd = "";
@@ -205,20 +240,5 @@ void MainWindow::on_treeView_clicked(const QModelIndex &index)
         ui->textBrowser->append(getTime() + "选中" + index3 + "文件，双击查看内容");
         shellcmd = "explorer " + shellpath;
         //QProcess::execute(shellcmd);
-    }
-}
-
-//treeview双击事件
-void MainWindow::on_treeView_doubleClicked(const QModelIndex &index)
-{
-    qDebug() << shellcmd;
-    if("" == shellcmd)
-    {
-        ui->textBrowser->append(getTime() + "无法打开，请确认文件");
-        return;
-    }
-    else
-    {
-        QProcess::execute(shellcmd);
     }
 }

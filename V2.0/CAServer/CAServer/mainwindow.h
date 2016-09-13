@@ -20,6 +20,7 @@
 #include <QTreeWidgetItem>
 #include <qdirmodel.h>
 #include <qtreeview.h>
+#include <qtimer.h>
 
 namespace Ui {
 class MainWindow;
@@ -68,6 +69,9 @@ private:
     QJsonObject jsignlist;  //JSON对象
 
     QString shellcmd;       //传递构造的shell命令
+    int clickflag;          //鼠标点击事件flag
+    QTimer *clicktimer;     //判断双击间隔 300
+    QString index1, index2, index3;
     /*\---------------------------------------------------/*/
 
 
@@ -187,9 +191,11 @@ private slots:
 
     void on_pushButton_3_clicked(); //证书签发tab点击[撤销证书]按钮
 
-    void on_treeView_clicked(const QModelIndex &index);
+    void on_treeView_clicked(const QModelIndex &index); //treeview单击事件槽
 
-    void on_treeView_doubleClicked(const QModelIndex &index);
+    void on_treeView_doubleClicked(const QModelIndex &index); //treeview双击事件槽
+
+    void mouseClicked(); //处理 单击-双击-单击 机制槽
 
 private:
     Ui::MainWindow *ui;
