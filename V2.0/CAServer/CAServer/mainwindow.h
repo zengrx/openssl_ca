@@ -66,6 +66,8 @@ private:
 
     QList<QString> queue;   //未用
     QJsonObject jsignlist;  //JSON对象
+
+    QString shellcmd;       //传递构造的shell命令
     /*\---------------------------------------------------/*/
 
 
@@ -186,6 +188,8 @@ private slots:
     void on_pushButton_3_clicked(); //证书签发tab点击[撤销证书]按钮
 
     void on_treeView_clicked(const QModelIndex &index);
+
+    void on_treeView_doubleClicked(const QModelIndex &index);
 
 private:
     Ui::MainWindow *ui;

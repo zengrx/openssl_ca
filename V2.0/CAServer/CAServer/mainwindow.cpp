@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <qprocess.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -21,6 +22,9 @@ MainWindow::MainWindow(QWidget *parent) :
     totalbytes = 0;              //接收文件全部大小=文件真实大小+文件名等信息大小
     bytesrecved = 0;             //已接收的文件大小
     filenamesize = 0;            //文件名等信息大小
+
+    //shell命令
+    shellcmd = "";
     /*\-----------------------------------------------------/*/
 
 
@@ -181,11 +185,40 @@ void MainWindow::on_treeView_clicked(const QModelIndex &index)
     index3 = index1 + "/" + index2;
     if("reqfiles" == index1)
     {
-        ui->textBrowser->append(getTime() + "进入" + index3 + "文件夹");
+        shellcmd = "";
+        QFileInfo fileInfo("../" + index3);
+        //qDebug() << fileInfo.suffix();
+        if("" == fileInfo.suffix())
+        {
+            ui->textBrowser->append(getTime() + "选中" + index3 + "文件夹");
+        }
+        else
+        {
+            ui->textBrowser->append(getTime() + "选中" + index3 + "文件");
+        }
     }
     else
     {
-        index3 = reqdir + index3;
-        ui->textBrowser->append(getTime() + "选中" + index3 + "文件");
+        QString shellpath;
+        shellpath = "..\\reqfiles\\";
+        shellpath = shellpath + index1 + "\\" + index2;
+        ui->textBrowser->append(getTime() + "选中" + index3 + "文件，双击查看内容");
+        shellcmd = "explorer " + shellpath;
+        //QProcess::execute(shellcmd);
+    }
+}
+
+//treeview双击事件
+void MainWindow::on_treeView_doubleClicked(const QModelIndex &index)
+{
+    qDebug() << shellcmd;
+    if("" == shellcmd)
+    {
+        ui->textBrowser->append(getTime() + "无法打开，请确认文件");
+        return;
+    }
+    else
+    {
+        QProcess::execute(shellcmd);
     }
 }
