@@ -53,7 +53,13 @@ void MainWindow::selectCertFile()
         }
         else
         {
-            r_usercert=PEM_read_bio_X509(b,NULL,NULL,NULL);
+            //通过BIO类型使用此函数获取X509结构体
+            r_usercert = PEM_read_bio_X509(b,NULL,NULL,NULL);
+            if(!r_usercert)
+            {
+                ui->textBrowser->append(getTime() + "无效的公钥安全文件，该证书或许已损坏");
+                return;
+            }
             certop.usercert = r_usercert;
             ui->textBrowser->append(getTime() + "待验证证书文件加载成功...");
             b = NULL;
