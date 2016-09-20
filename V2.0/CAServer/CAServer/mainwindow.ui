@@ -38,7 +38,7 @@
             </size>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>2</number>
            </property>
            <widget class="QWidget" name="tab">
             <attribute name="title">
@@ -693,7 +693,7 @@
                       </item>
                      </layout>
                     </item>
-                    <item row="3" column="0" colspan="2">
+                    <item row="3" column="0">
                      <layout class="QHBoxLayout" name="horizontalLayout_25">
                       <item>
                        <spacer name="horizontalSpacer_18">
@@ -711,7 +711,7 @@
                       <item>
                        <widget class="QLabel" name="label_12">
                         <property name="text">
-                         <string>电子邮箱地址</string>
+                         <string>邮  箱</string>
                         </property>
                        </widget>
                       </item>
@@ -724,6 +724,50 @@
                       </item>
                       <item>
                        <spacer name="horizontalSpacer_19">
+                        <property name="orientation">
+                         <enum>Qt::Horizontal</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>40</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                     </layout>
+                    </item>
+                    <item row="3" column="1">
+                     <layout class="QHBoxLayout" name="horizontalLayout_29">
+                      <item>
+                       <spacer name="horizontalSpacer_20">
+                        <property name="orientation">
+                         <enum>Qt::Horizontal</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>40</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                      <item>
+                       <widget class="QLabel" name="label_13">
+                        <property name="text">
+                         <string>序列号</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="lineEdit_10">
+                        <property name="enabled">
+                         <bool>false</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <spacer name="horizontalSpacer_21">
                         <property name="orientation">
                          <enum>Qt::Horizontal</enum>
                         </property>

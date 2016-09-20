@@ -51,9 +51,13 @@ void MainWindow::selectCertFile()
             BIO_free(b);
             return;
         }
-        else
+        //首先读取der格式证书
+        r_usercert = d2i_X509_bio(b,NULL);
+        //如果未成功读取则尝试pem格式
+        if(!r_usercert)
         {
             //通过BIO类型使用此函数获取X509结构体
+            b = BIO_new_file(certop.usrurl.toStdString().data(),"r");
             r_usercert = PEM_read_bio_X509(b,NULL,NULL,NULL);
             if(!r_usercert)
             {
@@ -61,8 +65,13 @@ void MainWindow::selectCertFile()
                 return;
             }
             certop.usercert = r_usercert;
-            ui->textBrowser->append(getTime() + "待验证证书文件加载成功...");
+            ui->textBrowser->append(getTime() + "PEM格式待验证证书文件加载成功...");
             b = NULL;
+        }
+        else
+        {
+            certop.usercert = r_usercert;
+            ui->textBrowser->append(getTime() + "DER格式待验证证书文件加载成功...");
         }
         /*实例化结构体并调用读取信息函数*/
         certInfo info;
@@ -162,6 +171,7 @@ QString MainWindow::getCertSubInfo(certInfo *info)
         delete [] pbuf;
     }
     r_str += + "\n            serialNumber:\t" + q_serial;
+    info->serialnumber = q_serial;
     return r_str;
 }
 
@@ -178,6 +188,7 @@ void MainWindow::setCertSubInfo(certInfo *info)
     ui->lineEdit_4->setText(info->organization);
     ui->lineEdit_6->setText(info->ogUnit);
     ui->lineEdit_9->setText(info->emailAddr);
+    ui->lineEdit_10->setText(info->serialnumber);
 }
 
 ////

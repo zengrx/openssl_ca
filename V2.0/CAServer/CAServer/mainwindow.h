@@ -36,6 +36,7 @@ struct certInfo
     QString organization;   //组织
     QString ogUnit;         //部门
     QString emailAddr;      //邮箱地址
+    QString serialnumber;   //序列号
 };
 
 //证书操作变量结构体
