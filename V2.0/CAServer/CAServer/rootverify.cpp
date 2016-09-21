@@ -92,12 +92,36 @@ QString MainWindow::getCertSubInfo(certInfo *info)
 {
     QString r_str = "待验证证书内容如下：";
     //qDebug() << certop.usercert;
-    X509_NAME *name = X509_get_subject_name(certop.usercert);
     X509 *x509 = certop.usercert;
-    ASN1_INTEGER *serial = X509_get_serialNumber(x509); //获取序列号
-    QString q_serial = i2s_ASN1_INTEGER(NULL,serial); //转换为qstring类型
-    int num = X509_NAME_entry_count(name); //条目总数
-    //qDebug() << num;
+    //证书版本号 0-V1 1-V2 2-V3
+    int version = X509_get_version(x509) + 1;
+    QString ver = QString::number(version);
+    r_str += "\n            version:       V" + ver;
+    //EVP_PKEY *r_key = X509_get_pubkey(x509);
+    asn1_string_st *r_before, *r_after;
+    ASN1_TIME *r_be, *r_af;
+    //中间值x2
+    time_t tt;
+    QDateTime dt;
+    QString r_dt;
+    //证书生效时间
+    r_before= X509_get_notBefore(x509);
+    r_be = ASN1_STRING_dup(r_before);
+    tt = ASN1_GetTimeT(r_be);
+    dt = QDateTime::fromTime_t(tt);
+    r_dt = dt.toString(Qt::TextDate);
+    r_str += "\n            not before: " + r_dt;
+    //证书过期时间
+    r_after= X509_get_notAfter(x509);
+    r_af = ASN1_STRING_dup(r_after);
+    tt = ASN1_GetTimeT(r_af);
+    dt = QDateTime::fromTime_t(tt);
+    r_dt = dt.toString(Qt::TextDate);
+    r_str += "\n            not after:  " + r_dt;
+    //qDebug() << dt.toString(Qt::TextDate);
+    X509_NAME *name = X509_get_subject_name(x509); //待验证书
+    X509_NAME *name1 = X509_get_issuer_name(x509); //签发证书
+    int num1 = X509_NAME_entry_count(name1); //条目总数
     X509_NAME_ENTRY *entry;
     ASN1_OBJECT *obj;
     ASN1_STRING *str;
@@ -105,6 +129,61 @@ QString MainWindow::getCertSubInfo(certInfo *info)
     int fn_nid;
     const char *objbuf;
     setlocale(LC_CTYPE, "");
+    r_str += "\n            issuer's information:";
+    for(int i=0; i<num1; i++)
+    {
+        char out[255] = {0};//输出
+        entry = (X509_NAME_ENTRY *)X509_NAME_get_entry(name1,i);
+        obj = X509_NAME_ENTRY_get_object(entry);
+        str = X509_NAME_ENTRY_get_data(entry);
+        fn_nid = OBJ_obj2nid(obj);
+        if(fn_nid == NID_undef)
+        {
+            OBJ_obj2txt(objtmp, sizeof objtmp, obj, 1);
+        }
+        else
+        {
+            objbuf = OBJ_nid2sn(fn_nid);
+            strcpy(objtmp,objbuf);
+        }
+        BIO *mem = BIO_new(BIO_s_mem());
+        BIO_set_close(mem, BIO_CLOSE);
+        ASN1_STRING_print_ex(mem,str,ASN1_STRFLGS_ESC_QUOTE );
+        BUF_MEM *bptr;
+        BIO_get_mem_ptr(mem, &bptr);
+        int len = bptr->length;
+        char * pbuf = new char[len+1];
+        memset(pbuf,0,len+1);
+        memcpy(pbuf,bptr->data,len);
+        strncpy(out,pbuf,strlen(pbuf));
+        if (mem != NULL)
+        {
+            BIO_free(mem);
+        }
+        r_str += " \n";
+        r_str += "            ";
+        r_str += objtmp;
+        r_str += ":\t";
+        r_str += out;
+//        r_str += objtmp;
+//        r_str += ": ";
+//        r_str += out;
+//        r_str += ",  ";
+        //qDebug() << i << out;
+        delete [] pbuf;
+    }
+    ASN1_INTEGER *serial = X509_get_serialNumber(x509); //获取序列号
+    QString q_serial = i2s_ASN1_INTEGER(NULL,serial); //转换为qstring类型
+    int num = X509_NAME_entry_count(name); //条目总数
+    //qDebug() << num;
+//    X509_NAME_ENTRY *entry;
+//    ASN1_OBJECT *obj;
+//    ASN1_STRING *str;
+//    char objtmp[80] = {0};
+//    int fn_nid;
+//    const char *objbuf;
+    setlocale(LC_CTYPE, "");
+    r_str += "\n            subject's information:";
     for(int i=0; i<num; i++)
     {
         char out[255] = {0};//输出
