@@ -15,7 +15,7 @@ void MainWindow::selectCertFile()
     char name1[100];           //局部变量 撤销链路径
     X509 *r_usercert = NULL;   //待验证证书
     BIO *b = NULL;             //接收证书等待格式化
-    X509_CRL *Crl = NULL;      //证书撤销链表
+    X509_CRL *r_Crl = NULL;      //证书撤销链表
     QString r_showinfo;        //接收cetCertSubInfo函数返回值
     certop.usrurl = QFileDialog::getOpenFileName(this,"select file",signdir,"*.crt;*.der;*.pem;*.cer");
     if(certop.usrurl.isNull())
@@ -39,7 +39,7 @@ void MainWindow::selectCertFile()
         }
         else
         {
-            Crl = PEM_read_bio_X509_CRL(b,NULL,NULL,NULL);
+            r_Crl = PEM_read_bio_X509_CRL(b,NULL,NULL,NULL);
             ui->textBrowser->append(getTime() + "根证书撤销链文件加载成功...");
             b = NULL;
         }
@@ -191,6 +191,7 @@ QString MainWindow::getCertSubInfo(certInfo *info)
         obj = X509_NAME_ENTRY_get_object(entry);
         str = X509_NAME_ENTRY_get_data(entry);
         fn_nid = OBJ_obj2nid(obj);
+        //qDebug() << fn_nid;
         if(fn_nid == NID_undef)
         {
             OBJ_obj2txt(objtmp, sizeof objtmp, obj, 1);
@@ -214,28 +215,28 @@ QString MainWindow::getCertSubInfo(certInfo *info)
         {
             BIO_free(mem);
         }
-        //由于i的随机性，可以在这里建立一个字典
-        switch(i)
+        //不应对i循环而应该对OBJ_obj2nid(obj)的返回值nid循环
+        switch(fn_nid)
         {
-        case 0 :
+        case 14 : //国家
             info->country = out;
             break;
-        case 1:
+        case 15 : //地区
             info->locality = out;
             break;
-        case 2 :
+        case 18 : //组织
             info->ogUnit = out;
             break;
-        case 3 :
+        case 16 : //省份
             info->province = out;
             break;
-        case 4 :
+        case 17 : //单位
             info->organization = out;
             break;
-        case 5 :
+        case 13 : //别名
             info->common = out;
             break;
-        case 6 :
+        case 48 : //邮箱
             info->emailAddr = out;
             break;
         default:
