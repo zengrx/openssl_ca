@@ -1,3 +1,6 @@
+for the latest version, please see [there](http://git.oschina.net/rx_z/openssl_ca)
+===================
+
 --------
 基于OpenSSL的证书中心
 ===================
