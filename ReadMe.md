@@ -1,134 +1,36 @@
-for the latest version, please see [there](http://git.oschina.net/rx_z/openssl_ca)
-===================
+拖了一年多了啊啊啊啊，必须要更新readme了
 
---------
-基于OpenSSL的证书中心
-===================
+new version [here](http://git.oschina.net/rx_z/openssl_ca)
 
---------
+## Certificate Authority using Openssl API
 
-###项目概要
+### Introduction
 
-**OpenSSL_CA**使用C++语言编写，开发框架为QT，支持跨平台       
-程序使用OpenSSL提供的**include文件**以及**lib库**      
-目前已完成具备基本操作的1.0版本，正在重写2.0版本
+OpenSSL_CA is a simulate software of digital certificate authority, programmed with C++ using QT framework. Well it is Cryptography class homework actually. This project may provide you some help when you start learning openssl API.
 
---------
+### Base Functions
 
-###目前情况
+ - generate certificate request file (*.csr)
+ - file transfer between client and server
+ - csr file signed by root certificate
+ - root certificate verify
+ - certificate revocation or restore the revoked certificate
+ - generate certificate revocation list (*.crl)
 
-**已经完成的内容:**
+### Usage
+> git clone https://github.com/zengrx/openssl_ca.git    
+client: .\openssl_ca\V2.0\CAClient\CAClient, double click CAClient.pro file    
+server: .\openssl_ca\V2.0\CAServer\CAServer, double click CAServer.pro file   
 
-> - 证书请求文件的生成
-> - 文件传输功能（内网）
-> - 根证书对请求文件签名，验证及撤销发布证书
-> - 撤销及恢复被撤销的证书
-> - 初步将根证书签名整合至2.0版本
-> - 用户申请证书时可选择密钥对的bits长度
-> - 基本完善工程目录结构
-> - Server对证书颁布、撤销链、时效进行验证
-> - 根证书生成新的撤销链
-> - 整合了JSON文件操作的代码
-> - 对原有函数进行优化
-> - 客户端可选择生成具备或不具备口令的私钥
+### Client & Server
+![client](https://github.com/zengrx/openssl_ca/blob/master/doc/pictures/client.png)
+![server3](https://github.com/zengrx/openssl_ca/blob/master/doc/pictures/server3.png)
+![server2](https://github.com/zengrx/openssl_ca/blob/master/doc/pictures/server2.png)
+![server1](https://github.com/zengrx/openssl_ca/blob/master/doc/pictures/server1.png)
 
-**8.26修复严重错误**
-
-> - 原始公私钥对在客户端生成，但证书中只能够传递公钥信息，在服务器端错误地使用公钥填充了私钥生成函数，导致.key文件无效
-
-**现在存在的问题:**
-
-> - **V1.0**：   
-1.  在X509中没有找到相应修改文件路径的函数，在使用中生成的文件都存放在opensslca.exe同级目录下，无法组织合理的文件结构       
-2.  生成证书请求文件时，大部分函数返回值没有进行判断或没有合理的返回操作，导致代码健壮性不足，无法获取相应的错误判断，程序崩溃时无法快速定位错误位置
-3.  存在函数功能重合，变量定义冗余情况
-4.  没有规范代码命名规则，注释不全
-5.  V1.0(ji)偶(ben)尔(bu)修复现有bug，(juedui)不再更新功能
-
-> - **V2.0**：  
-1.   在2.0版本中分离了客户端和CA中心服务器，目前只完成了文件传输操作，在传输初始时未实现数字信封
-2.   客户端仅对部分输入框进行了正则规范
-3.   证书预览显示窗内容使用循环读取，但i值似乎是随机的，无法直接准确定位至lineEdit
-4.   ...
-
-**接下来的工作：**
-
-> - 在V1.0的基础上重写V2.0版本
-> - 继续完善注释、变量及函数规范
-> - 调整界面布局
-> - 完成V2.0版本CA服务器剩余功能
-> - 完善选择待验证证书读取显示功能，由于循环i值随机生成，可考虑建立字典
-> - 继续完成JSON文件读写，同时考虑数据库的使用
-
----------
-
-###规则说明
-####代码规范
-**命名**
-> - 函数
-1.   除系统自动生成的槽函数外，所有函数使用**驼峰命名法**，建议由两个或以上的单词缩写组成。    
-     首个单词全部小写，其余部分首字母大写。并且尽量简洁精准的表达函数功能。    
-     函数统一在对应的头文件中声明，行末加一个空格或与上下函数注释对其并写明简要功能注释。    
-     两个不同的函数声明之间空一行。
-2.   在函数具体实现部分，起始位置**写明函数名称、参数、返回值以及功能**，并对其功能进行大体描述，并标记修改日期。    
-     合作开发时如对函数进行修改则在修改部分标记修改者信息及时间，且必需确定功能运行完备。
-> - 类或结构体
-1.   所有类命名组成**单词首字母大写**，其余要求参考函数要求
-> - 变量
-1.   **全局变量**定义在对应的头文件中，并且在头文件中标明使用变量的源文件，如多个源文件使用该变量则标记为公共变量。    
-     变量命名原则上使用单个单词、单词缩写或其组合，可以使用驼峰或下划线组合命名。    
-     变量行末加一个空格写明注释。由于变量名称长度接近，在注释时以最长的变量名为基准，**所有注释对齐**。    
-     同一源文件中使用到的变量声明之间不空行。
-2.   **局部变量**定义在相应的函数中，使用时对命名无具体要求，但需要做出注释。    
-     其余要求参考全局变量要求    
-3.   **变量赋值**根据函数具体要求对变量进行赋值操作，**不允许**出现没有赋初值的变量。赋值行末加一个空格并写明注释。
-> - UI对象
-1.   原则上对ui object修改合适的名称
-> - 其他
-...
-
-**代码健壮性**
-> - 返回值
-1.   对非void型函数的返回值进行判断，判断内容与函数实现部分的注释相符合。
-2.   尽可能多的考虑返回情况，对返回值的接收输出相应的信息，返回多种错误时使用switch-case进行说明，利于确定错误位置。
-3.   ...
-
---------
-
-
-###错误排除
-
-> **可能遇到的问题**
-
-> - **编译时可能遇到的问题**
-1.   由于qt的xx.pro项目文件中引入openssl/include与/lib使用了绝对路径，可能导致复制的代码在构建时无法找到对应的目录    
-**解决方法：**使用相同的格式将xx.pro文件中关于该引用的三行代码自行改为对应的正确路径，重新构建项目    
-2.   低版本qt中可能会遇到文件流读取的错误
-**解决方法：**在.ToStdString后面加上.c_str()
-
-> - **运行时可能遇到的问题**
-1.   在构思工程目录结构完毕后，将所有代码中使用的目录都以全局变量与局部变量组合的方式完成，在选择文件时更改目录可能引发程序崩溃
-2.   如果出现程序提示生成用户证书及私钥却无法在文件夹中找到，可能因为不存在这个文件夹，自行添加即可
-
-> - **Windows中证书文件打开**
-1.   经过测试，用户提交512bits证书请求时，生成的crt证书文件在windows证书浏览窗中提示无效签名，改用1024或2048bits生成请求文件即可
-
-> - **Linux中的使用**
-1.   未测试
-
-> - **JSON文件索引值问题**
-1.   可能存在arrest出jsonarray范围问题，是因为输入的jsonarray索引与json文件中的size不匹配，这时需要查看core文件夹下的json文件
-**解决方法：**确保signlist.json文件中有内容并且格式正确，如果不确定可以先按正确步骤签发一个证书填充该json文件
-
-> - **V1.0版本中的一个错误**
-1.   在签发和撤销证书的两个ListWidget中，使用了currentRowChange作为信号，但两次的Row共用了同一个全局变量储存索引，
-如果在点击事件发生后切换至另一个tab时可能会引起索引混乱
-
----------
-
-
-###联系作者
+### _(:3 」∠)/
+大三写的密码学大作业，啃了半个月openssl文档。bug挺多的，抛砖引玉啦
 基于OpenSSL的证书中心 桂林电子科技大学 计算机与信息安全学院 信息安全13402 曾若星 张德信   
-邮箱：orz_amber@163.com
+orz_amber@163.com
 
 ---------
