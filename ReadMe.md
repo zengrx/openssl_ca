@@ -18,15 +18,15 @@ OpenSSL_CA is a simulate software of digital certificate authority, programmed w
  - generate certificate revocation list (*.crl)
 
 ### Usage
-> git clone https://github.com/zengrx/openssl_ca.git    
-client: .\openssl_ca\V2.0\CAClient\CAClient, double click CAClient.pro file    
-server: .\openssl_ca\V2.0\CAServer\CAServer, double click CAServer.pro file   
+>   git clone https://github.com/zengrx/openssl_ca.git    
+    client: .\openssl_ca\V2.0\CAClient\CAClient, double click CAClient.pro file    
+    server: .\openssl_ca\V2.0\CAServer\CAServer, double click CAServer.pro file   
 
 ### Client & Server
-![client](https://github.com/zengrx/openssl_ca/blob/master/doc/pictures/client.png)
-![server3](https://github.com/zengrx/openssl_ca/blob/master/doc/pictures/server3.png)
-![server2](https://github.com/zengrx/openssl_ca/blob/master/doc/pictures/server2.png)
-![server1](https://github.com/zengrx/openssl_ca/blob/master/doc/pictures/server1.png)
+![client](https://github.com/zengrx/openssl_ca/blob/master/Doc/pictures/client.png)
+![server3](https://github.com/zengrx/openssl_ca/blob/master/Doc/pictures/server3.png)
+![server2](https://github.com/zengrx/openssl_ca/blob/master/Doc/pictures/server2.png)
+![server1](https://github.com/zengrx/openssl_ca/blob/master/Doc/pictures/server1.png)
 
 ### _(:3 」∠)/
 大三写的密码学大作业，啃了半个月openssl文档。bug挺多的，抛砖引玉啦
