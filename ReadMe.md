@@ -2,6 +2,8 @@
 
 new version [here](http://git.oschina.net/rx_z/openssl_ca)
 
+A simple document in [my blog](https://zengrx.github.io/2017/12/16/digital-certificate-authority-system-in-C-language/)
+
 ## Certificate Authority using Openssl API
 
 ### Introduction
