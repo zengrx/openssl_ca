@@ -32,7 +32,6 @@ OpenSSL_CA is a simulate software of digital certificate authority, programmed w
 
 ### _(:3 」∠)/
 大三写的密码学大作业，啃了半个月openssl文档。bug挺多的，抛砖引玉啦
-基于OpenSSL的证书中心 桂林电子科技大学 计算机与信息安全学院 信息安全13402 曾若星 张德信   
 orz_amber@163.com
 
 ---------
