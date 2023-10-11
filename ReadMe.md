@@ -35,3 +35,6 @@ OpenSSL_CA is a simulate software of digital certificate authority, programmed w
 orz_amber@163.com
 
 ---------
+
+## See also
+* [List of cryptography GUI tools](https://gist.github.com/stokito/eea7ee50d51e1db30122e2e33a62723e)
